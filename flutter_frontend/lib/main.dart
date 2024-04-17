@@ -5,8 +5,6 @@ import 'package:flutter_frontend/product_model.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final _productService = ProductService();
-
   @override
   Widget build(BuildContext context) {
     const title = 'Product List';
@@ -53,7 +51,7 @@ class _ProductListState extends State<ProductList> {
         var products = snapshot.data ?? [];
 
         if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         return RefreshIndicator(

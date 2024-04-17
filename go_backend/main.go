@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -54,6 +55,30 @@ func updateProductHandler(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
 }
 
+func deleteProductHandler(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	}
+
+	index := -1
+	for i, p := range products {
+		if p.Id == id {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
+
+	products = append(products[:index], products[index+1:]...)
+	c.JSON(http.StatusOK, gin.H{"message": "Product deleted successfully"})
+}
+
 func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
@@ -61,6 +86,7 @@ func main() {
 	r.GET("/products", getProductsHandler)
 	r.POST("/products", addProductHandler)
 	r.PUT("/products/:id", updateProductHandler)
+	r.DELETE("/products/:id", deleteProductHandler)
 
 	r.Run(":5000")
 }
