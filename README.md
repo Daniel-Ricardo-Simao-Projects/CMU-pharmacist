@@ -33,4 +33,15 @@ PharmacIST is an Android mobile application designed to simplify medication mana
     - [ ] Button to get notification when available in favorite pharmacy;
     - [ ] List pharmacies where available, sorted by distance.
 
+## Optional Features
+- [ ] Securing Communication;
+- [ ] Meta Moderation;
+- [ ] User Ratings;
+- [ ] User Accounts;
+- [ ] Social Sharing To Other Apps;
+- [ ] Localization (L10n);
+- [ ] UI Adaptability: Rotation;
+- [ ] UI Adaptability: Light/Dark Theme;
+- [ ] Recommendations;
+
 ## TODO
