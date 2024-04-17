@@ -15,10 +15,10 @@ type Product struct {
 
 func productsHandler(c *gin.Context) {
 	products := []Product{
-		Product{100, "BassTune Headset 2.0", 200, "A headphone with a inbuilt high-quality microphone"},
-		Product{101, "Fastlane Toy Car", 100, "A toy car that comes with a free HD camera"},
-		Product{101, "ATV Gear Mouse", 75, "A high-quality mouse for office work and gaming"},
-		Product{101, "BassTune Headset 1.0", 150, "A headphone with a inbuilt high-quality microphone"},
+		{100, "BassTune Headset 2.0", 200, "A headphone with a inbuilt high-quality microphone"},
+		{101, "Fastlane Toy Car", 100, "A toy car that comes with a free HD camera"},
+		{101, "ATV Gear Mouse", 75, "A high-quality mouse for office work and gaming"},
+		{101, "BassTune Headset 1.0", 150, "A headphone with a inbuilt high-quality microphone"},
 	}
 	c.JSON(200, gin.H{
 		"products": products,

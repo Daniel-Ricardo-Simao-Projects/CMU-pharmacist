@@ -7,13 +7,15 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   final _productService = ProductService();
 
+  MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     const title = 'Product List';
 
     return MaterialApp(
       title: title,
-      theme: new ThemeData(scaffoldBackgroundColor: const Color(0xffdddddd)),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xffdddddd)),
       home: Scaffold(
         appBar: AppBar(
           title: const Text(title),
