@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	models "go_backend/models"
+	models "go_backend/internal/models"
 
 	"github.com/gin-gonic/gin"
 )

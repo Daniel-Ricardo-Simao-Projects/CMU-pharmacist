@@ -1,7 +1,7 @@
 package main
 
 import (
-	api "go_backend/api"
+	api "go_backend/internal/api"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
