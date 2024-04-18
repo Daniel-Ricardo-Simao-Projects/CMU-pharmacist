@@ -1,0 +1,1 @@
+This directory contains business logic and services that are not directly related to handling HTTP requests. For example, you might have a location service that interacts with a third-party API to get location data.
