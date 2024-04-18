@@ -1,33 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/activities/maps.dart';
 import 'package:flutter_frontend/product_service.dart';
 import 'package:flutter_frontend/product_model.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     const title = 'Product List';
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: title,
       theme: ThemeData(scaffoldBackgroundColor: const Color(0xffdddddd)),
       home: Scaffold(
         appBar: AppBar(
           title: const Text(title),
         ),
-        body: ProductList(),
+        body: Builder(
+          builder: (context) => ListView(
+              children: [
+                //const ProductList(),
+                Center(
+                  child: ElevatedButton(
+                    child: const Text('Show Map'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MapsPage()),
+                      );
+                    }),
+                )
+              ],
+            )
+        ),
       ),
     );
   }
 }
 
 class ProductList extends StatefulWidget {
+  const ProductList({super.key});
+
   @override
-  _ProductListState createState() => _ProductListState();
+  ProductListState createState() => ProductListState();
 }
 
-class _ProductListState extends State<ProductList> {
+class ProductListState extends State<ProductList> {
   final _productService = ProductService();
   late Future<List<Product>> _productsFuture;
 
