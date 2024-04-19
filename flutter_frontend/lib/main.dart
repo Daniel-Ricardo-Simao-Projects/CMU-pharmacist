@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend/activities/maps.dart';
+import 'package:flutter_frontend/pages/maps.dart';
 import 'package:flutter_frontend/product_service.dart';
 import 'package:flutter_frontend/product_model.dart';
 
@@ -16,28 +16,38 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: title,
       theme: ThemeData(scaffoldBackgroundColor: const Color(0xffdddddd)),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(title),
-        ),
-        body: Builder(
-          builder: (context) => ListView(
-              children: [
-                //const ProductList(),
-                Center(
-                  child: ElevatedButton(
-                    child: const Text('Show Map'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MapsPage()),
-                      );
-                    }),
-                )
-              ],
-            )
-        ),
+      home: const MyHomePage(title: title),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({
+    super.key,
+    required this.title,
+  });
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('PharmacIST'),
       ),
+      body: ElevatedButton(
+        child: const Text('Show Map'),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MapsPage()),
+          );
+        }),
     );
   }
 }
