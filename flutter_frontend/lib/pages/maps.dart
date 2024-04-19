@@ -11,17 +11,24 @@ class MapsPage extends StatefulWidget {
   State<MapsPage> createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<MapsPage> {
+class _MapsPageState extends State<MapsPage> /*with AutomaticKeepAliveClientMixin*/ {
   late GoogleMapController mapController;
+  StreamSubscription<Position>? _positionListen;
 
   String mapTheme = '';
   LatLng? _currentPosition;
+
+  // @override
+  // bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
     _loadPosition().then((value) {
-      _currentPosition = value;
+      print('Current position: $value');
+      setState(() {
+        _currentPosition = value;
+      });
     });
     DefaultAssetBundle.of(context)
         .loadString('assets/map_themes/silver_map.json')
@@ -33,13 +40,25 @@ class _MapsPageState extends State<MapsPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _loadPosition().then((value) {
+      setState(() {
+        _currentPosition = value;
+      });
+    });
     _fetchLocationUpdates().catchError((error) {
       print(error);
     });
   }
 
   @override
+  void dispose() {
+    _positionListen?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    //super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('PharmacIST'),
@@ -118,7 +137,7 @@ class _MapsPageState extends State<MapsPage> {
       print(status);
     });
 
-    Geolocator.getPositionStream(locationSettings: locationSettings)
+    _positionListen = Geolocator.getPositionStream(locationSettings: locationSettings)
         .listen((Position? position) {
       print(position == null
           ? 'Unknown'
@@ -126,8 +145,8 @@ class _MapsPageState extends State<MapsPage> {
       if (position != null) {
         setState(() {
           _currentPosition = LatLng(position.latitude, position.longitude);
+          _savePosition(_currentPosition!);
         });
-        _savePosition(_currentPosition!);
       }
     });
   }
