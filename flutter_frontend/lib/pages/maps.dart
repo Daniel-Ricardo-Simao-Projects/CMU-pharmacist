@@ -71,6 +71,7 @@ class _MapsPageState extends State<MapsPage> /*with AutomaticKeepAliveClientMixi
           : GoogleMap(
               onMapCreated: _onMapCreated,
               style: mapTheme,
+              zoomControlsEnabled: false,
               initialCameraPosition: CameraPosition(
                 target: _currentPosition!,
                 zoom: 17.0,
@@ -83,6 +84,20 @@ class _MapsPageState extends State<MapsPage> /*with AutomaticKeepAliveClientMixi
                 ),
               },
             ),
+      
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: _currentPosition!,
+                zoom: 17.0,
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.my_location),
+      ),
     );
   }
 
@@ -138,7 +153,7 @@ class _MapsPageState extends State<MapsPage> /*with AutomaticKeepAliveClientMixi
     });
 
     _positionListen = Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position? position) {
+            .listen((Position? position) {
       print(position == null
           ? 'Unknown'
           : '${position.latitude.toString()}, ${position.longitude.toString()}');

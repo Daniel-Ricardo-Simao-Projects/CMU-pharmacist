@@ -14,9 +14,12 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: title,
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xffdddddd)),
-      home: const MyHomePage(title: title),
+      title: 'PharmacIST',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 73, 168, 112)),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'PharmacIST'),
     );
   }
 }
@@ -38,16 +41,26 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PharmacIST'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
       ),
-      body: ElevatedButton(
-        child: const Text('Show Map'),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MapsPage()),
-          );
-        }),
+      body: Center(
+        child: ElevatedButton(
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.map),
+                SizedBox(width: 8),
+                Text('Show Map'),
+              ],
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MapsPage()),
+              );
+            }),
+      ),
     );
   }
 }
