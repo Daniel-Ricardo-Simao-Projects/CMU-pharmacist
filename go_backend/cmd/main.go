@@ -2,12 +2,15 @@ package main
 
 import (
 	api "go_backend/internal/api"
+	config "go_backend/internal/config"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	config.ResetDatabase()
+
 	r := gin.Default()
 	r.Use(cors.Default())
 
