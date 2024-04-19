@@ -10,13 +10,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //const title = 'Product List';
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PharmacIST',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 73, 168, 112)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 73, 168, 112)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'PharmacIST'),
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({
     super.key,
     required this.title,
@@ -33,35 +32,49 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(title),
       ),
-      body: Center(
-        child: ElevatedButton(
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.map),
-                SizedBox(width: 8),
-                Text('Show Map'),
-              ],
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ProductList(),
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MapsPage()),
-              );
-            }),
+            ShowMapButton(),
+          ],
+        ),
       ),
     );
+  }
+}
+
+class ShowMapButton extends StatelessWidget {
+  const ShowMapButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.map),
+            SizedBox(width: 8),
+            Text('Show Map'),
+          ],
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MapsPage()),
+          );
+        });
   }
 }
 
