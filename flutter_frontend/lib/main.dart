@@ -10,13 +10,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const title = 'Product List';
+    //const title = 'Product List';
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PharmacIST',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 73, 168, 112)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 73, 168, 112)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'PharmacIST'),
