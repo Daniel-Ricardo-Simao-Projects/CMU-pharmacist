@@ -2,32 +2,37 @@
 PharmacIST is an Android mobile application designed to simplify medication management for both you and your local pharmacies. Developed as part of the Mobile and Ubiquitous Computation course at IST (2023-2024)
 
 ## Stack
-- Database: ?
+- Database: MySQL 
 - Backend: Go
 - Frontend: Flutter
 
 ## Install and Setup Database
-1. We use MySQL as our database. Install the community edition from the [official website](https://dev.mysql.com/downloads/mysql/).
+1. We use MySQL (version 8.0.35) as our database. Install the community edition from the [official website](https://dev.mysql.com/downloads/mysql/).
 2. Run the following command to enable the MySQL service:
+
     ```bash
     sudo systemctl enable mysqld
     ```
 3. Run the following command to start the MySQL service:
+
     ```bash
     sudo service mysqld start
     ```
 4. Run the following command to configure the MySQL service:
+
     ```bash
     sudo mysql_secure_installation
     ```
 5. Run the following commands to confirm the installation and login to the MySQL shell:
+
     ```bash
     mysql --version
     mysql -u root -p
     ```
-If the version is displayed (we are using 8.0.35) and you are able to login to the MySQL shell, the installation was successful.
+If the version is displayed and you are able to login to the MySQL shell, the installation was successful.
 
-Then you have to change the database configuration in the backend to match your MySQL configuration. The configuration file is located at `go_backend/config/config.go`. Change the following lines:
+Then you have to change the database configuration in the backend to match your MySQL configuration. The configuration file is located at `go_backend/config/config.go`. Change the password line to match your MySQL password. If you created another user, change the user line as well. The default configuration is as follows:
+
 ```go
     const (
         dbDriver = "mysql"
@@ -38,6 +43,7 @@ Then you have to change the database configuration in the backend to match your 
 ```
 Where `<YOUR_PASSWORD>` is the password you set during the MySQL installation.
 With the database configuration set, you can now run the backend with the following command (assuming you are in the main directory):
+
 ```bash
     cd go_backend
     make run
