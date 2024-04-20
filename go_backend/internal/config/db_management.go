@@ -2,9 +2,12 @@ package config
 
 import (
 	"database/sql"
+
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/tanimutomo/sqlfile"
+	_ "github.com/tanimutomo/sqlfile"
+
 	"log"
-	"os"
 )
 
 const (
@@ -48,27 +51,13 @@ func ResetDatabase() {
 		log.Fatal(err)
 	}
 
-	// Open SQL file
-	file, err := os.Open("internal/config/database_schema.sql")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// Read SQL file
-	stat, err := file.Stat()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fileSize := stat.Size()
-	buffer := make([]byte, fileSize)
-	_, err = file.Read(buffer)
+	s := sqlfile.New()
+	err = s.File("internal/config/database_schema.sql")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Execute SQL statements
-	_, err = db.Exec(string(buffer))
+	_, err = s.Exec(db)
 	if err != nil {
 		log.Fatal(err)
 	}

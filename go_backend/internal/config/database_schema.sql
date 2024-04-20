@@ -1,7 +1,12 @@
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    price INT,
-    description TEXT
+    price INT NOT NULL,
+    description TEXT NOT NULL
 );
 
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL
+);

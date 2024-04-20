@@ -19,5 +19,10 @@ func main() {
 	r.PUT("/products/:id", api.UpdateProductHandler)
 	r.DELETE("/products/:id", api.DeleteProductHandler)
 
+	r.GET("/users", api.GetUsersHandler)
+	r.POST("/users", api.AddUserHandler)
+	r.PUT("/users/:id", api.UpdateUserHandler)
+	r.DELETE("/users/:id", api.DeleteUserHandler)
+
 	r.Run(":5000")
 }

@@ -1,10 +1,5 @@
 package models
 
-type User struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 type Favorites struct {
 	Username         string `json:"username"`
 	Pharmacy_id      int    `json:"pharmacy_id"`
