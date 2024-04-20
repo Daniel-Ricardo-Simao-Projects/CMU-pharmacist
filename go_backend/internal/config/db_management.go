@@ -13,7 +13,7 @@ import (
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = "1710Fedora"
+	dbPass   = <YOUR_PASSWORD>
 	dbName   = "pharmacist_app"
 )
 
