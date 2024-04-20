@@ -4,12 +4,13 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"os"
 )
 
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = <YOUR_PASSWORD>
+	dbPass   = "1710Fedora"
 	dbName   = "pharmacist_app"
 )
 
@@ -47,12 +48,27 @@ func ResetDatabase() {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`CREATE TABLE products (
-		id INT AUTO_INCREMENT PRIMARY KEY,
-		name VARCHAR(100) NOT NULL,
-		price INT,
-		description TEXT
-	)`)
+	// Open SQL file
+	file, err := os.Open("internal/config/database_schema.sql")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	// Read SQL file
+	stat, err := file.Stat()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fileSize := stat.Size()
+	buffer := make([]byte, fileSize)
+	_, err = file.Read(buffer)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Execute SQL statements
+	_, err = db.Exec(string(buffer))
 	if err != nil {
 		log.Fatal(err)
 	}
