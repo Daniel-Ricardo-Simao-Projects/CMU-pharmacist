@@ -10,14 +10,6 @@ type Map struct {
 	Pharmacies []Pharmacy `json:"pharmacies"`
 }
 
-type Pharmacy struct {
-	Pharmacy_id int             `json:"pharmacy_id"`
-	Name        string          `json:"name"`
-	Location    string          `json:"location"`
-	Picture     string          `json:"picture"`
-	Stock       []MedicineStock `json:"medicine"`
-}
-
 type MedicineStock struct {
 	Medicine_id int    `json:"medicine_id"`
 	Name        string `json:"name"`
