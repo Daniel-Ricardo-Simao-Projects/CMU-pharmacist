@@ -1,9 +1,10 @@
 package models
 
 type Pharmacy struct {
-	Pharmacy_id int             `json:"pharmacy_id"`
-	Name        string          `json:"name"`
-	Location    string          `json:"location"`
-	Picture     string          `json:"picture"`
-	Stock       []MedicineStock `json:"medicine"`
+	Id      int             `json:"id"`
+	Name    string          `json:"name"`
+	Address string          `json:"address"`
+	Picture string          `json:"picture"`
+  Date    string          `json:"date"`
+	Stock   []MedicineStock `json:"medicine"`
 }

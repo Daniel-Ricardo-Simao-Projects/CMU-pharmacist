@@ -24,5 +24,8 @@ func main() {
 	r.PUT("/users/:id", api.UpdateUserHandler)
 	r.DELETE("/users/:id", api.DeleteUserHandler)
 
+  r.GET("/pharmacies", api.GetPharmacyHandler)
+  r.POST("/pharmacies", api.AddPharmacyHandler)
+
 	r.Run(":5000")
 }

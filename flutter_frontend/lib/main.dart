@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/maps.dart';
 import 'package:flutter_frontend/product_service.dart';
 import 'package:flutter_frontend/product_model.dart';
+
+import 'models/pharmacy_model.dart';
+import 'services/pharmacy_service.dart';
 
 void main() => runApp(const MyApp());
 
@@ -43,13 +47,40 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: ProductList(),
+              child: PharmacyList(),
+              //child: ProductList(),
             ),
+            AddPharmacyButton(),
             ShowMapButton(),
           ],
         ),
       ),
     );
+  }
+}
+
+class AddPharmacyButton extends StatelessWidget {
+  const AddPharmacyButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.add),
+            SizedBox(width: 8),
+            Text('Add Pharmacy'),
+          ],
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddPharmacyPage()),
+          );
+        });
   }
 }
 
@@ -75,6 +106,58 @@ class ShowMapButton extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const MapsPage()),
           );
         });
+  }
+}
+
+class PharmacyList extends StatefulWidget {
+  const PharmacyList({super.key});
+
+  @override
+  State<PharmacyList> createState() => _PharmacyListState();
+}
+
+class _PharmacyListState extends State<PharmacyList> {
+  final _pharmacyService = PharmacyService();
+  late Future<List<Pharmacy>> _pharmacies;
+
+  @override
+  initState() {
+    super.initState();
+    _pharmacies = _pharmacyService.getPharmacies();
+  }
+
+  Future<void> _refreshPharmacies() async {
+    setState(() {
+      _pharmacies = _pharmacyService.getPharmacies();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Pharmacy>>(
+      future: _pharmacies,
+      builder: (context, snapshot) {
+        var pharmacies = snapshot.data ?? [];
+
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return RefreshIndicator(
+          onRefresh: _refreshPharmacies,
+          child: ListView.builder(
+            itemCount: pharmacies.length,
+            itemBuilder: (context, index) {
+              var pharmacy = pharmacies[index];
+              return ListTile(
+                title: Text(pharmacies[index].name),
+                subtitle: Text(pharmacy.address),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }
 
