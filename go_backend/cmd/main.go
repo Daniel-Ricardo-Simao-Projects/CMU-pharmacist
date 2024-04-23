@@ -11,6 +11,8 @@ import (
 func main() {
 	config.ResetDatabase()
 
+	gin.SetMode(gin.ReleaseMode)
+
 	r := gin.Default()
 	r.Use(cors.Default())
 
@@ -24,8 +26,8 @@ func main() {
 	r.PUT("/users/:id", api.UpdateUserHandler)
 	r.DELETE("/users/:id", api.DeleteUserHandler)
 
-  r.GET("/pharmacies", api.GetPharmacyHandler)
-  r.POST("/pharmacies", api.AddPharmacyHandler)
+	r.GET("/pharmacies", api.GetPharmacyHandler)
+	r.POST("/pharmacies", api.AddPharmacyHandler)
 
 	r.Run(":5000")
 }

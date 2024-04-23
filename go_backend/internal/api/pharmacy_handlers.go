@@ -5,6 +5,7 @@ import (
 
 	db "go_backend/internal/database"
 	models "go_backend/internal/models"
+	utils "go_backend/internal/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,12 +17,14 @@ func GetPharmacyHandler(c *gin.Context) {
 }
 
 func AddPharmacyHandler(c *gin.Context) {
-  var newPharmacy models.Pharmacy
+	var newPharmacy models.Pharmacy
 	if err := c.ShouldBindJSON(&newPharmacy); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.Error("Error binding JSON")
 		return
 	}
 
-  db.AddPharmacy(newPharmacy)
+	db.AddPharmacy(newPharmacy)
 	c.JSON(http.StatusCreated, gin.H{"message": "Pharmacy added successfully"})
+	utils.Info("Pharmacy added successfully")
 }
