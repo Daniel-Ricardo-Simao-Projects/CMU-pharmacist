@@ -181,8 +181,9 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   }
 
   void savePharmacy(String name, String address, File file) {
-    // TODO: Save picture to server
-    Pharmacy pharmacy = Pharmacy(id: 0, name: name, address: address, picture: "path");
+    List<int> imageBytes = file.readAsBytesSync();
+    Pharmacy pharmacy =
+        Pharmacy(id: 0, name: name, address: address, picture: imageBytes);
     PharmacyService().addPharmacy(pharmacy);
 
     Navigator.pop(context);

@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 class Pharmacy {
   final int id;
   final String name;
   final String address;
-  final String picture;
+  final List<int> picture;
 
   const Pharmacy({
     required this.id,
@@ -12,19 +14,15 @@ class Pharmacy {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'address': address,
-      'picture': picture
-    };
+    return {'name': name, 'address': address, 'picture': picture};
   }
 
   factory Pharmacy.fromJson(Map json) {
     return Pharmacy(
-      id: json['id'],
-      name: json['name'],
-      address: json['address'],
-      picture: json['picture']
-    );
+        id: json['id'],
+        name: json['name'],
+        address: json['address'],
+        // Convert base64 string to List<int>
+        picture: base64Decode(json['picture']));
   }
 }

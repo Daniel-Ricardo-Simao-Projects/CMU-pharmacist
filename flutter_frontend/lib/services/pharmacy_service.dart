@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../models/pharmacy_model.dart';
+import 'dart:convert';
 
 class PharmacyService {
   final String pharmaciesURL = 'http://localhost:5000/pharmacies';
@@ -9,7 +10,17 @@ class PharmacyService {
 
   Future<void> addPharmacy(Pharmacy pharmacy) async {
     try {
-      await dio.post(pharmaciesURL, data: pharmacy.toJson());
+      // Convert List<int> to base64 string
+      String pictureBase64 = base64Encode(pharmacy.picture);
+
+      // Create JSON object with base64 string
+      Map<String, dynamic> pharmacyJson = {
+        'name': pharmacy.name,
+        'address': pharmacy.address,
+        'picture': pictureBase64,
+      };
+
+      await dio.post(pharmaciesURL, data: pharmacyJson);
     } catch (e) {
       rethrow;
     }
@@ -29,9 +40,11 @@ class PharmacyService {
       for (var pharmacy in pharmacies) {
         print(pharmacy.name);
         print(pharmacy.address);
-        print(pharmacy.picture);
       }
     } catch (e) {
+      // verbose error with stack trace
+      print(e);
+
       pharmacies = [];
     }
     return pharmacies;

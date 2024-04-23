@@ -10,6 +10,7 @@ import (
 
 func main() {
 	config.ResetDatabase()
+	config.RemoveImagesDir()
 
 	gin.SetMode(gin.ReleaseMode)
 

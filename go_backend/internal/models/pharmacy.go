@@ -5,6 +5,6 @@ type Pharmacy struct {
 	Name    string          `json:"name"`
 	Address string          `json:"address"`
 	Picture string          `json:"picture"`
-  Date    string          `json:"date"`
+	Date    string          `json:"date"`
 	Stock   []MedicineStock `json:"medicine"`
 }
