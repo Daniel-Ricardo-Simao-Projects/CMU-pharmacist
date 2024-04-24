@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 
@@ -9,29 +8,15 @@ import (
 	models "go_backend/internal/models"
 )
 
-var db *sql.DB
-
 func AddProduct(product models.Product) {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	_, err = db.Exec("INSERT INTO products (name, price, description) VALUES (?, ?, ?)", product.Name, product.Price, product.Description)
+	_, err := config.DB.Exec("INSERT INTO products (name, price, description) VALUES (?, ?, ?)", product.Name, product.Price, product.Description)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func UpdateProduct(product models.Product) error {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	_, err = db.Exec("UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?", product.Name, product.Price, product.Description, product.Id)
+	_, err := config.DB.Exec("UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?", product.Name, product.Price, product.Description, product.Id)
 	if err != nil {
 		return err
 	}
@@ -40,13 +25,7 @@ func UpdateProduct(product models.Product) error {
 }
 
 func DeleteProduct(id int) error {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	_, err = db.Exec("DELETE FROM products WHERE id = ?", id)
+	_, err := config.DB.Exec("DELETE FROM products WHERE id = ?", id)
 	if err != nil {
 		return err
 	}
@@ -55,13 +34,7 @@ func DeleteProduct(id int) error {
 }
 
 func GetProducts() []models.Product {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	rows, err := db.Query("SELECT * FROM products")
+	rows, err := config.DB.Query("SELECT * FROM products")
 	if err != nil {
 		log.Fatal(err)
 	}

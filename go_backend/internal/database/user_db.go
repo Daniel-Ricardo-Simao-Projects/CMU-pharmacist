@@ -9,16 +9,10 @@ import (
 )
 
 func GetUserByUsername(username string) *models.User {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	row := db.QueryRow("SELECT * FROM users WHERE username = ?", username)
+	row := config.DB.QueryRow("SELECT * FROM users WHERE username = ?", username)
 
 	var user models.User
-	err = row.Scan(&user.Id, &user.Username, &user.Password)
+	err := row.Scan(&user.Id, &user.Username, &user.Password)
 	if err != nil {
 		return nil
 	}
@@ -27,26 +21,14 @@ func GetUserByUsername(username string) *models.User {
 }
 
 func AddUser(user models.User) {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	_, err = db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", user.Username, user.Password)
+	_, err := config.DB.Exec("INSERT INTO users (username, password) VALUES (?, ?)", user.Username, user.Password)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func UpdateUser(user models.User) error {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	_, err = db.Exec("UPDATE users SET username = ?, password = ? WHERE id = ?", user.Username, user.Password, user.Id)
+	_, err := config.DB.Exec("UPDATE users SET username = ?, password = ? WHERE id = ?", user.Username, user.Password, user.Id)
 	if err != nil {
 		return err
 	}
@@ -55,13 +37,7 @@ func UpdateUser(user models.User) error {
 }
 
 func DeleteUser(id int) error {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	_, err = db.Exec("DELETE FROM users WHERE id = ?", id)
+	_, err := config.DB.Exec("DELETE FROM users WHERE id = ?", id)
 	if err != nil {
 		return err
 	}
@@ -70,13 +46,7 @@ func DeleteUser(id int) error {
 }
 
 func GetUsers() []models.User {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	rows, err := db.Query("SELECT * FROM users")
+	rows, err := config.DB.Query("SELECT * FROM users")
 	if err != nil {
 		log.Fatal(err)
 	}

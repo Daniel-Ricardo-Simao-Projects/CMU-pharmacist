@@ -2,7 +2,6 @@ package database
 
 import (
 	"encoding/base64"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
 
@@ -12,13 +11,7 @@ import (
 )
 
 func GetPharmacies() []models.Pharmacy {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
-	rows, err := db.Query("SELECT * FROM pharmacies")
+	rows, err := config.DB.Query("SELECT * FROM pharmacies")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,12 +39,6 @@ func GetPharmacies() []models.Pharmacy {
 }
 
 func AddPharmacy(pharmacy models.Pharmacy) {
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer config.CloseDB(db)
-
 	imageData, err := base64.StdEncoding.DecodeString(pharmacy.Picture)
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +55,7 @@ func AddPharmacy(pharmacy models.Pharmacy) {
 	// print picture
 	utils.Info(pharmacy.Picture)
 
-	_, err = db.Exec("INSERT INTO pharmacies (name, address, image_path) VALUES (?, ?, ?)", pharmacy.Name, pharmacy.Address, imagePath)
+	_, err = config.DB.Exec("INSERT INTO pharmacies (name, address, image_path) VALUES (?, ?, ?)", pharmacy.Name, pharmacy.Address, imagePath)
 	if err != nil {
 		log.Fatal(err)
 	}

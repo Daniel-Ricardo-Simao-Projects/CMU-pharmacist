@@ -1,0 +1,1022 @@
+{
+    "html_attributions": [],
+    "next_page_token": "ATplDJawWDgNVD0G-cQgSRmVke5WvpMIO49Ve4cZSs74VphYIDqjF-wM_vliW5Mg7QLyTp7sAWFKAGcR0m6iFmsyTy_yNQHIumP_f3WEVT5qETamHCf7FJ8_593MHUxSRJHkt0l1bWAPLktLL75qGEpf_335KZbU6nedga3zvYVbwJuS4X26VNkxT0kH36IOFvD6J6YOWTPiAm0muikDxB3aiWLj3_8Us8HlI2fLG0dyPhjpLJefellhdLimowDVteIzw8FCOMGsEGpAPo2sLpKFZDj1DKv29uELC47rkznAOPhxVnV_rbIv6q_KP2Kaw1aaz1sBxIzlzBeyk3h-senotfOaSKQsd3Dqzzh9h03VwR3MfrUHbyPNczxwghK0TeBUZTLsVAN-sAG3DoKgHYb6XCJ_EiUYx6Y9uWsjAOgX59feKQtJHg63mKjkyOqy_v9uDYCkZNzi3GP9K-ZcMDmxBUBGVVvl-ulDo1GCeKY5NPRFMf9DbikqbYdn7u6Cgq1zti_PgCWtJZy6JRxpVU9gLrQc2xtEBLAWlZVCLdg9A8KH21NsDtI9p8pKoomFbdkbZIBsZg-LrEeIJj6aWKaJBiVdEp8h9xhi2SGZqWISTF0rk_I7adYSJcqZlhd2w2kOz9xqx_QiREx0j54",
+    "results": [
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7719486,
+                    "lng": -9.251879599999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7733107802915,
+                        "lng": -9.250594919708497
+                    },
+                    "southwest": {
+                        "lat": 38.7706128197085,
+                        "lng": -9.253292880291502
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Pharmacy Carenque",
+            "place_id": "ChIJeVFylqfNHg0Rvu6F88oB1ds",
+            "plus_code": {
+                "compound_code": "QPCX+Q6 Amadora, Portugal",
+                "global_code": "8CCGQPCX+Q6"
+            },
+            "rating": 3,
+            "reference": "ChIJeVFylqfNHg0Rvu6F88oB1ds",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 9,
+            "vicinity": "Estrada Águas Livres 120B, Amadora"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.72275179999999,
+                    "lng": -9.160228499999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.72410713029149,
+                        "lng": -9.158932719708496
+                    },
+                    "southwest": {
+                        "lat": 38.72140916970849,
+                        "lng": -9.1616306802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Ivone",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 3024,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/100853518655318241605\">Ivone</a>"
+                    ],
+                    "photo_reference": "ATplDJZg5RKSv6VmRVKB4Bjf-YbHPsEI1t6KFfGhkOoPC6g3ZkvylCJeupup9vu-wogcPgieNFaid9kLKCrW7pCOrq1MQp_q1s4NFSjFSbep3ruce3rD5z95Ucfkuf7ukBbxzyq1mJ-orj4vPdj96mnonut67cwAdi-XI4hsHo4gdRNmZ0V_",
+                    "width": 4032
+                }
+            ],
+            "place_id": "ChIJ_dWWb28zGQ0RgRufhBRBu2A",
+            "plus_code": {
+                "compound_code": "PRFQ+4W Lisbon, Portugal",
+                "global_code": "8CCGPRFQ+4W"
+            },
+            "rating": 4,
+            "reference": "ChIJ_dWWb28zGQ0RgRufhBRBu2A",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 14,
+            "vicinity": "Rua Silva Carvalho 232c, Lisboa"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7285668,
+                    "lng": -9.1091527
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7299625802915,
+                        "lng": -9.107862719708498
+                    },
+                    "southwest": {
+                        "lat": 38.7272646197085,
+                        "lng": -9.110560680291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Conceição Lda.",
+            "opening_hours": {
+                "open_now": true
+            },
+            "place_id": "ChIJ4yFZ-OQzGQ0RbYBdJJ48GB0",
+            "plus_code": {
+                "compound_code": "PVHR+C8 Lisbon, Portugal",
+                "global_code": "8CCGPVHR+C8"
+            },
+            "rating": 4.1,
+            "reference": "ChIJ4yFZ-OQzGQ0RbYBdJJ48GB0",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 17,
+            "vicinity": "Calçada Dom Gastão 29B, Lisboa"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.789332,
+                    "lng": -9.226936600000002
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.79066238029151,
+                        "lng": -9.2256620697085
+                    },
+                    "southwest": {
+                        "lat": 38.78796441970851,
+                        "lng": -9.228360030291505
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia do Guizo",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1800,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/103482659115180084068\">Farmácia do Guizo</a>"
+                    ],
+                    "photo_reference": "ATplDJbgYPoPxuBe2cfO9JdalE1HfAV1et_oDPwW9Ib48hBlyW1dyT2vfcOX4k7UP9WiX6B3zrxFcex6OZ6Un1teXHSPWzsGYQEoT50XK5Z07hB5Mkm4u9jhrQaNNVdBhrjhWQrIkP0qy1YNT6u4zhUSHOIDhs13G0xLMVsb-lWd3pa68yQ",
+                    "width": 4000
+                }
+            ],
+            "place_id": "ChIJcUU-hjvNHg0RpfIkYPKjLvc",
+            "plus_code": {
+                "compound_code": "QQQF+P6 Amadora, Portugal",
+                "global_code": "8CCGQQQF+P6"
+            },
+            "rating": 4.7,
+            "reference": "ChIJcUU-hjvNHg0RpfIkYPKjLvc",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 23,
+            "vicinity": "Urbanização do, Rua Moinho do Guizo lote A6 Piso 0 6 loja a, Amadora"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7422295,
+                    "lng": -9.2087834
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.74359113029149,
+                        "lng": -9.207375469708499
+                    },
+                    "southwest": {
+                        "lat": 38.7408931697085,
+                        "lng": -9.210073430291501
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Vaz Martins",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 3480,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/115291950498749261884\">Nuno Ferreira</a>"
+                    ],
+                    "photo_reference": "ATplDJZBCm75nCgVdYiUA2xolaqgLcIV0VhrjkqVtCZBZ_KlhN7S3q1BTe1JuYAtljD6pyEF_NCn89ynxqsMPvjfx71wlYWUxCc9rZm6MP1WpBgfauZKJvBJ1h41LOiS14YW4I2RQDxy7o0j6cqY4c8u1BcWDHYxOJxOSkLgM6BKiwrzlPiT",
+                    "width": 4640
+                }
+            ],
+            "place_id": "ChIJf2UUUNzMHg0RAVrQMRAKRgI",
+            "plus_code": {
+                "compound_code": "PQRR+VF Amadora, Portugal",
+                "global_code": "8CCGPQRR+VF"
+            },
+            "rating": 4.1,
+            "reference": "ChIJf2UUUNzMHg0RAVrQMRAKRgI",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 16,
+            "vicinity": "Praceta Fernando Pessoa 5"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7657199,
+                    "lng": -9.1161415
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7669698302915,
+                        "lng": -9.114832069708498
+                    },
+                    "southwest": {
+                        "lat": 38.7642718697085,
+                        "lng": -9.117530030291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Antunes Rosas",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 3120,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/113425875815368958016\">Juan Azambuja</a>"
+                    ],
+                    "photo_reference": "ATplDJaYUI5Q1f805FOD5uBVIv9kzeu40IS1QSW79Kq3JCeb-s8svKbF4AmZghJTrAXgkk7vXmq0KanfGOA1il5lNzd0XYwEgZl6UkdqOAZNNI_FNK5xcEJe-vzTVP3ny-PTPHQL-NGso7QyFGwileHXJNnb0vzZkxx2BUwZS9hrSGXysVB7",
+                    "width": 4160
+                }
+            ],
+            "place_id": "ChIJw5NO7DAyGQ0RtgFGcu7VzEA",
+            "plus_code": {
+                "compound_code": "QV8M+7G Lisbon, Portugal",
+                "global_code": "8CCGQV8M+7G"
+            },
+            "rating": 4.6,
+            "reference": "ChIJw5NO7DAyGQ0RtgFGcu7VzEA",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 14,
+            "vicinity": "Praça Cidade São Salvador 199, Lisboa"
+        },
+        {
+            "business_status": "CLOSED_TEMPORARILY",
+            "geometry": {
+                "location": {
+                    "lat": 38.78395739999999,
+                    "lng": -9.2069517
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7853207302915,
+                        "lng": -9.205679769708498
+                    },
+                    "southwest": {
+                        "lat": 38.7826227697085,
+                        "lng": -9.208377730291502
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Espaço de Saúde da Paiã",
+            "permanently_closed": true,
+            "photos": [
+                {
+                    "height": 768,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/113050497967503629622\">Espaço de Saúde da Paiã</a>"
+                    ],
+                    "photo_reference": "ATplDJYyEVDnOtvTEIRbDXoy0nBPK_i-tUiJqZYy-026k1q_6i7oUhNdAKHTV4w5g8zc695TvI-48fmd-sNrYHbUhtWfgdReT3BtQwUWy6FIIGBURO61FjOdhrEQsTZwTPDRrxSEyky4bwdM3UVC0PknAJ5NtrUyWhxIk_AFayLAbTYK7fMN",
+                    "width": 1024
+                }
+            ],
+            "place_id": "ChIJn7ubcFzNHg0RdD9IQ1sm8gI",
+            "plus_code": {
+                "compound_code": "QQMV+H6 Pontinha, Portugal",
+                "global_code": "8CCGQQMV+H6"
+            },
+            "rating": 4.3,
+            "reference": "ChIJn7ubcFzNHg0RdD9IQ1sm8gI",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 9,
+            "vicinity": "Rua Major João Luís de Moura 11, Pontinha"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.67425530000001,
+                    "lng": -9.1690331
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.6755295802915,
+                        "lng": -9.167622819708496
+                    },
+                    "southwest": {
+                        "lat": 38.67283161970851,
+                        "lng": -9.170320780291501
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Pragal Pharmacy Ltd.",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 4128,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/108459056696636365120\">Carlos Revés</a>"
+                    ],
+                    "photo_reference": "ATplDJZrP7hJUBfXdxToODQhMnE9Vc1SY8GiZGdff3YTka6WlNeqvKW1PA_p13_Bg9HvBzCCwYXkNAA8XhagTHnMNJQecl89NQFHQ8dxqj9A1rFifGOT8o8tbO-66Y0T4rZqPMl80t6G1NnXMJH5Fy8zO6RA4rEE5MvceMMy4chui2pWBuq2",
+                    "width": 3096
+                }
+            ],
+            "place_id": "ChIJfQf3DN40GQ0REdZX4jR_V0c",
+            "plus_code": {
+                "compound_code": "MRFJ+P9 Almada, Portugal",
+                "global_code": "8CCGMRFJ+P9"
+            },
+            "rating": 4.4,
+            "reference": "ChIJfQf3DN40GQ0REdZX4jR_V0c",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 93,
+            "vicinity": "Rua Direita 6, Almada"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7420043,
+                    "lng": -9.1084888
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7433180302915,
+                        "lng": -9.107066119708499
+                    },
+                    "southwest": {
+                        "lat": 38.7406200697085,
+                        "lng": -9.109764080291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia de Marvila",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 810,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/114937708407547928773\">Farmácia de Marvila</a>"
+                    ],
+                    "photo_reference": "ATplDJYWvnNmu1jj4cE0Pz9TVG0MC-K_ELBU6gqJY1grwTi2PI70ER5Jma4eCYECn0OPEAR6l2AJqF7UUietKR6DiWD5vZbcdxnq8x59KNVkG3Zdc-86_h27WVaS-Aar0i1is231uqr-aZdE7iF5jelSMyeykdTag4Lk7eyzz2PqApVW2zkF",
+                    "width": 1080
+                }
+            ],
+            "place_id": "ChIJxSywi9szGQ0RAOniOLf_46I",
+            "plus_code": {
+                "compound_code": "PVRR+RJ Lisbon, Portugal",
+                "global_code": "8CCGPVRR+RJ"
+            },
+            "rating": 4.5,
+            "reference": "ChIJxSywi9szGQ0RAOniOLf_46I",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 22,
+            "vicinity": "Rua Eduarda Lapa Lote 35, Lisboa"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.642295,
+                    "lng": -9.0985506
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.64362773029151,
+                        "lng": -9.097297819708498
+                    },
+                    "southwest": {
+                        "lat": 38.64092976970851,
+                        "lng": -9.099995780291502
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Seixal",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 4000,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/106826113460889867171\">Variações BR &amp; Cia.</a>"
+                    ],
+                    "photo_reference": "ATplDJZoiMrHCMsJtKwkwARDFrYYMyoBq1tpE0YL4dTo_fF1pcTB97GamFt6iib1n0NDhmyHGCsMwWk7JyeKjU0_9gEetSYKaEr-P5m-D__G2Bdhx8Y7FVVVEV7BHjUn14B3sNuv_1XyP1E1oLVGTTSja94lPjesGfgkT5kmieQt3BQbtMsv",
+                    "width": 3000
+                }
+            ],
+            "place_id": "ChIJG7krSwY2GQ0RgFXMs-5QdMw",
+            "plus_code": {
+                "compound_code": "JWR2+WH Seixal, Portugal",
+                "global_code": "8CCGJWR2+WH"
+            },
+            "rating": 4.2,
+            "reference": "ChIJG7krSwY2GQ0RgFXMs-5QdMw",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 90,
+            "vicinity": "Avenida Vasco da Gama 15, Seixal"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7590625,
+                    "lng": -9.241855800000002
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7604680302915,
+                        "lng": -9.2405397697085
+                    },
+                    "southwest": {
+                        "lat": 38.7577700697085,
+                        "lng": -9.243237730291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Confiança",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1024,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/108023498766033449807\">Farmácia Confiança</a>"
+                    ],
+                    "photo_reference": "ATplDJa0E2iEIS6-OnGLWAXkua_Uft8BJXFLy6ZH1vJYSK_LfHRLei0PrBvvKm3adKruN3_w-94sdl-HSN0Z9YdKoqZRNn4bNF7PmL_HtNzlfXsQFQP1rU5VzxiOVu0PtRotAnurr00QWBLpyFmzexLW497EvqYrphJz869byNFi0cGEPr9F",
+                    "width": 768
+                }
+            ],
+            "place_id": "ChIJ96rpFgjNHg0Rmw43CAGMxSI",
+            "plus_code": {
+                "compound_code": "QQ55+J7 Amadora, Portugal",
+                "global_code": "8CCGQQ55+J7"
+            },
+            "rating": 4.2,
+            "reference": "ChIJ96rpFgjNHg0Rmw43CAGMxSI",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 19,
+            "vicinity": "Avenida Dom Nuno Álvares Pereira 15A, Amadora"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.8379369,
+                    "lng": -9.0920858
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.8393530802915,
+                        "lng": -9.090730469708499
+                    },
+                    "southwest": {
+                        "lat": 38.8366551197085,
+                        "lng": -9.093428430291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Pharmacy Ribeiro Soares",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1013,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/113713069408067772617\">Farmácia Ribeiro Soares</a>"
+                    ],
+                    "photo_reference": "ATplDJbFrWXrdymfCI9_e32s5bwy0ycVnvYSUNcluAKPHC96UwtwfOvrHK3z8Um-hFCgi6MR2gdYgh5IHOvER51IL7kdJXI0NiEr0H2GK8ycXneiWxXANezLW9VEsoK-VUY7ftxNTBpy3X_xd-0i6eGgtZZXBFKstmGB2YYssTDBv4MGcJvz",
+                    "width": 1800
+                }
+            ],
+            "place_id": "ChIJbfT32oguGQ0RRJsHt0azapQ",
+            "plus_code": {
+                "compound_code": "RWQ5+55 Santa Iria de Azoia, Portugal",
+                "global_code": "8CCGRWQ5+55"
+            },
+            "rating": 4.5,
+            "reference": "ChIJbfT32oguGQ0RRJsHt0azapQ",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 26,
+            "vicinity": "Rua Dom Pedro V 39, Santa Iria de Azoia"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.8603619,
+                    "lng": -9.0639943
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.8616929802915,
+                        "lng": -9.062677069708498
+                    },
+                    "southwest": {
+                        "lat": 38.8589950197085,
+                        "lng": -9.065375030291502
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Higiénica",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 2084,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/100243263196865896524\">Maria Emília Guerra</a>"
+                    ],
+                    "photo_reference": "ATplDJYKzCrHEwnW2xjD0pdwql65K1MtLPEgHltjUal8kMo2slPVYXJsrkV1hrfaty-eRFNMSrsv6JfZXdwoQ-R3EZAnLD09XgIqEQZmW47RUHooBRfBDLU8IOebfQzeH7B-MTcwmGP9BwJCn0lVnadWd1phoZpYCzoVBhQ8EOs_hOP00eR4",
+                    "width": 4624
+                }
+            ],
+            "place_id": "ChIJE_oevuYuGQ0RSfxtvniJPHM",
+            "plus_code": {
+                "compound_code": "VW6P+4C Póvoa de Santa Iria e Forte da Casa, Portugal",
+                "global_code": "8CCGVW6P+4C"
+            },
+            "rating": 4.2,
+            "reference": "ChIJE_oevuYuGQ0RSfxtvniJPHM",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 95,
+            "vicinity": "Rua dos Marinheiros 60, Póvoa de Santa Iria"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7134426,
+                    "lng": -9.1634754
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7147376302915,
+                        "lng": -9.162108419708497
+                    },
+                    "southwest": {
+                        "lat": 38.7120396697085,
+                        "lng": -9.164806380291502
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Marques Freire",
+            "opening_hours": {
+                "open_now": true
+            },
+            "place_id": "ChIJJc_xl2EzGQ0RLLp1KzPJUzs",
+            "plus_code": {
+                "compound_code": "PR7P+9J Lisbon, Portugal",
+                "global_code": "8CCGPR7P+9J"
+            },
+            "rating": 4.7,
+            "reference": "ChIJJc_xl2EzGQ0RLLp1KzPJUzs",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 3,
+            "vicinity": "Rua Santo António à Estrela 98, Lisboa"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.719798,
+                    "lng": -9.129815599999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7211526802915,
+                        "lng": -9.128443469708497
+                    },
+                    "southwest": {
+                        "lat": 38.7184547197085,
+                        "lng": -9.131141430291501
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia do Monte",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1920,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/100075725457069161217\">Jonas Vejlin</a>"
+                    ],
+                    "photo_reference": "ATplDJYPc1swwAPgA8HRt5HidrvGLaCFGpB0ghemasw53kdlduGAH65QulI1CzUCgpUN9bCJUOEbHhd2Rwdg3KslMjs1Y_y9XHYC8C5MZDYeJX76dogNtl0i11f-0M-cXLio6PtGVXTC32e_M6n9UJDctFekhxvhhLKZD3i6y0sQnRMCRxgm",
+                    "width": 1080
+                }
+            ],
+            "place_id": "ChIJnXmbuo4zGQ0RRKU2euh5Y_w",
+            "plus_code": {
+                "compound_code": "PV9C+W3 Lisbon, Portugal",
+                "global_code": "8CCGPV9C+W3"
+            },
+            "rating": 4.1,
+            "reference": "ChIJnXmbuo4zGQ0RRKU2euh5Y_w",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 20,
+            "vicinity": "Rua da Graça 82A, Lisboa"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.6599205,
+                    "lng": -9.0645271
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.6612388802915,
+                        "lng": -9.063168069708498
+                    },
+                    "southwest": {
+                        "lat": 38.6585409197085,
+                        "lng": -9.065866030291502
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Santa Marta",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 4000,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/102708722836182647314\">Fernando Emanuel</a>"
+                    ],
+                    "photo_reference": "ATplDJbZfPPl1_RmofxARcOfJChOBVQyRz7-7rq9wTkwcnOSuqXp0_dQxu-euBENI5RSsaPJEqTcib8crr6X6E78IvmGJ77pdP2zggEiijC3E0nTJuDS33AfuYQLL0j74HYs_UeKv8YvzwXWnc8-BnurK2arnU3vKxkS_QWrugj2c_jhG64l",
+                    "width": 3000
+                }
+            ],
+            "place_id": "ChIJbyf1Dkk2GQ0Rpq8vp_5oSgA",
+            "plus_code": {
+                "compound_code": "MW5P+X5 Barreiro, Portugal",
+                "global_code": "8CCGMW5P+X5"
+            },
+            "rating": 4.6,
+            "reference": "ChIJbyf1Dkk2GQ0Rpq8vp_5oSgA",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 30,
+            "vicinity": "Rua Doutor Manuel Pacheco Nobre 44B, Barreiro"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.73463179999999,
+                    "lng": -9.157749899999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7359318802915,
+                        "lng": -9.156417269708498
+                    },
+                    "southwest": {
+                        "lat": 38.7332339197085,
+                        "lng": -9.159115230291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Sírius",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 2610,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/108369372606074653534\">Miguel Cunha Duarte</a>"
+                    ],
+                    "photo_reference": "ATplDJYLZfRI0qqSxv9aUBLg4-T9UOz8cqFmoQQVY49DuLSXeQ1bKIHdrHGnWZYO6PI69ELUHAuaD6hD2ESp32VdXzgnYnOclTXDgFqJErhdp6FBU_PQdjh06nfQg99dXALS8gdeB-ywHgOsB9od_qWklyzNYbAVs2As0C5D0_5HgHT6AeKJ",
+                    "width": 4640
+                }
+            ],
+            "place_id": "ChIJtyVgjRIzGQ0RwL0mi6tTLms",
+            "plus_code": {
+                "compound_code": "PRMR+VW Lisbon, Portugal",
+                "global_code": "8CCGPRMR+VW"
+            },
+            "rating": 3.9,
+            "reference": "ChIJtyVgjRIzGQ0RwL0mi6tTLms",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 18,
+            "vicinity": "Rua Fialho de Almeida 38, Lisboa"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.8068172,
+                    "lng": -9.2012783
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.80808078029149,
+                        "lng": -9.1999231197085
+                    },
+                    "southwest": {
+                        "lat": 38.80538281970849,
+                        "lng": -9.202621080291504
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Silva Monteiro",
+            "opening_hours": {
+                "open_now": true
+            },
+            "place_id": "ChIJecdWAbrSHg0RERD67q9UHoc",
+            "plus_code": {
+                "compound_code": "RQ4X+PF Ramada, Portugal",
+                "global_code": "8CCGRQ4X+PF"
+            },
+            "rating": 4.5,
+            "reference": "ChIJecdWAbrSHg0RERD67q9UHoc",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 22,
+            "vicinity": "Portugal"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7674783,
+                    "lng": -9.202745799999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.7688524802915,
+                        "lng": -9.201418169708498
+                    },
+                    "southwest": {
+                        "lat": 38.7661545197085,
+                        "lng": -9.204116130291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Cruz Correia",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1920,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/116639055341858718465\">Manel S Lima</a>"
+                    ],
+                    "photo_reference": "ATplDJY-cWe1n7A4HzCVGVgewp-dWoZdgdzGCjuHezRWoRi8MgCD--ZIwYhUTXYzL9-hesBsKWI5Iltzft4r4NAG9owNRfLyz10-7yU7Je_RUvqtOkCU6RZZSS_-MpGS0IhvEHE2cnRr6rF_YrAvVDjAHmex87w-E3Y1BJg486zG5mLYiHBg",
+                    "width": 1080
+                }
+            ],
+            "place_id": "ChIJ4Qmc994yGQ0RXO699YFyDUQ",
+            "plus_code": {
+                "compound_code": "QQ8W+XW Pontinha, Portugal",
+                "global_code": "8CCGQQ8W+XW"
+            },
+            "rating": 4,
+            "reference": "ChIJ4Qmc994yGQ0RXO699YFyDUQ",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 7,
+            "vicinity": "Rua de Santo Eloy 41 A, Pontinha"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 38.7791582,
+                    "lng": -9.235466299999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 38.78046293029151,
+                        "lng": -9.234090369708499
+                    },
+                    "southwest": {
+                        "lat": 38.77776496970851,
+                        "lng": -9.236788330291503
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/pharmacy-71.png",
+            "icon_background_color": "#F88181",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/pharmacy_pinlet",
+            "name": "Farmácia Tanara Amadora",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 4032,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/102269203279718083655\">Alexandre Canadas</a>"
+                    ],
+                    "photo_reference": "ATplDJbDVASJyuRJ-mlkDTyHPKZ1Aqz3eC3ByfCdnYhnT6H9XN_2xjUH4kXDYRzszq-11VRTayAQSxzsInBUBBJyT2qXrO8JntnPjnnpynXYKlkfkN4ofbSxXb9eFeoCEuwSS47PH7QReb19UIkjezbQPevFMaR_1dul8v-Qw6qOf3mWrhWN",
+                    "width": 3024
+                }
+            ],
+            "place_id": "ChIJrQbpt4LNHg0RVt7gdFzBy_4",
+            "plus_code": {
+                "compound_code": "QQH7+MR Amadora, Portugal",
+                "global_code": "8CCGQQH7+MR"
+            },
+            "rating": 3.4,
+            "reference": "ChIJrQbpt4LNHg0RVt7gdFzBy_4",
+            "scope": "GOOGLE",
+            "types": [
+                "pharmacy",
+                "store",
+                "point_of_interest",
+                "health",
+                "establishment"
+            ],
+            "user_ratings_total": 23,
+            "vicinity": "Avenida Doutor Armando Romão 3A, Amadora"
+        }
+    ],
+    "status": "OK"
+}

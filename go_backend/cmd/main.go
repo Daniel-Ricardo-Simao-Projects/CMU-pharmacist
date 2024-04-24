@@ -3,16 +3,19 @@ package main
 import (
 	api "go_backend/internal/api"
 	config "go_backend/internal/config"
+	"log"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	config.ResetDatabase()
-	config.RemoveImagesDir()
+	if err := config.OpenDB(); err != nil {
+		log.Fatal(err)
+	}
+	defer config.CloseDB()
 
-	gin.SetMode(gin.ReleaseMode)
+	//gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
 	r.Use(cors.Default())
