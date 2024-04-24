@@ -8,6 +8,24 @@ import (
 	models "go_backend/internal/models"
 )
 
+func GetUserByUsername(username string) *models.User {
+	db, err := config.OpenDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer config.CloseDB(db)
+
+	row := db.QueryRow("SELECT * FROM users WHERE username = ?", username)
+
+	var user models.User
+	err = row.Scan(&user.Id, &user.Username, &user.Password)
+	if err != nil {
+		return nil
+	}
+
+	return &user
+}
+
 func AddUser(user models.User) {
 	db, err := config.OpenDB()
 	if err != nil {

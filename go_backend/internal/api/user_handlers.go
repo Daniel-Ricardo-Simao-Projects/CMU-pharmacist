@@ -6,6 +6,7 @@ import (
 
 	db "go_backend/internal/database"
 	models "go_backend/internal/models"
+	services "go_backend/internal/services"
 	utils "go_backend/internal/utils"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,13 @@ func AddUserHandler(c *gin.Context) {
 		return
 	}
 
-	db.AddUser(newUser)
+	// db.AddUser(newUser)
+	err := services.AddUser(newUser)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.Error("Error adding user")
+		return
+	}
 	c.JSON(http.StatusCreated, gin.H{"message": "User added successfully"})
 	utils.Info("User added successfully")
 }
