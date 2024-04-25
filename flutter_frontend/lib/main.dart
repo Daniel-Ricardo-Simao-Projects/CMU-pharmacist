@@ -14,9 +14,9 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Transparent status bar
-    systemNavigationBarColor: Colors.transparent, // Transparent navigation bar
+    //systemNavigationBarColor: Colors.transparent, // Transparent navigation bar
   ));
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const MyApp());
 }
 
@@ -56,7 +56,7 @@ class MyHomePage extends StatelessWidget {
       ),
       body: const Center(
         child: Padding(
-          padding: EdgeInsets.only(bottom: 20),
+          padding: EdgeInsets.only(bottom: 40),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

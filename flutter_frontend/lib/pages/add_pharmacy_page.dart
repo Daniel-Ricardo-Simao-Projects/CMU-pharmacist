@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:image_picker/image_picker.dart';

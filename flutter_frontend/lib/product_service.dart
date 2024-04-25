@@ -18,7 +18,7 @@ class ProductService {
         )
         .toList();
     }
-    on DioError {
+    on DioException {
       products = [];
     }
 

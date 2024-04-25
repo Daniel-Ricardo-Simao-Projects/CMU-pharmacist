@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import '../models/pharmacy_model.dart';
 import 'dart:convert';
@@ -31,19 +33,19 @@ class PharmacyService {
     try {
       final res = await dio.get(pharmaciesURL);
 
-      print("GETTING PHARMACIES");
+      log("GETTING PHARMACIES");
       pharmacies = res.data['pharmacies']
           .map<Pharmacy>(
             (item) => Pharmacy.fromJson(item),
           )
           .toList();
-      for (var pharmacy in pharmacies) {
-        print(pharmacy.name);
-        print(pharmacy.address);
-      }
+      // for (var pharmacy in pharmacies) {
+      //   log(pharmacy.name);
+      //   log(pharmacy.address);
+      // }
     } catch (e) {
       // verbose error with stack trace
-      print(e);
+      log(e.toString());
 
       pharmacies = [];
     }
