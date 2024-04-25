@@ -5,6 +5,7 @@ import 'package:flutter_frontend/pages/maps.dart';
 import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/product_service.dart';
 import 'package:flutter_frontend/product_model.dart';
+import 'package:flutter_frontend/themes/colors.dart';
 
 import 'models/pharmacy_model.dart';
 import 'services/pharmacy_service.dart';
@@ -50,20 +51,28 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: backgroundColor,
         title: Text(title),
       ),
       body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: PharmacyList(),
-              //child: ProductList(),
-            ),
-            AddPharmacyButton(),
-            ShowMapButton(),
-          ],
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: PharmacyList(),
+                //child: ProductList(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  AddPharmacyButton(),
+                  ShowMapButton(),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -167,7 +176,8 @@ class _PharmacyListState extends State<PharmacyList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PharmacyInfoPanel(pharmacy: pharmacy),
+                      builder: (context) =>
+                          PharmacyInfoPanel(pharmacy: pharmacy),
                     ),
                   );
                 },
