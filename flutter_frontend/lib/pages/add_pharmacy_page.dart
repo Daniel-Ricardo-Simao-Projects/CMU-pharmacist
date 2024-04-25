@@ -283,6 +283,7 @@ AppBar appbar(BuildContext context) {
         fontFamily: 'RobotoMono',
         fontVariations: [FontVariation('wght', 700)],
         color: textColor,
+        fontSize: 20,
       ),
     ),
     // By default the appBar adds a back button, but we can customize it

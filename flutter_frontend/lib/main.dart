@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/maps.dart';
+import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/product_service.dart';
 import 'package:flutter_frontend/product_model.dart';
 
@@ -162,6 +163,14 @@ class _PharmacyListState extends State<PharmacyList> {
               return ListTile(
                 title: Text(pharmacies[index].name),
                 subtitle: Text(pharmacy.address),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PharmacyInfoPanel(pharmacy: pharmacy),
+                    ),
+                  );
+                },
               );
             },
           ),
