@@ -41,7 +41,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: appbar(context),
+      appBar: _appBar(context),
       body: Padding(
           padding:
               const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
@@ -274,7 +274,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   }
 }
 
-AppBar appbar(BuildContext context) {
+AppBar _appBar(BuildContext context) {
   return AppBar(
     backgroundColor: backgroundColor,
     title: const Text(
