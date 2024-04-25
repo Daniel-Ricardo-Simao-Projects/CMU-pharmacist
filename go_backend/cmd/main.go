@@ -10,6 +10,8 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	if err := config.OpenDB(); err != nil {
 		log.Fatal(err)
 	}

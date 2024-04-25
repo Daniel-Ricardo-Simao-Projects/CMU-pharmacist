@@ -45,7 +45,7 @@ func AddPharmacy(pharmacy models.Pharmacy) {
 	}
 
 	// save picture (create directory if not exists)
-	imagePath := "internal/images/" + pharmacy.Name + ".png"
+	imagePath := "internal/images/pharmacies/" + pharmacy.Name + ".png"
 
 	err = os.WriteFile(imagePath, imageData, 0644)
 	if err != nil {
