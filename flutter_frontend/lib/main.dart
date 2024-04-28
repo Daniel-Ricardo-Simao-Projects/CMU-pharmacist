@@ -9,6 +9,7 @@ import 'package:flutter_frontend/themes/colors.dart';
 
 import 'models/pharmacy_model.dart';
 import 'services/pharmacy_service.dart';
+import 'services/user_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +62,8 @@ class MyHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: PharmacyList(),
+                child: UserLogin(),
+                //child: PharmacyList(),
                 //child: ProductList(),
               ),
               Row(
@@ -101,6 +103,78 @@ class AddPharmacyButton extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const AddPharmacyPage()),
           );
         });
+  }
+}
+
+class UserLogin extends StatefulWidget {
+  const UserLogin({super.key});
+
+  @override
+  State<UserLogin> createState() => _UserLoginState();
+}
+
+class _UserLoginState extends State<UserLogin> {
+  final _userService = UserService();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _isLoggedIn = false; // Add this variable to track login state
+
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    bool isAuthenticated =
+        await _userService.authenticateUser(username, password);
+
+    setState(() {
+      _isLoading = false;
+      _isLoggedIn = isAuthenticated; // Update login state
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: _isLoggedIn ? const Text('Pharmacy List') : const Text('Login'),
+      ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : _isLoggedIn // Display pharmacy list if logged in and change app bar title to 'Pharmacy List'
+              ? const PharmacyList()
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextField(
+                        controller: _usernameController,
+                        decoration:
+                            const InputDecoration(labelText: 'Username'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration:
+                            const InputDecoration(labelText: 'Password'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: _login,
+                        child: const Text('Login'),
+                      ),
+                    ],
+                  ),
+                ),
+    );
   }
 }
 

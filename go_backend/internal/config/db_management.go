@@ -14,7 +14,7 @@ import (
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = "password"
+	dbPass   = <YOUR_PASSWORD>
 	dbName   = "pharmacist_app"
 )
 
@@ -108,6 +108,12 @@ func PopulateDatabase() {
 		("Farmácia Silva Monteiro", "Portugal", "internal/images/pharmacies/FarmaciaSilvaMonteiro.png"),
 		("Farmácia Cruz Correia", "Rua de Santo Eloy 41 A, Pontinha", "internal/images/pharmacies/FarmaciaCruzCorreia.png"),
 		("Farmácia Tanara Amadora", "Avenida Doutor Armando Romão 3A, Amadora", "internal/images/pharmacies/FarmaciaTanaraAmadora.png")
+	`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = DB.Exec(`INSERT INTO users (username, password) VALUES
+		("admin", "1234")
 	`)
 	if err != nil {
 		log.Fatal(err)

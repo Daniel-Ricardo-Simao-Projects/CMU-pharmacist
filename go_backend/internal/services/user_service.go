@@ -23,3 +23,18 @@ func AddUser(user models.User) error {
 	db.AddUser(user)
 	return nil
 }
+
+func AuthenticateUser(username, password string) error {
+	user := db.GetUserByUsername(username)
+	if user == nil {
+		utils.Error("User not found")
+		return errors.New("User not found")
+	}
+
+	if user.Password != password {
+		utils.Error("Invalid password")
+		return errors.New("Invalid password")
+	}
+
+	return nil
+}

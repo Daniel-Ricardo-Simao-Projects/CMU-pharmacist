@@ -18,6 +18,24 @@ func GetUsersHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"Users": users})
 }
 
+func AuthenticateUserHandler(c *gin.Context) {
+	var user models.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.Error("Error binding JSON")
+		return
+	}
+
+	if err := services.AuthenticateUser(user.Username, user.Password); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		utils.Error("Error authenticating user")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User authenticated successfully"})
+	utils.Info("User authenticated successfully")
+}
+
 func AddUserHandler(c *gin.Context) {
 	var newUser models.User
 	if err := c.ShouldBindJSON(&newUser); err != nil {
