@@ -62,8 +62,8 @@ class MyHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: UserLogin(),
-                //child: PharmacyList(),
+                //child: UserLogin(),
+                child: PharmacyList(),
                 //child: ProductList(),
               ),
               Row(

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
+import 'package:flutter_frontend/pages/add_medicine_page.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 
 class PharmacyInfoPanel extends StatefulWidget {
@@ -61,7 +62,13 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
             ],
           ),
           child: IconButton(
-            onPressed: () {}, // TODO: Implement add medicine logic
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AddMedicinePage()),
+              );
+            },
             icon: const Icon(Icons.add, color: backgroundColor, size: 30),
           ),
         ),
@@ -83,7 +90,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
           ),
         ),
         const SizedBox(height: 10),
-        Container( // TODO: Change this do list view and add medicines containers
+        Container(
+          // TODO: Change this do list view and add medicines containers
           height: 200,
           width: double.infinity,
           decoration: BoxDecoration(
