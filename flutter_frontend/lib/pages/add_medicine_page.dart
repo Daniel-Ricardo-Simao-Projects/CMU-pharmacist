@@ -1,14 +1,73 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/models/medicine_model.dart';
+import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddMedicinePage extends StatefulWidget {
-  const AddMedicinePage({super.key});
+  final int PharmacyId;
+
+  const AddMedicinePage({super.key, required this.PharmacyId});
 
   @override
   _AddMedicinePageState createState() => _AddMedicinePageState();
 }
 
 class _AddMedicinePageState extends State<AddMedicinePage> {
+  String _name = '';
+  int _stock = 0;
+  String _details = '';
+  File? _image;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final result = await picker.pickImage(source: source);
+
+    setState(() {
+      _image = File(result!.path);
+    });
+  }
+
+  Future<void> _captureImage() async {
+    final picker = ImagePicker();
+    final result = await picker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = File(result!.path);
+    });
+  }
+
+  void _incrementStock() {
+    setState(() {
+      _stock++;
+    });
+  }
+
+  void _decrementStock() {
+    setState(() {
+      if (_stock > 0) {
+        _stock--;
+      }
+    });
+  }
+
+  void _saveMedicine(
+      String name, int stock, String details, File file, int pharmacyId) {
+    List<int> imageBytes = file.readAsBytesSync();
+    Medicine newMedicine = Medicine(
+      id: 0,
+      name: name,
+      stock: stock,
+      details: details,
+      picture: imageBytes,
+      pharmacyId: pharmacyId,
+    );
+    MedicineService().addMedicine(newMedicine);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,14 +88,14 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             const SizedBox(height: 20),
             _addDetailsField(),
             const SizedBox(height: 30),
-            _bottomButtons(),
+            _bottomButtons(widget.PharmacyId),
           ],
         ),
       ),
     );
   }
 
-  Widget _bottomButtons() {
+  Widget _bottomButtons(int pharmacyId) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -65,7 +124,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
               elevation: 0,
             ),
             onPressed: () {
-              // TODO: Add save medicine logic
+              _saveMedicine(_name, _stock, _details, _image!, pharmacyId);
             },
             child: const Text(
               'Save',
@@ -96,7 +155,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           ),
           child: IconButton(
             onPressed: () {
-              // TODO: Add take photo logic
+              _captureImage();
             },
             icon: const Icon(
               Icons.photo_camera_outlined,
@@ -153,7 +212,9 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             return null;
           },
           onChanged: (value) {
-            // TODO: Update medicine details variable with entered value
+            setState(() {
+              _details = value;
+            });
           },
         ),
       ],
@@ -174,16 +235,18 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       Row(
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _decrementStock();
+            },
             icon: const Icon(
               Icons.remove,
               color: accentColor,
             ),
           ),
-          const Text(
+          Text(
             //TODO: Change this to input field
-            '24',
-            style: TextStyle(
+            '$_stock',
+            style: const TextStyle(
               fontFamily: 'RobotoMono',
               fontVariations: [FontVariation('wght', 400)],
               color: textColor,
@@ -191,7 +254,9 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _incrementStock();
+            },
             icon: const Icon(
               Icons.add,
               color: accentColor,
@@ -232,6 +297,11 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
               borderSide: BorderSide(color: accentColor),
             ),
           ),
+          onChanged: (value) {
+            setState(() {
+              _name = value;
+            });
+          },
         ),
       ],
     );
@@ -240,7 +310,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   InkWell _imagePreview() {
     return InkWell(
       onTap: () {
-        //_pickImage(ImageSource.gallery);
+        _pickImage(ImageSource.gallery);
       },
       child: Container(
         width: double.infinity,
@@ -256,25 +326,32 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             ),
           ],
         ),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add_photo_alternate_outlined,
-              size: 35,
-              color: accentColor,
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Click to add picture',
-              style: TextStyle(
-                fontFamily: 'RobotoMono',
-                fontVariations: [FontVariation('wght', 400)],
-                fontSize: 15,
+        child: _image != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.file(
+                  _image!,
+                  fit: BoxFit.cover,
+                ))
+            : const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add_photo_alternate_outlined,
+                    size: 35,
+                    color: accentColor,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Click to add picture',
+                    style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontVariations: [FontVariation('wght', 400)],
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

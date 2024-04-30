@@ -36,5 +36,8 @@ func main() {
 	r.GET("/pharmacies", api.GetPharmacyHandler)
 	r.POST("/pharmacies", api.AddPharmacyHandler)
 
+	r.GET("/medicines", api.GetMedicineHandler)
+	r.POST("/medicines", api.AddMedicineHandler)
+
 	r.Run(":5000")
 }

@@ -37,12 +37,12 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         const SizedBox(height: 25),
         _pharmacyMedicines(pharmacy),
         const SizedBox(height: 25),
-        _addMedicineButton(), // TODO: Maybe needs the pharmacy (?)
+        _addMedicineButton(pharmacy.id), // TODO: Maybe needs the pharmacy (?)
       ],
     );
   }
 
-  Widget _addMedicineButton() {
+  Widget _addMedicineButton(int pharmacyId) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -66,7 +66,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const AddMedicinePage()),
+                    builder: (context) => AddMedicinePage(PharmacyId: pharmacyId)),
               );
             },
             icon: const Icon(Icons.add, color: backgroundColor, size: 30),
