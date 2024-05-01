@@ -1,8 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_medicine_page.dart';
+import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 
 class PharmacyInfoPanel extends StatefulWidget {
@@ -27,9 +30,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         ));
   }
 
-  Column _pharmacyInfo(Pharmacy pharmacy) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  ListView _pharmacyInfo(Pharmacy pharmacy) {
+    return ListView(
       children: [
         _pharmacyImage(),
         const SizedBox(height: 20),
@@ -37,7 +39,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         const SizedBox(height: 25),
         _pharmacyMedicines(pharmacy),
         const SizedBox(height: 25),
-        _addMedicineButton(pharmacy.id), // TODO: Maybe needs the pharmacy (?)
+        _addMedicineButton(pharmacy.id),
       ],
     );
   }
@@ -66,7 +68,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => AddMedicinePage(PharmacyId: pharmacyId)),
+                    builder: (context) =>
+                        AddMedicinePage(PharmacyId: pharmacyId)),
               );
             },
             icon: const Icon(Icons.add, color: backgroundColor, size: 30),
@@ -91,8 +94,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         ),
         const SizedBox(height: 10),
         Container(
-          // TODO: Change this do list view and add medicines containers
-          height: 200,
+          height: 220,
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
@@ -105,6 +107,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               ),
             ],
           ),
+          child: MedicineList(pharmacyId: pharmacy.id),
         ),
       ],
     );
@@ -129,31 +132,35 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 8, bottom: 8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pharmacy.name,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 700)],
-                    color: primaryColor,
-                    fontSize: 17,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, top: 8, bottom: 8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    pharmacy.name,
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontVariations: [FontVariation('wght', 700)],
+                      color: primaryColor,
+                      fontSize: 17,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                Text(
-                  pharmacy.address,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 400)],
-                    color: Colors.white,
-                    fontSize: 13,
+                  Text(
+                    pharmacy.address,
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontVariations: [FontVariation('wght', 400)],
+                      color: Colors.white,
+                      fontSize: 13,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           IconButton(
@@ -223,5 +230,83 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
 
   Uint8List _decodeImage(List<int> imageBytes) {
     return Uint8List.fromList(imageBytes);
+  }
+}
+
+class MedicineList extends StatefulWidget {
+  final int pharmacyId;
+  const MedicineList({super.key, required this.pharmacyId});
+
+  @override
+  State<MedicineList> createState() => _MedicineListState();
+}
+
+class _MedicineListState extends State<MedicineList> {
+  final medicineService = MedicineService();
+  late Future<List<Medicine>> medicines;
+
+  @override
+  initState() {
+    super.initState();
+    medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacyId);
+  }
+
+  Future<void> _refreshMedicines() async {
+    setState(() {
+      medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacyId);
+    });
+  }
+
+  Uint8List _decodeImage(List<int> imageBytes) {
+    return Uint8List.fromList(imageBytes);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Medicine>>(
+      future: medicines,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('Error'));
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  snapshot.data![index].name,
+                  style: const TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontVariations: [FontVariation('wght', 700)],
+                    color: accentColor,
+                    fontSize: 17,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                subtitle: Text(
+                  snapshot.data![index].details,
+                  style: const TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontVariations: [FontVariation('wght', 400)],
+                    color: Colors.black87,
+                    fontSize: 13,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                leading: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: MemoryImage(
+                    _decodeImage(snapshot.data![index].picture),
+                  ),
+                ),
+                trailing: Text('Stock: ${snapshot.data![index].stock}'),
+              );
+            },
+          );
+        }
+      },
+    );
   }
 }

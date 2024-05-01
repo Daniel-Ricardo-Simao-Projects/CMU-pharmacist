@@ -10,23 +10,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TODO: implement GetMedicineHandler
-func GetMedicineHandler(c *gin.Context) {
-  var medicine models.Medicine
-	if err := c.ShouldBindJSON(&medicine); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		utils.Error("Error binding JSON")
-		return
-	}
-	// medicines := db.GetMedicines(medicine.PharmacyId)
+type PharmacyMessage struct {
+    PharmacyID int `json:"pharmacyId"`
+}
 
-	// c.JSON(http.StatusOK, gin.H{"medicines": medicines})
+func GetMedicineHandler(c *gin.Context) {
+  var pharmacyMessage PharmacyMessage
+  if err := c.ShouldBindJSON(&pharmacyMessage); err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    utils.Error("Error binding JSON")
+    return
+  }
+  println(pharmacyMessage.PharmacyID)
+	medicines := db.GetMedicines(pharmacyMessage.PharmacyID)
+
+	c.JSON(http.StatusOK, gin.H{"medicines": medicines})
 }
 
 func AddMedicineHandler(c *gin.Context) {
 	var newMedicine models.Medicine
 	if err := c.ShouldBindJSON(&newMedicine); err != nil {
-    println(c.Keys)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		utils.Error("Error binding JSON")
 		return

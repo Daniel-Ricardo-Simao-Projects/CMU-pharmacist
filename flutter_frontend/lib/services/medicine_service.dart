@@ -28,10 +28,10 @@ class MedicineService {
   }
 
   // To Show in the pharmacy panel
-  Future<List<Medicine>> getMedicines() async {
+  Future<List<Medicine>> getMedicinesFromPharmacy(int pharmacyId) async {
     late List<Medicine> medicines;
     try {
-      final res = await dio.get(medicineURL);
+      final res = await dio.get(medicineURL, data: {'pharmacyId': pharmacyId});
 
       medicines = res.data['medicines']
           .map<Medicine>(

@@ -11,34 +11,38 @@ import (
 	utils "go_backend/internal/utils"
 )
 
-// TODO: implement GetMedicines
-// func GetMedicines(pharmacyId int) []models.Medicine {
-// 	rows, err := config.DB.Query("SELECT * FROM pharmacies")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-//
-// 	pharmacies := []models.Pharmacy{}
-// 	// iterate over each row, watch out: send picture as base64
-// 	for rows.Next() {
-// 		var pharmacy models.Pharmacy
-// 		err := rows.Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Date)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-//
-// 		// read picture
-// 		imageData, err := os.ReadFile(pharmacy.Picture)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		pharmacy.Picture = base64.StdEncoding.EncodeToString(imageData)
-//
-// 		pharmacies = append(pharmacies, pharmacy)
-// 	}
-//
-// 	return pharmacies
-// }
+func GetMedicines(pharmacyId int) []models.Medicine {
+	rows, err := config.DB.Query("SELECT * FROM medicine_pharmacy WHERE pharmacy_id = ?", pharmacyId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	medicines := []models.Medicine{}
+	for rows.Next() {
+		var medicine models.Medicine
+		err := rows.Scan(&medicine.Id, &medicine.PharmacyId, &medicine.Stock)
+		if err != nil {
+			log.Fatal(err)
+		}
+    var image_path string
+		err = config.DB.QueryRow("SELECT * FROM medicines WHERE id = ?", medicine.Id).
+      Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path)
+
+    if err != nil {
+      log.Fatal(err)
+    }
+
+		imageData, err := os.ReadFile(image_path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		medicine.Picture = base64.StdEncoding.EncodeToString(imageData)
+
+    medicines = append(medicines, medicine)
+	}
+
+	return medicines
+}
 
 func AddMedicine(medicine models.Medicine) {
 	imageData, err := base64.StdEncoding.DecodeString(medicine.Picture)
@@ -70,7 +74,7 @@ func AddMedicine(medicine models.Medicine) {
 			log.Fatal(err)
 		}
 
-    // Get the medicine id
+		// Get the medicine id
 		err = config.DB.QueryRow("SELECT id FROM medicines WHERE name = ?", medicine.Name).Scan(&medicineId)
 		if err != nil && err != sql.ErrNoRows {
 			log.Fatal(err)
