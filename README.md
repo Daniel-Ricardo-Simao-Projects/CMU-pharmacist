@@ -56,25 +56,32 @@ With the database configuration set, you can now run the backend with the follow
     - [ ] Favorite pharmacies have a different marker;
     - [ ] Tapping a marker goes to a pharmacy information panel;
 - [ ] There should be an option to add a new pharmacy with:
-    - [ ] Name;
+    - [x] Name;
     - [ ] Pick location on map, use address, or current location;
-    - [ ] Take picture;
+        - *Note: location is just a string, no map integration yet.*
+    - [x] Take picture;
 - [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
 - [ ] Pharmacy Information Panel:
-    - [ ] Show name, location on map, and picture. Button to navigate there;
-    - [ ] List available medicines;
+    - [x] Show name
+    - [ ] Show location. Button to navigate there;
+        - *Note: location is just a string, no map integration yet.*
+    - [x] Show picture
+    - [x] List available medicines;
     - [ ] Button to add medicine stock (scan barcode)or create medicine if code unknown:
-        - [ ] Name;
-        - [ ] Box photo (from camera or file);
-        - [ ] Quantity;
-        - [ ] Purpose/Preferred Use;
+        - [ ] *Note: Add barcode and automated support*
+        - [x] Name;
+        - [x] Box photo (from camera or file);
+        - [x] Quantity;
+        - [x] Purpose/Preferred Use;
     - [ ] Button to purchase/reduce stock (scan barcode);
     - [ ] Button to add/remove from favorites;
-    - [ ] Tapping medicines opens medicine information panel;
+    - [x] Tapping medicines opens medicine information panel;
 - [ ] Medicine Information Panel:
-    - [ ] Show name and picture;
+    - [x] Show name and picture;
     - [ ] Button to get notification when available in favorite pharmacy;
     - [ ] List pharmacies where available, sorted by distance.
+        - [x] List pharmacies where available.
+        - [ ] *Note: Sorted by distance.*
 
 ## Optional Features
 - [ ] Securing Communication;
