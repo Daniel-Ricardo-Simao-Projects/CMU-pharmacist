@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_medicine_page.dart';
+import 'package:flutter_frontend/pages/medicine_panel.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 
@@ -275,34 +276,43 @@ class _MedicineListState extends State<MedicineList> {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(
-                  snapshot.data![index].name,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 700)],
-                    color: accentColor,
-                    fontSize: 17,
-                    overflow: TextOverflow.ellipsis,
+                  title: Text(
+                    snapshot.data![index].name,
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontVariations: [FontVariation('wght', 700)],
+                      color: accentColor,
+                      fontSize: 17,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                subtitle: Text(
-                  snapshot.data![index].details,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 400)],
-                    color: Colors.black87,
-                    fontSize: 13,
-                    overflow: TextOverflow.ellipsis,
+                  subtitle: Text(
+                    snapshot.data![index].details,
+                    style: const TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontVariations: [FontVariation('wght', 400)],
+                      color: Colors.black87,
+                      fontSize: 13,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: MemoryImage(
-                    _decodeImage(snapshot.data![index].picture),
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: MemoryImage(
+                      _decodeImage(snapshot.data![index].picture),
+                    ),
                   ),
-                ),
-                trailing: Text('Stock: ${snapshot.data![index].stock}'),
-              );
+                  trailing: Text('Stock: ${snapshot.data![index].stock}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MedicineInfoPage(
+                          medicine: snapshot.data![index],
+                        ),
+                      ),
+                    );
+                  });
             },
           );
         }

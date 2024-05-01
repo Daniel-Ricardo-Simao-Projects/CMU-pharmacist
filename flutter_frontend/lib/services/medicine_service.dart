@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_frontend/models/pharmacy_model.dart';
 import '../models/medicine_model.dart';
 import 'dart:convert';
 
@@ -42,6 +43,23 @@ class MedicineService {
       medicines = [];
     }
     return medicines;
+  }
+
+  // To show in the medicine panel
+  Future<List<Pharmacy>> getPharmaciesWithMedicine(int medicineId) async {
+    late List<Pharmacy> pharmacies;
+    try {
+      final res = await dio.get('$medicineURL/pharmacies', data: {'medicineId': medicineId});
+
+      pharmacies = res.data['pharmacies']
+          .map<Pharmacy>(
+            (item) => Pharmacy.fromJson(item),
+          )
+          .toList();
+    } catch (e) {
+      pharmacies = [];
+    }
+    return pharmacies;
   }
 
   // TODO: Maybe add a new method to update the stock of a medicine

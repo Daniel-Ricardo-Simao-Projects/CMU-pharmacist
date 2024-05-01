@@ -87,3 +87,42 @@ func AddMedicine(medicine models.Medicine) {
 	}
 
 }
+
+func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
+	rows, err := config.DB.Query("SELECT pharmacy_id, stock FROM medicine_pharmacy WHERE medicine_id = ?", medicineId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pharmacies := []models.Pharmacy{}
+	for rows.Next() {
+    var pharmacy models.Pharmacy
+    var stock int
+
+		err := rows.Scan(&pharmacy.Id, &stock)
+		if err != nil {
+			log.Fatal(err)
+		}
+    
+    if stock == 0 {
+      continue
+    }
+
+    var image_path string
+		err = config.DB.QueryRow("SELECT name, address, image_path FROM pharmacies WHERE id = ?", pharmacy.Id).
+      Scan(&pharmacy.Name, &pharmacy.Address, &image_path)
+    if err != nil {
+      log.Fatal(err)
+    }
+
+		imageData, err := os.ReadFile(image_path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pharmacy.Picture = base64.StdEncoding.EncodeToString(imageData)
+
+    pharmacies = append(pharmacies, pharmacy)
+	}
+
+	return pharmacies
+}
