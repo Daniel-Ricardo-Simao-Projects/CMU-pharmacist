@@ -204,7 +204,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             fontSize: 14,
           ),
           maxLines: null,
-          minLines: 5,
+          minLines: 7,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter some details about the medicine.';
@@ -289,7 +289,6 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             fontSize: 16,
           ),
           decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20),
             border: UnderlineInputBorder(
               borderSide: BorderSide(color: accentColor),
             ),

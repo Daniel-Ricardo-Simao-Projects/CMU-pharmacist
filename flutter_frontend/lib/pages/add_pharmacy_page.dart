@@ -53,56 +53,88 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
         children: [
           const SizedBox(height: 10),
           _imagePreview(),
-          const SizedBox(height: 20),
-          _addImageButtons(),
-          const SizedBox(height: 40),
+          const SizedBox(height: 60),
           _nameField(),
           const SizedBox(height: 25),
           _addressField(),
-          const SizedBox(height: 50),
-          _savePharmacy(),
+          const SizedBox(height: 150),
+          bottomButtons(),
         ],
       ),
     );
   }
 
-  Container _savePharmacy() {
-    return Container(
-      width: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: const Border(
-            bottom: BorderSide(color: primaryBorderColor, width: 4)),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          padding: const EdgeInsets.all(15),
-          shape: RoundedRectangleBorder(
+  Row bottomButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 250,
+          height: 55,
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
+            border: const Border(
+                bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                offset: Offset(0, 10),
+              ),
+            ],
           ),
-          elevation: 0,
-        ),
-        onPressed: () {
-          savePharmacy(_name, _address, _image!);
-        },
-        child: const Text(
-          'Save',
-          style: TextStyle(
-            fontFamily: 'RobotoMono',
-            fontSize: 15,
-            fontVariations: [FontVariation('wght', 500)],
-            color: textColor,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              padding: const EdgeInsets.all(15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              elevation: 0,
+            ),
+            onPressed: () {
+              savePharmacy(_name, _address, _image!);
+            },
+            child: const Text(
+              'Save',
+              style: TextStyle(
+                fontFamily: 'RobotoMono',
+                fontSize: 15,
+                fontVariations: [FontVariation('wght', 500)],
+                color: textColor,
+              ),
+            ),
           ),
         ),
-      ),
+        Container(
+          height: 55,
+          width: 55,
+          decoration: BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(15),
+            border: const Border(
+                bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                offset: Offset(0, 10),
+              ),
+            ],
+          ),
+          child: IconButton(
+            onPressed: () {
+              _captureImage();
+            },
+            icon: const Icon(
+              Icons.photo_camera_outlined,
+            ),
+            iconSize: 30,
+            padding: EdgeInsets.zero,
+            visualDensity: VisualDensity.compact,
+          ),
+        ),
+      ],
     );
   }
 
@@ -121,15 +153,9 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
         ),
         TextFormField(
           decoration: const InputDecoration(
-            //  labelText: 'Address',
-            //  labelStyle: TextStyle(
-            //    fontFamily: 'RobotoMono',
-            //    color: textColor,
-            //    fontVariations: [FontVariation('wght', 500)],
-            //  ),
             border: UnderlineInputBorder(),
             suffixIcon: Icon(
-              Icons.pin_drop_outlined,
+              Icons.add_location_alt_outlined,
               color: accentColor,
               size: 30,
             ),
@@ -176,53 +202,6 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
     );
   }
 
-  Row _addImageButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: primaryColor,
-          ),
-          child: IconButton(
-            onPressed: () {
-              _captureImage();
-            },
-            icon: const Icon(
-              Icons.photo_camera_outlined,
-            ),
-            iconSize: 30,
-            padding: EdgeInsets.zero,
-            visualDensity: VisualDensity.compact,
-          ),
-        ),
-        const SizedBox(width: 20),
-        Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: primaryColor,
-          ),
-          child: IconButton(
-            onPressed: () {
-              _pickImage(ImageSource.gallery);
-            },
-            icon: const Icon(
-              Icons.image_search_outlined,
-            ),
-            iconSize: 30,
-            padding: EdgeInsets.zero,
-            visualDensity: VisualDensity.compact,
-          ),
-        ),
-      ],
-    );
-  }
-
   InkWell _imagePreview() {
     return InkWell(
       onTap: () {
@@ -248,15 +227,24 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
                   _image!,
                   fit: BoxFit.cover,
                 ))
-            : const Center(
-                child: Text(
-                  '+ Add Picture',
-                  style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 400)],
-                    fontSize: 15,
+            : const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add_photo_alternate_outlined,
+                    size: 35,
+                    color: accentColor,
                   ),
-                ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Click to add picture',
+                    style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontVariations: [FontVariation('wght', 400)],
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
               ),
       ),
     );

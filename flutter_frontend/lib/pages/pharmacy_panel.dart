@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_medicine_page.dart';
