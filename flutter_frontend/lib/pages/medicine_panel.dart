@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
+import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 
@@ -24,7 +25,7 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
       backgroundColor: backgroundColor,
       appBar: _appBar(context),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 13),
         child: _medicineInfo(),
       ),
     );
@@ -33,96 +34,97 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
   ListView _medicineInfo() {
     return ListView(
       children: [
-        _medicineImage(),
-        const SizedBox(height: 20),
-        _medicineDescription(widget.medicine),
+        _medicineCard(widget.medicine),
         const SizedBox(height: 20),
         _pharmaciesAvailable(widget.medicine),
       ],
     );
   }
 
-  Widget _pharmaciesAvailable(Medicine medicine) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          'Pharmacies Available',
-          style: TextStyle(
-            fontFamily: 'RobotoMono',
-            fontVariations: [FontVariation('wght', 500)],
-            color: accentColor, // TODO: Add new text colors (t1, t2)
-            fontSize: 20,
-          ),
+  Widget _medicineCard(Medicine medicine) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: primaryColor,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, 10),
+            ),
+          ],
         ),
-        const SizedBox(height: 10),
-        Container(
-          height: 300,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: primaryColor,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, 10),
-              ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              _medicineImage(),
+              const SizedBox(height: 5),
+              _medicineDescription(medicine),
             ],
           ),
-          child: PharmacyList(medicineId: medicine.id),
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _pharmaciesAvailable(Medicine medicine) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Pharmacies Available',
+            style: TextStyle(
+              fontFamily: 'RobotoMono',
+              fontVariations: [FontVariation('wght', 500)],
+              color: accentColor, // TODO: Add new text colors (t1, t2)
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 10),
+          PharmacyList(medicineId: medicine.id),
+        ],
+      ),
     );
   }
 
   Widget _medicineDescription(Medicine medicine) {
     return Container(
-      height: 70,
+      height: 50,
       width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: accentColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.45),
-            spreadRadius: 0,
-            blurRadius: 5,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    medicine.name,
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontVariations: [FontVariation('wght', 700)],
-                      color: primaryColor,
-                      fontSize: 17,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    medicine.details,
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontVariations: [FontVariation('wght', 400)],
-                      color: Colors.white,
-                      fontSize: 13,
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  medicine.name,
+                  style: const TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontVariations: [FontVariation('wght', 700)],
+                    color: Colors.black,
+                    fontSize: 15,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+                Text(
+                  medicine.details,
+                  style: const TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontVariations: [FontVariation('wght', 400)],
+                    color: Colors.black54,
+                    fontSize: 12,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
         ],
@@ -132,11 +134,11 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
 
   Widget _medicineImage() {
     return Container(
-      height: 200,
+      height: 180,
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: primaryColor,
+        color: Colors.white,
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
@@ -194,7 +196,7 @@ class PharmacyList extends StatefulWidget {
 class _PharmacyListState extends State<PharmacyList> {
   final medicineService = MedicineService();
   late Future<List<Pharmacy>> pharmacies;
-  
+
   @override
   initState() {
     super.initState();
@@ -222,16 +224,113 @@ class _PharmacyListState extends State<PharmacyList> {
           return const Center(child: Text('Error fetching pharmacies'));
         } else {
           return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: MemoryImage(
-                    _decodeImage(snapshot.data![index].picture),
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: InkWell(
+                  splashColor: Colors.blue,
+                  highlightColor: Colors.blue,
+                  borderRadius: BorderRadius.circular(15),
+                  onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PharmacyInfoPanel(pharmacy: snapshot.data![index]),
+                    ),
+                  );
+                  },
+                  child: Container(
+                    height: 70,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: primaryColor,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.memory(
+                                      height: 50,
+                                      width: 50,
+                                      _decodeImage(
+                                          snapshot.data![index].picture),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 250,
+                                    child: Text(
+                                      snapshot.data![index].name,
+                                      style: const TextStyle(
+                                        fontFamily: 'RobotoMono',
+                                        fontVariations: [
+                                          FontVariation('wght', 700)
+                                        ],
+                                        color: accentColor,
+                                        fontSize: 12,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 250,
+                                    child: Text(
+                                      snapshot.data![index].address,
+                                      style: const TextStyle(
+                                        fontFamily: 'RobotoMono',
+                                        fontVariations: [
+                                          FontVariation('wght', 400)
+                                        ],
+                                        color: Colors.black54,
+                                        fontSize: 10,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                title: Text(snapshot.data![index].name),
-                subtitle: Text(snapshot.data![index].address),
               );
             },
           );
