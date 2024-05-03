@@ -93,7 +93,7 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
   }
 
   Widget _medicineDescription(Medicine medicine) {
-    return Container(
+    return SizedBox(
       height: 50,
       width: double.infinity,
       child: Row(
@@ -290,7 +290,7 @@ class _PharmacyListState extends State<PharmacyList> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 250,
                                     child: Text(
                                       snapshot.data![index].name,
@@ -306,7 +306,7 @@ class _PharmacyListState extends State<PharmacyList> {
                                       maxLines: 2,
                                     ),
                                   ),
-                                  Container(
+                                  SizedBox(
                                     width: 250,
                                     child: Text(
                                       snapshot.data![index].address,

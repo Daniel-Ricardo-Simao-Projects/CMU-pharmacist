@@ -137,7 +137,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   }
 
   Widget _pharmacyDetails(Pharmacy pharmacy) {
-    return Container(
+    return SizedBox(
       height: 50,
       width: double.infinity,
       child: Row(
@@ -340,8 +340,8 @@ class _MedicineListState extends State<MedicineList> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    flex: 0,
+                                  SizedBox(
+                                    width: 200,
                                     child: Text(
                                       snapshot.data![index].name,
                                       style: const TextStyle(
@@ -355,8 +355,8 @@ class _MedicineListState extends State<MedicineList> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 0,
+                                  SizedBox(
+                                    width: 200,
                                     child: Text(
                                       snapshot.data![index].details,
                                       style: const TextStyle(
@@ -370,8 +370,8 @@ class _MedicineListState extends State<MedicineList> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 0,
+                                  SizedBox(
+                                    width: 200,
                                     child: Text(
                                       'Stock: ${snapshot.data![index].stock}',
                                       style: const TextStyle(
