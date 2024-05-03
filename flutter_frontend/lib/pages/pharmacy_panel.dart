@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
@@ -25,23 +26,56 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         backgroundColor: backgroundColor,
         appBar: _appBar(context),
         body: Padding(
-          padding:
-              const EdgeInsets.only(left: 22, right: 22, top: 10, bottom: 16),
+          padding: const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 13),
           child: _pharmacyInfo(widget.pharmacy),
         ));
   }
 
-  ListView _pharmacyInfo(Pharmacy pharmacy) {
-    return ListView(
+  Stack _pharmacyInfo(Pharmacy pharmacy) {
+    return Stack(
       children: [
-        _pharmacyImage(),
-        const SizedBox(height: 20),
-        _pharmacyDetails(pharmacy),
-        const SizedBox(height: 25),
-        _pharmacyMedicines(pharmacy),
-        const SizedBox(height: 25),
-        _addMedicineButton(pharmacy.id),
+        ListView(
+          children: [
+            _pharmacyCard(pharmacy),
+            const SizedBox(height: 20),
+            _pharmacyMedicines(pharmacy),
+          ],
+        ),
+        Positioned(
+          bottom: 15,
+          right: 5,
+          child: _addMedicineButton(pharmacy.id),
+        ),
       ],
+    );
+  }
+
+  Widget _pharmacyCard(Pharmacy pharmacy) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: primaryColor,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              _pharmacyImage(),
+              const SizedBox(height: 5),
+              _pharmacyDetails(pharmacy),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -81,97 +115,71 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   }
 
   Widget _pharmacyMedicines(Pharmacy pharmacy) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Medicines',
-          style: TextStyle(
-            fontFamily: 'RobotoMono',
-            fontVariations: [FontVariation('wght', 500)],
-            color: accentColor, // TODO: Add new text colors (t1, t2)
-            fontSize: 20,
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Medicines',
+            style: TextStyle(
+              fontFamily: 'RobotoMono',
+              fontVariations: [FontVariation('wght', 500)],
+              color: accentColor, // TODO: Add new text colors (t1, t2)
+              fontSize: 18,
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          height: 220,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: primaryColor,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, 10),
-              ),
-            ],
-          ),
-          child: MedicineList(pharmacyId: pharmacy.id),
-        ),
-      ],
+          const SizedBox(height: 10),
+          MedicineList(pharmacyId: pharmacy.id),
+        ],
+      ),
     );
   }
 
   Widget _pharmacyDetails(Pharmacy pharmacy) {
     return Container(
-      height: 70,
+      height: 50,
       width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: accentColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.45),
-            spreadRadius: 0,
-            blurRadius: 5,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 15, top: 8, bottom: 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    pharmacy.name,
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontVariations: [FontVariation('wght', 700)],
-                      color: primaryColor,
-                      fontSize: 17,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    pharmacy.address,
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontVariations: [FontVariation('wght', 400)],
-                      color: Colors.white,
-                      fontSize: 13,
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  pharmacy.name,
+                  style: const TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontVariations: [FontVariation('wght', 700)],
+                    color: Colors.black,
+                    fontSize: 15,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+                Text(
+                  pharmacy.address,
+                  style: const TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontVariations: [FontVariation('wght', 400)],
+                    color: Colors.black54,
+                    fontSize: 12,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.pin_drop_outlined,
-              color: backgroundColor,
+          const SizedBox(width: 5),
+          InkWell(
+            onTap: () {},
+            child: const Icon(
+              Icons.explore_outlined,
+              color: Colors.black,
               size: 30,
             ),
-          ),
+          )
         ],
       ),
     );
@@ -179,18 +187,11 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
 
   Widget _pharmacyImage() {
     return Container(
-      height: 200,
+      height: 180,
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: primaryColor,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 10),
-          ),
-        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
@@ -273,36 +274,16 @@ class _MedicineListState extends State<MedicineList> {
           return const Center(child: Text('Error'));
         } else {
           return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                  title: Text(
-                    snapshot.data![index].name,
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontVariations: [FontVariation('wght', 700)],
-                      color: accentColor,
-                      fontSize: 17,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  subtitle: Text(
-                    snapshot.data![index].details,
-                    style: const TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontVariations: [FontVariation('wght', 400)],
-                      color: Colors.black87,
-                      fontSize: 13,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: MemoryImage(
-                      _decodeImage(snapshot.data![index].picture),
-                    ),
-                  ),
-                  trailing: Text('Stock: ${snapshot.data![index].stock}'),
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: InkWell(
+                  splashColor: Colors.blue,
+                  highlightColor: Colors.blue,
+                  borderRadius: BorderRadius.circular(15),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -312,7 +293,126 @@ class _MedicineListState extends State<MedicineList> {
                         ),
                       ),
                     );
-                  });
+                  },
+                  child: Container(
+                    height: 70,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: primaryColor,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: ClipRRect(
+                                    child: Image.memory(
+                                      height: 50,
+                                      width: 50,
+                                      _decodeImage(
+                                          snapshot.data![index].picture),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 0,
+                                    child: Text(
+                                      snapshot.data![index].name,
+                                      style: const TextStyle(
+                                        fontFamily: 'RobotoMono',
+                                        fontVariations: [
+                                          FontVariation('wght', 700)
+                                        ],
+                                        color: accentColor,
+                                        fontSize: 12,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 0,
+                                    child: Text(
+                                      snapshot.data![index].details,
+                                      style: const TextStyle(
+                                        fontFamily: 'RobotoMono',
+                                        fontVariations: [
+                                          FontVariation('wght', 400)
+                                        ],
+                                        color: Colors.black87,
+                                        fontSize: 10,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 0,
+                                    child: Text(
+                                      'Stock: ${snapshot.data![index].stock}',
+                                      style: const TextStyle(
+                                        fontFamily: 'RobotoMono',
+                                        fontVariations: [
+                                          FontVariation('wght', 400)
+                                        ],
+                                        color: Colors.black87,
+                                        fontSize: 10,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                onTap: () {},
+                                child: const Icon(Icons.add,
+                                    color: Colors.black,
+                                    size: 25), // TODO: Implement add stock
+                              ),
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: () {},
+                                child: const Icon(Icons.shopping_bag_outlined,
+                                    color: Colors.black,
+                                    size: 25), // TODO: Implement reduce stock
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
             },
           );
         }
