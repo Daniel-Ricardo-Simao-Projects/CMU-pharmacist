@@ -9,12 +9,11 @@ class UserService {
 
   UserService();
 
-  Future<void> addUser(User user) async {
+  Future<void> addUser(String username, String password) async {
     try {
-      // Create JSON object with base64 string
       Map<String, dynamic> userJson = {
-        'name': user.name,
-        'password': user.password,
+        'username': username,
+        'password': password,
       };
 
       await dio.post(usersURL, data: userJson);

@@ -62,8 +62,8 @@ class MyHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                //child: UserLogin(),
-                child: PharmacyList(),
+                child: UserLogin(),
+                // child: PharmacyList(),
                 //child: ProductList(),
               ),
               Row(
@@ -119,6 +119,8 @@ class _UserLoginState extends State<UserLogin> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isLoggedIn = false; // Add this variable to track login state
+  bool _isCreatingUsername =
+      false; // Add this variable to track username creation state
 
   void _login() async {
     setState(() {
@@ -137,19 +139,41 @@ class _UserLoginState extends State<UserLogin> {
     });
   }
 
+  void _createUsername() {
+    setState(() {
+      _isCreatingUsername = true;
+    });
+  }
+
+  void _saveUsername() {
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    // Here you would call the addUser method of the UserService to save the username and password
+    _userService.addUser(username, password);
+
+    setState(() {
+      _isCreatingUsername = false;
+      _isLoggedIn = true; // Automatically login after creating username
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _isLoggedIn ? const Text('Pharmacy List') : const Text('Login'),
+        title: _isLoggedIn
+            ? const Text('Pharmacy List')
+            : _isCreatingUsername
+                ? const Text('Sign in')
+                : const Text('Login'),
       ),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : _isLoggedIn // Display pharmacy list if logged in and change app bar title to 'Pharmacy List'
-              ? const PharmacyList()
-              : Padding(
+          : _isCreatingUsername
+              ? Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -168,12 +192,43 @@ class _UserLoginState extends State<UserLogin> {
                       ),
                       const SizedBox(height: 16.0),
                       ElevatedButton(
-                        onPressed: _login,
-                        child: const Text('Login'),
+                        onPressed: _saveUsername,
+                        child: const Text('Save Username'),
                       ),
                     ],
                   ),
-                ),
+                )
+              : _isLoggedIn
+                  ? const PharmacyList()
+                  : Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextField(
+                            controller: _usernameController,
+                            decoration:
+                                const InputDecoration(labelText: 'Username'),
+                          ),
+                          const SizedBox(height: 16.0),
+                          TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration:
+                                const InputDecoration(labelText: 'Password'),
+                          ),
+                          const SizedBox(height: 16.0),
+                          ElevatedButton(
+                            onPressed: _login,
+                            child: const Text('Login'),
+                          ),
+                          TextButton(
+                            onPressed: _createUsername,
+                            child: const Text('Create Username'),
+                          ),
+                        ],
+                      ),
+                    ),
     );
   }
 }

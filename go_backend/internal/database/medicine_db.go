@@ -24,13 +24,13 @@ func GetMedicines(pharmacyId int) []models.Medicine {
 		if err != nil {
 			log.Fatal(err)
 		}
-    var image_path string
+		var image_path string
 		err = config.DB.QueryRow("SELECT * FROM medicines WHERE id = ?", medicine.Id).
-      Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path)
+			Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path)
 
-    if err != nil {
-      log.Fatal(err)
-    }
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		imageData, err := os.ReadFile(image_path)
 		if err != nil {
@@ -38,7 +38,7 @@ func GetMedicines(pharmacyId int) []models.Medicine {
 		}
 		medicine.Picture = base64.StdEncoding.EncodeToString(imageData)
 
-    medicines = append(medicines, medicine)
+		medicines = append(medicines, medicine)
 	}
 
 	return medicines
@@ -96,24 +96,24 @@ func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
 
 	pharmacies := []models.Pharmacy{}
 	for rows.Next() {
-    var pharmacy models.Pharmacy
-    var stock int
+		var pharmacy models.Pharmacy
+		var stock int
 
 		err := rows.Scan(&pharmacy.Id, &stock)
 		if err != nil {
 			log.Fatal(err)
 		}
-    
-    if stock == 0 {
-      continue
-    }
 
-    var image_path string
+		if stock == 0 {
+			continue
+		}
+
+		var image_path string
 		err = config.DB.QueryRow("SELECT name, address, image_path FROM pharmacies WHERE id = ?", pharmacy.Id).
-      Scan(&pharmacy.Name, &pharmacy.Address, &image_path)
-    if err != nil {
-      log.Fatal(err)
-    }
+			Scan(&pharmacy.Name, &pharmacy.Address, &image_path)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		imageData, err := os.ReadFile(image_path)
 		if err != nil {
@@ -121,7 +121,7 @@ func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
 		}
 		pharmacy.Picture = base64.StdEncoding.EncodeToString(imageData)
 
-    pharmacies = append(pharmacies, pharmacy)
+		pharmacies = append(pharmacies, pharmacy)
 	}
 
 	return pharmacies

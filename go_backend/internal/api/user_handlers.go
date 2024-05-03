@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -43,6 +44,8 @@ func AddUserHandler(c *gin.Context) {
 		utils.Error("Error binding JSON")
 		return
 	}
+
+	fmt.Println("New user: ", newUser.Username, newUser.Password)
 
 	// db.AddUser(newUser)
 	err := services.AddUser(newUser)

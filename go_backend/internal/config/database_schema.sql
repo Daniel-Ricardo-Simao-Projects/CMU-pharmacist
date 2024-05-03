@@ -35,3 +35,10 @@ CREATE TABLE medicine_pharmacy (
   PRIMARY KEY (medicine_id, pharmacy_id)
 );
 
+CREATE TABLE favorites (
+  user_id INT NOT NULL,
+  pharmacy_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id),
+  PRIMARY KEY (user_id, pharmacy_id)
+);

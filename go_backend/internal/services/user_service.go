@@ -38,3 +38,7 @@ func AuthenticateUser(username, password string) error {
 
 	return nil
 }
+
+func GetFavoritePharmaciesByUsername(username string) []models.Pharmacy {
+	return db.GetFavoritePharmaciesByUsername(username)
+}

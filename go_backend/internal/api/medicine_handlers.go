@@ -44,13 +44,13 @@ func AddMedicineHandler(c *gin.Context) {
 }
 
 func GetPharmacyWithMedicineHandler(c *gin.Context) {
-  var message getPharmaciesMessage
-  if err := c.ShouldBindJSON(&message); err != nil {
-    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-    utils.Error("Error binding JSON")
-    return
-  }
+	var message getPharmaciesMessage
+	if err := c.ShouldBindJSON(&message); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.Error("Error binding JSON")
+		return
+	}
 
-  pharmacies := db.GetPharmaciesWithMedicine(message.MedicineID)
-  c.JSON(http.StatusOK, gin.H{"pharmacies": pharmacies})
+	pharmacies := db.GetPharmaciesWithMedicine(message.MedicineID)
+	c.JSON(http.StatusOK, gin.H{"pharmacies": pharmacies})
 }
