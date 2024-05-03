@@ -1,7 +1,10 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:dio/dio.dart';
 import '../models/user_model.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 class UserService {
   final String usersURL = 'http://localhost:5000/users';
@@ -9,14 +12,24 @@ class UserService {
 
   UserService();
 
-  Future<void> addUser(String username, String password) async {
+  Future<bool> addUser(String username, String password) async {
     try {
+      String hashedPassword = sha256.convert(utf8.encode(password)).toString();
+
       Map<String, dynamic> userJson = {
         'username': username,
-        'password': password,
+        'password': hashedPassword,
       };
 
-      await dio.post(usersURL, data: userJson);
+      final response = await dio.post(usersURL, data: userJson);
+
+      if (response.statusCode == 201) {
+        print('User added successfully');
+        return true;
+      } else {
+        print('Failed to add user');
+        return false;
+      }
     } catch (e) {
       rethrow;
     }
@@ -24,10 +37,12 @@ class UserService {
 
   Future<bool> authenticateUser(String username, String password) async {
     try {
+      String hashedPassword = sha256.convert(utf8.encode(password)).toString();
+
       // Create JSON object with username and password
       Map<String, dynamic> userData = {
         'username': username,
-        'password': password,
+        'password': hashedPassword,
       };
 
       final response = await dio.post('$usersURL/authenticate', data: userData);

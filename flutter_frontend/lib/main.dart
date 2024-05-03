@@ -145,16 +145,16 @@ class _UserLoginState extends State<UserLogin> {
     });
   }
 
-  void _saveUsername() {
+  void _saveUsername() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    // Here you would call the addUser method of the UserService to save the username and password
-    _userService.addUser(username, password);
+    bool isValidUsername = await _userService.addUser(username, password);
 
+    // Here you would call the addUser method of the UserService to save the username and password
     setState(() {
-      _isCreatingUsername = false;
-      _isLoggedIn = true; // Automatically login after creating username
+      _isCreatingUsername = !isValidUsername;
+      _isLoggedIn = isValidUsername;
     });
   }
 
