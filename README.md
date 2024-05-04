@@ -31,13 +31,18 @@ PharmacIST is an Android mobile application designed to simplify medication mana
     ```
 If the version is displayed and you are able to login to the MySQL shell, the installation was successful.
 
-Then you have to change the database configuration in the backend to match your MySQL configuration. The configuration file is located at `go_backend/config/config.go`. Change the password line to match your MySQL password. If you created another user, change the user line as well. The default configuration is as follows:
+Then you have to change the database configuration in the backend to match your MySQL configuration. The configuration file is located at `go_backend/config/db_management.go`. It uses an `.env` file that must be located in the project root directory. Create it with the following variables. Change the password line to match your MySQL password. If you created another user, change the user line as well. The default configuration is as follows:
+
+```bash
+    DB_DRIVER="mysql"
+    DB_USER="root"
+    DB_PASS=<YOUR_PASSWORD>
+    DB_NAME="pharmacist_app"
+
+```
 
 ```go
     const (
-        dbDriver = "mysql"
-        dbUser   = "root"
-        dbPass   = <YOUR_PASSWORD>
         dbName   = "pharmacist_app"
     )
 ```
