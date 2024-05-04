@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/maps.dart';
 import 'package:flutter_frontend/pages/pharmacy_panel.dart';
+import 'package:flutter_frontend/pages/user_login_page.dart';
 import 'package:flutter_frontend/product_service.dart';
 import 'package:flutter_frontend/product_model.dart';
 import 'package:flutter_frontend/themes/colors.dart';
@@ -34,52 +35,11 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromARGB(255, 73, 168, 112)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'PharmacIST'),
+      home: const LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({
-    super.key,
-    required this.title,
-  });
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: backgroundColor,
-        title: Text(title),
-      ),
-      body: const Center(
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 40),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: UserLogin(),
-                // child: PharmacyList(),
-                //child: ProductList(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  AddPharmacyButton(),
-                  ShowMapButton(),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class AddPharmacyButton extends StatelessWidget {
   const AddPharmacyButton({
@@ -103,133 +63,6 @@ class AddPharmacyButton extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const AddPharmacyPage()),
           );
         });
-  }
-}
-
-class UserLogin extends StatefulWidget {
-  const UserLogin({super.key});
-
-  @override
-  State<UserLogin> createState() => _UserLoginState();
-}
-
-class _UserLoginState extends State<UserLogin> {
-  final _userService = UserService();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
-  bool _isLoggedIn = false; // Add this variable to track login state
-  bool _isCreatingUsername =
-      false; // Add this variable to track username creation state
-
-  void _login() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    String username = _usernameController.text.trim();
-    String password = _passwordController.text.trim();
-
-    bool isAuthenticated =
-        await _userService.authenticateUser(username, password);
-
-    setState(() {
-      _isLoading = false;
-      _isLoggedIn = isAuthenticated; // Update login state
-    });
-  }
-
-  void _createUsername() {
-    setState(() {
-      _isCreatingUsername = true;
-    });
-  }
-
-  void _saveUsername() async {
-    String username = _usernameController.text.trim();
-    String password = _passwordController.text.trim();
-
-    bool isValidUsername = await _userService.addUser(username, password);
-
-    // Here you would call the addUser method of the UserService to save the username and password
-    setState(() {
-      _isCreatingUsername = !isValidUsername;
-      _isLoggedIn = isValidUsername;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _isLoggedIn
-            ? const Text('Pharmacy List')
-            : _isCreatingUsername
-                ? const Text('Sign in')
-                : const Text('Login'),
-      ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : _isCreatingUsername
-              ? Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextField(
-                        controller: _usernameController,
-                        decoration:
-                            const InputDecoration(labelText: 'Username'),
-                      ),
-                      const SizedBox(height: 16.0),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration:
-                            const InputDecoration(labelText: 'Password'),
-                      ),
-                      const SizedBox(height: 16.0),
-                      ElevatedButton(
-                        onPressed: _saveUsername,
-                        child: const Text('Save Username'),
-                      ),
-                    ],
-                  ),
-                )
-              : _isLoggedIn
-                  ? const PharmacyList()
-                  : Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextField(
-                            controller: _usernameController,
-                            decoration:
-                                const InputDecoration(labelText: 'Username'),
-                          ),
-                          const SizedBox(height: 16.0),
-                          TextField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
-                          ),
-                          const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            onPressed: _login,
-                            child: const Text('Login'),
-                          ),
-                          TextButton(
-                            onPressed: _createUsername,
-                            child: const Text('Create Username'),
-                          ),
-                        ],
-                      ),
-                    ),
-    );
   }
 }
 

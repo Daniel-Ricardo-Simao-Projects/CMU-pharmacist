@@ -24,14 +24,15 @@ class UserService {
       final response = await dio.post(usersURL, data: userJson);
 
       if (response.statusCode == 201) {
-        print('User added successfully');
+        log('User added successfully');
         return true;
       } else {
-        print('Failed to add user');
+        log('Failed to add user');
         return false;
       }
     } catch (e) {
-      rethrow;
+      log(e.toString());
+      return false;
     }
   }
 
