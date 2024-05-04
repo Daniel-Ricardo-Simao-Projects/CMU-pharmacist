@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
-import 'package:flutter_frontend/pages/maps.dart';
+import 'package:flutter_frontend/pages/maps_page.dart';
 import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/pages/user_login_page.dart';
 import 'package:flutter_frontend/product_service.dart';
@@ -10,7 +10,6 @@ import 'package:flutter_frontend/themes/colors.dart';
 
 import 'models/pharmacy_model.dart';
 import 'services/pharmacy_service.dart';
-import 'services/user_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

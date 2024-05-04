@@ -24,4 +24,4 @@
 go.work
 
 # Ignore pharmacies images
-go_backend/internal/images/*
+go_backend/internal/images/pharmacies/*

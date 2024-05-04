@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
+import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,14 +16,15 @@ class MapsPage extends StatefulWidget {
   State<MapsPage> createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin {
+class _MapsPageState extends State<MapsPage>
+    with AutomaticKeepAliveClientMixin {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
   final Set<Marker> _markers = {};
+  BitmapDescriptor _pharmacyIcon = BitmapDescriptor.defaultMarker;
 
   final _pharmacyService = PharmacyService();
-  List<Pharmacy> _pharmacies = [];
 
   String mapTheme = '';
   LatLng? _currentPosition;
@@ -33,21 +35,7 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
-    _loadPosition().then((value) {
-      setState(() {
-        _currentPosition = value;
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('Your location'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(120),
-            position: _currentPosition!,
-          ),
-        );
-      });
-    });
     _pharmacyService.getPharmacies().then((pharmacies) {
-      log('done!!');
-      _pharmacies = pharmacies;
       _addPharmacyMarkers(pharmacies);
     });
     DefaultAssetBundle.of(context)
@@ -55,23 +43,19 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
         .then((value) {
       mapTheme = value;
     });
+    BitmapDescriptor.fromAssetImage(
+      //const ImageConfiguration(devicePixelRatio: 0.01),
+      ImageConfiguration.empty,
+      'assets/icon/pharmacy_icon.png',
+    ).then((icon) {
+      _pharmacyIcon = icon;
+    }).catchError((error) {
+      log(error);
+    });
     _fetchLocationUpdates().catchError((error) {
       log(error);
     });
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _loadPosition().then((value) {
-  //     setState(() {
-  //       _currentPosition = value;
-  //     });
-  //   });
-  //   _fetchLocationUpdates().catchError((error) {
-  //     log(error);
-  //   });
-  // }
 
   @override
   void dispose() {
@@ -93,7 +77,6 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        //title: const Text('PharmacIST'),
         backgroundColor: Colors.transparent,
       ),
       body: _currentPosition == null
@@ -102,16 +85,28 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
             )
           : Stack(children: [
               GoogleMap(
-                onMapCreated: _onMapCreated,
-                style: mapTheme,
-                zoomControlsEnabled: false,
-                compassEnabled: false,
-                initialCameraPosition: CameraPosition(
-                  target: _currentPosition!,
-                  zoom: 17.0,
-                ),
-                markers: _markers,
-              ),
+                  onMapCreated: _onMapCreated,
+                  style: mapTheme,
+                  zoomControlsEnabled: false,
+                  compassEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                    target: _currentPosition!,
+                    zoom: 17.0,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId('currentPosition'),
+                      position: _currentPosition!,
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueAzure),
+                      infoWindow: const InfoWindow(
+                        title: 'Current Position',
+                        snippet: 'You are here',
+                      ),
+                    ),
+                  }.union(_markers)
+                  //_markers,
+                  ),
               //const ScrollableWidget()
             ]),
       floatingActionButton: FloatingActionButton(
@@ -146,10 +141,10 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
 
   Future<void> _savePosition(LatLng position) async {
     final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-        'currentPosition',
-        '${position.latitude},${position.longitude}',
-      );
+    await prefs.setString(
+      'currentPosition',
+      '${position.latitude},${position.longitude}',
+    );
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -173,10 +168,11 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
-      _savePosition(_currentPosition!);
+      //_savePosition(_currentPosition!);
     });
 
     const LocationSettings locationSettings = LocationSettings(
@@ -184,7 +180,8 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
       distanceFilter: 3,
     );
 
-    _statusListen = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    _statusListen =
+        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       log(status.toString());
     });
 
@@ -197,24 +194,29 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
       if (position != null) {
         setState(() {
           _currentPosition = LatLng(position.latitude, position.longitude);
-          _savePosition(_currentPosition!);
+          //_savePosition(_currentPosition!);
         });
       }
     });
   }
 
-  void _addPharmacyMarkers(pharmacies) async {
-    for (var pharmacy in pharmacies) {
+  void _addPharmacyMarkers(List<Pharmacy> pharmacies) async {
+    for (Pharmacy p in pharmacies) {
       LatLng? coordinates;
-      _getLatLngFromAddress(pharmacy.address).then((value) {
+      _getLatLngFromAddress(p.address).then((value) {
         coordinates = value;
-        //log('Coordinates: $coordinates');
+        log("new marker: ${p.name} at $coordinates");
         final marker = Marker(
-          markerId: MarkerId(pharmacy.id.toString()),
+          markerId: MarkerId(p.id.toString()),
           position: coordinates!,
+          icon: _pharmacyIcon,
           infoWindow: InfoWindow(
-            title: pharmacy.name,
-            snippet: pharmacy.address,
+            title: p.name,
+            snippet: p.address,
+          ),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PharmacyInfoPanel(pharmacy: p)),
           ),
         );
         setState(() {
