@@ -7,20 +7,26 @@ import (
 	_ "github.com/go-sql-driver/mysql" // MySQL driver
 
 	"github.com/tanimutomo/sqlfile"
+    "github.com/joho/godotenv"
 
 	"log"
 )
 
 const (
-	dbDriver = "mysql"
-	dbUser   = "root"
-	dbPass   = "1710Fedora"
 	dbName   = "pharmacist_app"
 )
 
 var DB *sql.DB
 
 func OpenDB() error {
+    if err := godotenv.Load("../.env"); err != nil {
+        log.Fatal("Error loading .env file")
+    }
+
+    dbDriver := os.Getenv("DB_DRIVER")
+    dbUser := os.Getenv("DB_USER")
+    dbPass := os.Getenv("DB_PASS")
+
 	var err error
 	DB, err = sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
 	if err != nil {
