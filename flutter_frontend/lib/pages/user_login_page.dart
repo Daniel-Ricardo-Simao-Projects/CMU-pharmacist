@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/main.dart';
 import 'package:flutter_frontend/pages/create_user_page.dart';
 import 'package:flutter_frontend/pages/maps_page.dart';
 import '../services/user_service.dart';
@@ -79,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
       if (isAuthenticated) {
         Navigator.pushReplacement(
           _dialogContext!,
-          MaterialPageRoute(builder: (context) => const MapsPage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         ScaffoldMessenger.of(_dialogContext!).showSnackBar(

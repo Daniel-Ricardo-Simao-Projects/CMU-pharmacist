@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
@@ -39,6 +41,66 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentPageIndex = 0;
+  final _pageOptions = <Widget>[
+    const MapsPage(),
+    const AddPharmacyPage(),
+    const Center(child: Text("Search")),
+    const Center(child: Text("Profile")),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pageOptions[_currentPageIndex],
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            _currentPageIndex = index;
+          });
+        },
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        indicatorColor: const Color.fromARGB(127, 20, 219, 203),
+        selectedIndex: _currentPageIndex,
+        height: 50,
+        elevation: 0,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.map),
+            icon: Icon(Icons.map_outlined),
+            label: 'Map',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.add_circle),
+            icon: Icon(Icons.add_circle_outline),
+            label: 'Add Pharmacy',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.search),
+            icon: Icon(Icons.search_outlined),
+            label: 'Search',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'Profile',
+          ),
+        ],
+        //currentIndex: _selectedIndex,
+        //onTap: _onItemTapped,
+      ),
+    );
+  }
+}
 
 class AddPharmacyButton extends StatelessWidget {
   const AddPharmacyButton({

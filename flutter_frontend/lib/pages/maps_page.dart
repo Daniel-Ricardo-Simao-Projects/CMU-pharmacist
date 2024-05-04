@@ -16,8 +16,7 @@ class MapsPage extends StatefulWidget {
   State<MapsPage> createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<MapsPage>
-    with AutomaticKeepAliveClientMixin {
+class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
@@ -83,46 +82,43 @@ class _MapsPageState extends State<MapsPage>
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Stack(children: [
-              GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  style: mapTheme,
-                  zoomControlsEnabled: false,
-                  compassEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    target: _currentPosition!,
-                    zoom: 17.0,
-                  ),
-                  markers: {
-                    Marker(
-                      markerId: const MarkerId('currentPosition'),
-                      position: _currentPosition!,
-                      icon: BitmapDescriptor.defaultMarkerWithHue(
-                          BitmapDescriptor.hueAzure),
-                      infoWindow: const InfoWindow(
-                        title: 'Current Position',
-                        snippet: 'You are here',
-                      ),
-                    ),
-                  }.union(_markers)
-                  //_markers,
-                  ),
-              //const ScrollableWidget()
-            ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          mapController.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
+          : GoogleMap(
+              onMapCreated: _onMapCreated,
+              style: mapTheme,
+              zoomControlsEnabled: false,
+              compassEnabled: false,
+              initialCameraPosition: CameraPosition(
                 target: _currentPosition!,
                 zoom: 17.0,
               ),
-            ),
-          );
-        },
-        child: const Icon(Icons.my_location),
-      ),
-      bottomNavigationBar: const BottomNavBar(),
+              markers: {
+                Marker(
+                  markerId: const MarkerId('currentPosition'),
+                  position: _currentPosition!,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueAzure),
+                  infoWindow: const InfoWindow(
+                    title: 'Current Position',
+                    snippet: 'You are here',
+                  ),
+                ),
+              }.union(_markers)
+              //_markers,
+              ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     mapController.animateCamera(
+      //       CameraUpdate.newCameraPosition(
+      //         CameraPosition(
+      //           target: _currentPosition!,
+      //           zoom: 17.0,
+      //         ),
+      //       ),
+      //     );
+      //   },
+      //   child: const Icon(Icons.my_location),
+      // ),
+      //bottomNavigationBar: const BottomNavBar(),
     );
   }
 
@@ -216,7 +212,8 @@ class _MapsPageState extends State<MapsPage>
           ),
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PharmacyInfoPanel(pharmacy: p)),
+            MaterialPageRoute(
+                builder: (context) => PharmacyInfoPanel(pharmacy: p)),
           ),
         );
         setState(() {
@@ -239,30 +236,51 @@ class _MapsPageState extends State<MapsPage>
   }
 }
 
-class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({
-    super.key,
-  });
+class BottomNavBar extends StatefulWidget {
+  const BottomNavBar({super.key});
+
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+  int _currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+    return NavigationBar(
+      onDestinationSelected: (int index) {
+        setState(() {
+          _currentPageIndex = index;
+        });
+      },
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      indicatorColor: const Color.fromARGB(127, 20, 219, 203),
+      selectedIndex: _currentPageIndex,
+      height: 60,
+      destinations: const <Widget>[
+        NavigationDestination(
+          selectedIcon: Icon(Icons.map),
+          icon: Icon(Icons.map_outlined),
+          label: 'Map',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.business),
-          label: 'Business',
+        NavigationDestination(
+          selectedIcon: Icon(Icons.add_circle),
+          icon: Icon(Icons.add_circle_outline),
+          label: 'Add Pharmacy',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.school),
-          label: 'School',
+        NavigationDestination(
+          selectedIcon: Icon(Icons.search),
+          icon: Icon(Icons.search_outlined),
+          label: 'Search',
+        ),
+        NavigationDestination(
+          selectedIcon: Icon(Icons.account_circle),
+          icon: Icon(Icons.account_circle_outlined),
+          label: 'Profile',
         ),
       ],
       //currentIndex: _selectedIndex,
-      selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
       //onTap: _onItemTapped,
     );
   }
