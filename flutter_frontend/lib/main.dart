@@ -60,7 +60,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pageOptions[_currentPageIndex],
+      body: IndexedStack(
+        index: _currentPageIndex,
+        children: _pageOptions,
+      ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
