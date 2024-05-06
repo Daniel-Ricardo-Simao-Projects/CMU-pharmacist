@@ -62,5 +62,22 @@ class MedicineService {
     return pharmacies;
   }
 
+  // To get the pharmacies from the search menu, given a medicine substring
+  Future<List<Pharmacy>> getPharmaciesFromSearch(String medicineInput) async {
+    late List<Pharmacy> pharmacies;
+    try {
+      final res = await dio.get('$medicineURL/pharmacies-search', data: {'medicineInput': medicineInput});
+
+      pharmacies = res.data['pharmacies']
+          .map<Pharmacy>(
+            (item) => Pharmacy.fromJson(item),
+          )
+          .toList();
+    } catch (e) {
+      pharmacies = [];
+    }
+    return pharmacies;
+  }
+
   // TODO: Maybe add a new method to update the stock of a medicine
 }

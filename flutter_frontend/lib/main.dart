@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
+import 'package:flutter_frontend/pages/find_medicine_page.dart';
 import 'package:flutter_frontend/pages/maps_page.dart';
 import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/pages/user_login_page.dart';
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
   final _pageOptions = <Widget>[
     const MapsPage(),
     const AddPharmacyPage(),
-    const Center(child: Text("Search")),
+    const FindMedicinePage(),
     const Center(child: Text("Profile")),
   ];
 

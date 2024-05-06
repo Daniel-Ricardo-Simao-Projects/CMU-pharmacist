@@ -126,3 +126,56 @@ func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
 
 	return pharmacies
 }
+
+func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
+  medicineInput = "%" + medicineInput + "%"
+	medicineRows, err := config.DB.Query("SELECT id FROM medicines WHERE name LIKE ?", medicineInput)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pharmacies := []models.Pharmacy{}
+	for medicineRows.Next() {
+		var medicineId string
+		err := medicineRows.Scan(&medicineId)
+		if err != nil {
+			log.Fatal(err)
+		}
+		connectionRows, err := config.DB.Query("SELECT pharmacy_id, stock FROM medicine_pharmacy WHERE medicine_id = ?", medicineId)
+		if err != nil {
+			log.Fatal(err)
+		}
+		for connectionRows.Next() {
+			var pharmacy models.Pharmacy
+			var stock int
+
+			err := connectionRows.Scan(&pharmacy.Id, &stock)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if stock == 0 {
+				continue
+			}
+
+			var image_path string
+			err = config.DB.QueryRow("SELECT name, address, image_path FROM pharmacies WHERE id = ?", pharmacy.Id).
+				Scan(&pharmacy.Name, &pharmacy.Address, &image_path)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			imageData, err := os.ReadFile(image_path)
+			if err != nil {
+				log.Fatal(err)
+			}
+			pharmacy.Picture = base64.StdEncoding.EncodeToString(imageData)
+
+			pharmacies = append(pharmacies, pharmacy)
+
+      //TODO: Ordenar lista por distancia
+		}
+	}
+
+	return pharmacies
+}

@@ -39,6 +39,7 @@ func main() {
 	r.GET("/medicines", api.GetMedicineHandler)
 	r.POST("/medicines", api.AddMedicineHandler)
 	r.GET("/medicines/pharmacies", api.GetPharmacyWithMedicineHandler)
+	r.GET("/medicines/pharmacies-search", api.SearchPharmacyWithMedicineHandler)
 
 	r.GET("/favorites", api.GetFavoritePharmaciesHandler)
 
