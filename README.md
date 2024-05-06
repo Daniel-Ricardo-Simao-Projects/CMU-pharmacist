@@ -66,6 +66,8 @@ With the database configuration set, you can now run the backend with the follow
         - *Note: location is just a string, no map integration yet.*
     - [x] Take picture;
 - [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
+    - [x] Search with a sub-string;
+    - [ ] *Note: Closest pharmacy is not implemented yet.*
 - [ ] Pharmacy Information Panel:
     - [x] Show name
     - [ ] Show location. Button to navigate there;

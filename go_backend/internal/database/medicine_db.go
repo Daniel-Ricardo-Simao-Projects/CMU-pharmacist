@@ -128,7 +128,8 @@ func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
 }
 
 func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
-  medicineInput = "%" + medicineInput + "%"
+    // TODO: Maybe sanitize input (?)
+	medicineInput = "%" + medicineInput + "%"
 	medicineRows, err := config.DB.Query("SELECT id FROM medicines WHERE name LIKE ?", medicineInput)
 	if err != nil {
 		log.Fatal(err)
@@ -173,7 +174,7 @@ func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
 
 			pharmacies = append(pharmacies, pharmacy)
 
-      //TODO: Ordenar lista por distancia
+			//TODO: Order pharmacies by distance
 		}
 	}
 
