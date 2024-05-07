@@ -55,11 +55,12 @@ With the database configuration set, you can now run the backend with the follow
 ```
 
 ## Mandatory Features
-- [ ] Allow users to create a username in the application/system.
+- [x] Allow users to create a username in the application/system.
 - [ ] Show a map with pharmacy locations:
-    - [ ] The map can be dragged, address searched, or centered on current location;
+    - [x] The map can be dragged or centered on current location;
+    - [ ] Search for pharmacy given the address
     - [ ] Favorite pharmacies have a different marker;
-    - [ ] Tapping a marker goes to a pharmacy information panel;
+    - [x] Tapping a marker goes to a pharmacy information panel;
 - [ ] There should be an option to add a new pharmacy with:
     - [x] Name;
     - [ ] Pick location on map, use address, or current location;
