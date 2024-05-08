@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
@@ -16,16 +17,18 @@ class MapsPage extends StatefulWidget {
   State<MapsPage> createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin {
+class _MapsPageState extends State<MapsPage>
+    with AutomaticKeepAliveClientMixin {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
-  final Set<Marker> _markers = {};
   BitmapDescriptor _pharmacyIcon = BitmapDescriptor.defaultMarker;
 
   final _pharmacyService = PharmacyService();
 
-  String mapTheme = '';
+  final Set<Marker> _markers = {};
+  final Map<String, dynamic> _savedMarkers = {};
+  String _mapTheme = '';
   LatLng? _currentPosition;
 
   @override
@@ -34,16 +37,25 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
+
+    _loadPosition().catchError((error) {
+      log(error);
+    });
+    _loadMarkers().catchError((error) {
+      log(error);
+    });
+
     _pharmacyService.getPharmacies().then((pharmacies) {
       _addPharmacyMarkers(pharmacies);
     });
+
     DefaultAssetBundle.of(context)
         .loadString('assets/map_themes/silver_map.json')
         .then((value) {
-      mapTheme = value;
+      _mapTheme = value;
     });
+
     BitmapDescriptor.fromAssetImage(
-      //const ImageConfiguration(devicePixelRatio: 0.01),
       ImageConfiguration.empty,
       'assets/icon/pharmacy_icon.png',
     ).then((icon) {
@@ -51,6 +63,7 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
     }).catchError((error) {
       log(error);
     });
+
     _fetchLocationUpdates().catchError((error) {
       log(error);
     });
@@ -82,29 +95,31 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : GoogleMap(
-              onMapCreated: _onMapCreated,
-              style: mapTheme,
-              zoomControlsEnabled: false,
-              compassEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: _currentPosition!,
-                zoom: 17.0,
-              ),
-              markers: {
-                Marker(
-                  markerId: const MarkerId('currentPosition'),
-                  position: _currentPosition!,
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueAzure),
-                  infoWindow: const InfoWindow(
-                    title: 'Current Position',
-                    snippet: 'You are here',
-                  ),
+          : Stack(children: [
+              GoogleMap(
+                onMapCreated: _onMapCreated,
+                style: _mapTheme,
+                zoomControlsEnabled: false,
+                compassEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  target: _currentPosition!,
+                  zoom: 17.0,
                 ),
-              }.union(_markers)
-              //_markers,
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('currentPosition'),
+                    position: _currentPosition!,
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueAzure),
+                    infoWindow: const InfoWindow(
+                      title: 'Current Position',
+                      snippet: 'You are here',
+                    ),
+                  ),
+                }.union(_markers),
+                //_markers,
               ),
+            ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           mapController.animateCamera(
@@ -122,25 +137,50 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Future<LatLng?> _loadPosition() async {
+  Future<void> _loadPosition() async {
     final prefs = await SharedPreferences.getInstance();
     final savedPosition = prefs.getString('currentPosition');
     if (savedPosition != null) {
+      log('Loading position...');
       final coordinates = savedPosition.split(',');
-      return LatLng(
-        double.parse(coordinates[0]),
-        double.parse(coordinates[1]),
-      );
+      setState(() => _currentPosition = LatLng(
+            double.parse(coordinates[0]),
+            double.parse(coordinates[1]),
+          ));
     }
-    return null;
   }
 
-  Future<void> _savePosition(LatLng position) async {
+  Future<void> _loadMarkers() async {
+    final prefs = await SharedPreferences.getInstance();
+    final markersString = prefs.getStringList('markers');
+    if (markersString != null) {
+      log('Loading markers...');
+      for (var marker in markersString) {
+        final json = jsonDecode(marker);
+        _savedMarkers.addAll(json);
+      }
+      log('Loaded markers: $_savedMarkers');
+    }
+  }
+
+  Future<void> _savePosition() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       'currentPosition',
-      '${position.latitude},${position.longitude}',
+      '${_currentPosition!.latitude},${_currentPosition!.longitude}',
     );
+  }
+
+  Future<void> _saveMarkers() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> markers = [];
+    for (Marker marker in _markers) {
+      final pharmacyid = marker.markerId.value;
+      final position =
+          '${marker.position.latitude},${marker.position.longitude}';
+      markers.add(jsonEncode({pharmacyid: position}));
+    }
+    await prefs.setStringList('markers', markers);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -168,7 +208,7 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
-      //_savePosition(_currentPosition!);
+      _savePosition();
     });
 
     const LocationSettings locationSettings = LocationSettings(
@@ -188,9 +228,12 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
           ? 'Unknown'
           : '${position.latitude.toString()}, ${position.longitude.toString()}');
       if (position != null) {
+        final pos = LatLng(position.latitude, position.longitude);
         setState(() {
-          _currentPosition = LatLng(position.latitude, position.longitude);
-          //_savePosition(_currentPosition!);
+          _currentPosition = pos;
+          _savePosition().catchError((error) {
+            log(error);
+          });
         });
       }
     });
@@ -199,28 +242,41 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
   void _addPharmacyMarkers(List<Pharmacy> pharmacies) async {
     for (Pharmacy p in pharmacies) {
       LatLng? coordinates;
-      _getLatLngFromAddress(p.address).then((value) {
-        coordinates = value;
-        log("new marker: ${p.name} at $coordinates");
-        final marker = Marker(
-          markerId: MarkerId(p.id.toString()),
-          position: coordinates!,
-          icon: _pharmacyIcon,
-          infoWindow: InfoWindow(
-            title: p.name,
-            snippet: p.address,
-          ),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PharmacyInfoPanel(pharmacy: p)),
-          ),
+      if (_savedMarkers.containsKey(p.id.toString())) {
+        log("marker already saved");
+        final positionStr =
+            _savedMarkers[p.id.toString()].toString().split(',');
+        coordinates = LatLng(
+          double.parse(positionStr[0]),
+          double.parse(positionStr[1]),
         );
-        setState(() {
-          _markers.add(marker);
+      } else {
+        await _getLatLngFromAddress(p.address).then((value) {
+          coordinates = value;
         });
-      });
+      }
+      log("new marker: ${p.name} at $coordinates");
+      final marker = Marker(
+        markerId: MarkerId(p.id.toString()),
+        position: coordinates!,
+        icon: _pharmacyIcon,
+        infoWindow: InfoWindow(
+          title: p.name,
+          snippet: p.address,
+        ),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PharmacyInfoPanel(pharmacy: p)),
+        ),
+      );
+      _markers.add(marker);
     }
+    log("saving markers....");
+    setState(() {});
+    _saveMarkers().catchError((error) {
+      log(error);
+    });
   }
 
   Future<LatLng> _getLatLngFromAddress(String address) async {
@@ -233,56 +289,6 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
       log('Error: ${e.toString()}');
     }
     return const LatLng(0, 0);
-  }
-}
-
-class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
-
-  @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
-}
-
-class _BottomNavBarState extends State<BottomNavBar> {
-  int _currentPageIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationBar(
-      onDestinationSelected: (int index) {
-        setState(() {
-          _currentPageIndex = index;
-        });
-      },
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      indicatorColor: const Color.fromARGB(127, 20, 219, 203),
-      selectedIndex: _currentPageIndex,
-      height: 60,
-      destinations: const <Widget>[
-        NavigationDestination(
-          selectedIcon: Icon(Icons.map),
-          icon: Icon(Icons.map_outlined),
-          label: 'Map',
-        ),
-        NavigationDestination(
-          selectedIcon: Icon(Icons.add_circle),
-          icon: Icon(Icons.add_circle_outline),
-          label: 'Add Pharmacy',
-        ),
-        NavigationDestination(
-          selectedIcon: Icon(Icons.search),
-          icon: Icon(Icons.search_outlined),
-          label: 'Search',
-        ),
-        NavigationDestination(
-          selectedIcon: Icon(Icons.account_circle),
-          icon: Icon(Icons.account_circle_outlined),
-          label: 'Profile',
-        ),
-      ],
-      //currentIndex: _selectedIndex,
-      //onTap: _onItemTapped,
-    );
   }
 }
 

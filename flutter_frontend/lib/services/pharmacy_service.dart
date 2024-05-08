@@ -31,9 +31,9 @@ class PharmacyService {
   Future<List<Pharmacy>> getPharmacies() async {
     late List<Pharmacy> pharmacies;
     try {
-      final res = await dio.get(pharmaciesURL);
-
       log("GETTING PHARMACIES");
+      final res = await dio.get(pharmaciesURL);
+      log('got response');
       pharmacies = res.data['pharmacies']
           .map<Pharmacy>(
             (item) => Pharmacy.fromJson(item),

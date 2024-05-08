@@ -256,7 +256,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
         Pharmacy(id: 0, name: name, address: address, picture: imageBytes);
     PharmacyService().addPharmacy(pharmacy);
 
-    Navigator.pop(context);
+    //Navigator.pop(context);
   }
 }
 
@@ -273,11 +273,11 @@ AppBar _appBar(BuildContext context) {
       ),
     ),
     // By default the appBar adds a back button, but we can customize it
-    leading: IconButton(
-      icon: const Icon(Icons.arrow_back, color: accentColor),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    ),
+    // leading: IconButton(
+    //   icon: const Icon(Icons.arrow_back, color: accentColor),
+    //   onPressed: () {
+    //     Navigator.pop(context);
+    //   },
+    // ),
   );
 }
