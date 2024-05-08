@@ -105,19 +105,19 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
               }.union(_markers)
               //_markers,
               ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     mapController.animateCamera(
-      //       CameraUpdate.newCameraPosition(
-      //         CameraPosition(
-      //           target: _currentPosition!,
-      //           zoom: 17.0,
-      //         ),
-      //       ),
-      //     );
-      //   },
-      //   child: const Icon(Icons.my_location),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: _currentPosition!,
+                zoom: 17.0,
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.my_location),
+      ),
       //bottomNavigationBar: const BottomNavBar(),
     );
   }

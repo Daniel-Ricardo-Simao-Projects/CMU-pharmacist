@@ -1,13 +1,10 @@
 import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:dio/dio.dart';
-import '../models/user_model.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
 class UserService {
-  final String usersURL = 'http://localhost:5000/users';
+  final String usersURL = '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/users';
   final Dio dio = Dio();
 
   UserService();

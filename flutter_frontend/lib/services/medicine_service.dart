@@ -4,7 +4,7 @@ import '../models/medicine_model.dart';
 import 'dart:convert';
 
 class MedicineService {
-  final String medicineURL = 'http://localhost:5000/medicines';
+  final String medicineURL = '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/medicines';
   final Dio dio = Dio();
 
   MedicineService();

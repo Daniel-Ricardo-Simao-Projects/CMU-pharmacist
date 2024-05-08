@@ -5,7 +5,7 @@ import '../models/pharmacy_model.dart';
 import 'dart:convert';
 
 class PharmacyService {
-  final String pharmaciesURL = 'http://localhost:5000/pharmacies';
+  final String pharmaciesURL = '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/pharmacies';
   final Dio dio = Dio();
 
   PharmacyService();

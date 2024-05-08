@@ -7,9 +7,6 @@ import 'package:flutter_frontend/pages/find_medicine_page.dart';
 import 'package:flutter_frontend/pages/maps_page.dart';
 import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/pages/user_login_page.dart';
-import 'package:flutter_frontend/product_service.dart';
-import 'package:flutter_frontend/product_model.dart';
-import 'package:flutter_frontend/themes/colors.dart';
 
 import 'models/pharmacy_model.dart';
 import 'services/pharmacy_service.dart';
@@ -21,6 +18,8 @@ void main() {
     //systemNavigationBarColor: Colors.transparent, // Transparent navigation bar
   ));
   //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  const url = String.fromEnvironment('URL');
+  log(url);
   runApp(const MyApp());
 }
 
@@ -208,59 +207,6 @@ class _PharmacyListState extends State<PharmacyList> {
                     ),
                   );
                 },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ProductList extends StatefulWidget {
-  const ProductList({super.key});
-
-  @override
-  ProductListState createState() => ProductListState();
-}
-
-class ProductListState extends State<ProductList> {
-  final _productService = ProductService();
-  late Future<List<Product>> _productsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _productsFuture = _productService.getProducts();
-  }
-
-  Future<void> _refreshProducts() async {
-    setState(() {
-      _productsFuture = _productService.getProducts();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Product>>(
-      future: _productsFuture,
-      builder: (context, snapshot) {
-        var products = snapshot.data ?? [];
-
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return RefreshIndicator(
-          onRefresh: _refreshProducts,
-          child: ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              var product = products[index];
-              return ListTile(
-                title: Text(products[index].name),
-                subtitle: Text('#${product.id} ${product.description}'),
-                trailing: Text('\$${product.price}'),
               );
             },
           ),

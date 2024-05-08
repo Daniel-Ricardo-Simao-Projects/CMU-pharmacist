@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/main.dart';
 import 'package:flutter_frontend/pages/create_user_page.dart';
-import 'package:flutter_frontend/pages/maps_page.dart';
 import '../services/user_service.dart';
 
 class LoginPage extends StatefulWidget {

@@ -54,6 +54,17 @@ With the database configuration set, you can now run the backend with the follow
     make run
 ```
 
+## Run flutter app
+
+You can define the backend url with the command:
+
+```bash
+    flutter run --dart-define=URL=<BACKEND_URL>:5000
+```
+
+The default URL is localhost:5000
+
+
 ## Mandatory Features
 - [x] Allow users to create a username in the application/system.
 - [ ] Show a map with pharmacy locations:
