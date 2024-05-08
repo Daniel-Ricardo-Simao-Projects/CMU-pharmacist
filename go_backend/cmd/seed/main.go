@@ -2,6 +2,7 @@ package main
 
 import (
 	config "go_backend/internal/config"
+	"go_backend/internal/services"
 	"log"
 )
 
@@ -11,5 +12,5 @@ func main() {
 	}
 	defer config.CloseDB()
 
-	config.PopulateDatabase()
+	services.PopulateDatabase()
 }

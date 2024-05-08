@@ -8,7 +8,7 @@ import (
 
 	config "go_backend/internal/config"
 	models "go_backend/internal/models"
-	utils "go_backend/internal/utils"
+	//utils "go_backend/internal/utils"
 )
 
 func GetMedicines(pharmacyId int) []models.Medicine {
@@ -59,7 +59,7 @@ func AddMedicine(medicine models.Medicine) {
 	}
 
 	// print picture
-	utils.Info(medicine.Picture)
+	//utils.Info(medicine.Picture)
 
 	var medicineId int
 	err = config.DB.QueryRow("SELECT id FROM medicines WHERE name = ?", medicine.Name).Scan(&medicineId)

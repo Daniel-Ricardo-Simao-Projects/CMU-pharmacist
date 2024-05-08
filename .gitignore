@@ -26,3 +26,4 @@ go.work
 # Ignore pharmacies and medicines images
 go_backend/internal/images/pharmacies/*
 go_backend/internal/images/medicines/*
+.vscode/

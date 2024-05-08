@@ -18,8 +18,7 @@ void main() {
     //systemNavigationBarColor: Colors.transparent, // Transparent navigation bar
   ));
   //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  const url = String.fromEnvironment('URL');
-  log(url);
+  log(const String.fromEnvironment('URL'));
   runApp(const MyApp());
 }
 
