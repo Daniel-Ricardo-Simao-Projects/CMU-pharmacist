@@ -21,11 +21,13 @@ class MapsPage extends StatefulWidget {
   State<MapsPage> createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin {
+class _MapsPageState extends State<MapsPage>
+    with AutomaticKeepAliveClientMixin {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
   BitmapDescriptor _pharmacyIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor _favoritePharmacyIcon = BitmapDescriptor.defaultMarker;
 
   final _pharmacyService = PharmacyService();
 
@@ -59,6 +61,15 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
       'assets/icon/pharmacy_icon.png',
     ).then((icon) {
       _pharmacyIcon = icon;
+    }).catchError((error) {
+      log(error);
+    });
+
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration.empty,
+      'assets/icon/favorite.png',
+    ).then((icon) {
+      _favoritePharmacyIcon = icon;
     }).catchError((error) {
       log(error);
     });
@@ -105,8 +116,8 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
                   Marker(
                     markerId: const MarkerId('currentPosition'),
                     position: _currentPosition!,
-                    icon:
-                        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueAzure),
                     infoWindow: const InfoWindow(
                       title: 'Current Position',
                       snippet: 'You are here',
@@ -207,7 +218,8 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
     List<String> markers = [];
     for (Marker marker in _markers) {
       final pharmacyid = marker.markerId.value;
-      final position = '${marker.position.latitude},${marker.position.longitude}';
+      final position =
+          '${marker.position.latitude},${marker.position.longitude}';
       markers.add(jsonEncode({pharmacyid: position}));
     }
     await prefs.setStringList('markers', markers);
@@ -215,7 +227,8 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
 
   Future<void> _savePharmacies() async {
     log("saving pharmacies....");
-    final pharmaciesJson = _pharmacies.map((pharmacy) => pharmacy.toJson()).toList();
+    final pharmaciesJson =
+        _pharmacies.map((pharmacy) => pharmacy.toJson()).toList();
     // Encode the list of pharmacy objects (not JSON strings)
     final encodedData = jsonEncode(pharmaciesJson);
     final bytes = utf8.encode(encodedData);
@@ -243,8 +256,8 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position =
-        await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
       _savePosition();
@@ -255,12 +268,14 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
       distanceFilter: 3,
     );
 
-    _statusListen = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    _statusListen =
+        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       log("status:$status.toString()");
     });
 
-    _positionListen = Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position? position) {
+    _positionListen =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position? position) {
       log(position == null
           ? 'Unknown'
           : '${position.latitude.toString()}, ${position.longitude.toString()}');
@@ -280,12 +295,17 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
     if (pharmacies.isEmpty) {
       return;
     }
+    // get favorite pharmacies ids if any
+    List<int> favoritePharmacies =
+        await _pharmacyService.getFavoritePharmaciesIds();
+
     for (Pharmacy p in pharmacies) {
       log("adding marker for ${p.name}");
       LatLng? coordinates;
       if (_savedMarkers.containsKey(p.id.toString())) {
         log("marker already saved");
-        final positionStr = _savedMarkers[p.id.toString()].toString().split(',');
+        final positionStr =
+            _savedMarkers[p.id.toString()].toString().split(',');
         coordinates = LatLng(
           double.parse(positionStr[0]),
           double.parse(positionStr[1]),
@@ -295,18 +315,22 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
           coordinates = value;
         });
       }
+
       //log("new marker: ${p.name} at $coordinates");
       final marker = Marker(
         markerId: MarkerId(p.id.toString()),
         position: coordinates!,
-        icon: _pharmacyIcon,
+        icon: favoritePharmacies.contains(p.id)
+            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
+            : _pharmacyIcon,
         infoWindow: InfoWindow(
           title: p.name,
           snippet: p.address,
         ),
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PharmacyInfoPanel(pharmacy: p)),
+          MaterialPageRoute(
+              builder: (context) => PharmacyInfoPanel(pharmacy: p)),
         ),
       );
       if (!_markers.contains(marker)) {
@@ -334,13 +358,15 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
   }
 
   Widget buildFloatingSearchBar() {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
       controller: _searchBarController,
       hint: 'Search Pharmacies...',
       borderRadius: BorderRadius.circular(50),
-      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
+      scrollPadding:
+          const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
       transitionDuration: const Duration(milliseconds: 5),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
@@ -384,8 +410,10 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
                     if (_savedMarkers.containsKey(pharmacy.id.toString())) {
                       mapController.animateCamera(
                         CameraUpdate.newLatLng(LatLng(
-                          double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[0]), 
-                          double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[1]),
+                          double.parse(_savedMarkers[pharmacy.id.toString()]
+                              .split(',')[0]),
+                          double.parse(_savedMarkers[pharmacy.id.toString()]
+                              .split(',')[1]),
                         )),
                       );
                       _searchBarController.close();
@@ -405,7 +433,6 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
       return pharmacy.name.toLowerCase().contains(query.toLowerCase()) ||
           pharmacy.address.toLowerCase().contains(query.toLowerCase());
     }).toList();
-  
   }
 }
 
