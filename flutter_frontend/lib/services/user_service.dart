@@ -2,12 +2,23 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import '../models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
-  final String usersURL = '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/users';
+  final String usersURL =
+      '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/users';
   final Dio dio = Dio();
+  late User
+      user; // user object to store the authenticated user and access it throughout the app
 
   UserService();
+
+  // getter to access the authenticated user
+  User getUser() {
+    print(user);
+    return user;
+  }
 
   Future<bool> addUser(String username, String password) async {
     try {
@@ -46,8 +57,11 @@ class UserService {
       final response = await dio.post('$usersURL/authenticate', data: userData);
 
       // Check if the response contains a message indicating successful authentication
-      if (response.statusCode == 200 &&
-          response.data['message'] == "User authenticated successfully") {
+      if (response.statusCode == 200) {
+        print("User authenticated successfully" + response.data.toString());
+        user = User.fromJson(response.data);
+        saveUser(user);
+        // Store the authenticated user in the user object
         // User authenticated successfully
         return true;
       } else {
@@ -59,5 +73,17 @@ class UserService {
       log(e.toString());
       return false;
     }
+  }
+
+  Future<void> saveUser(User user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', user.id.toString());
+    await prefs.setString('username', user.name);
+  }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userId');
+    await prefs.remove('username');
   }
 }

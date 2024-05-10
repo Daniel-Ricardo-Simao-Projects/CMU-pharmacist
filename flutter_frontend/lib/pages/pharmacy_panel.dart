@@ -7,6 +7,7 @@ import 'package:flutter_frontend/pages/add_medicine_page.dart';
 import 'package:flutter_frontend/pages/medicine_panel.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
+import 'package:flutter_frontend/services/pharmacy_service.dart';
 
 class PharmacyInfoPanel extends StatefulWidget {
   final Pharmacy pharmacy;
@@ -18,6 +19,25 @@ class PharmacyInfoPanel extends StatefulWidget {
 }
 
 class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
+  bool isFavorite = false; // Initially not a favorite
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if the pharmacy is already in user's favorites when the widget is initialized
+    checkFavoriteStatus();
+  }
+
+  void checkFavoriteStatus() async {
+    // Fetch user's favorite pharmacies
+    List<int> favoritePharmacyIds =
+        await PharmacyService().getFavoritePharmaciesIds();
+    // Check if the current pharmacy is in the list of favorites
+    setState(() {
+      isFavorite = favoritePharmacyIds.contains(widget.pharmacy.id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,11 +241,38 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
       ),
       actions: [
         IconButton(
-          onPressed: () {}, // TODO: Implement favorite logic
-          icon: const Icon(Icons.star_outline, color: accentColor),
+          onPressed: () {
+            toggleFavorite();
+          },
+          icon: Icon(
+            isFavorite ? Icons.star : Icons.star_outline,
+            color: isFavorite ? Colors.yellow : accentColor,
+          ),
         )
       ],
     );
+  }
+
+  void toggleFavorite() async {
+    if (isFavorite) {
+      // Remove from favorites
+      bool removed =
+          await PharmacyService().removeFavoritePharmacy(widget.pharmacy.id);
+      if (removed) {
+        setState(() {
+          isFavorite = false;
+        });
+      }
+    } else {
+      // Add to favorites
+      bool added =
+          await PharmacyService().addFavoritePharmacy(widget.pharmacy.id);
+      if (added) {
+        setState(() {
+          isFavorite = true;
+        });
+      }
+    }
   }
 
   Uint8List _decodeImage(List<int> imageBytes) {

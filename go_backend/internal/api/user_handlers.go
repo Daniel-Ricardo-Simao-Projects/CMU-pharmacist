@@ -27,13 +27,19 @@ func AuthenticateUserHandler(c *gin.Context) {
 		return
 	}
 
-	if err := services.AuthenticateUser(user.Username, user.Password); err != nil {
+	userInfo, err := services.AuthenticateUser(user.Username, user.Password)
+	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		utils.Error("Error authenticating user")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "User authenticated successfully"})
+	// log user info
+	if userInfo != nil {
+		fmt.Println("User authenticated: ", userInfo)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": userInfo})
 	utils.Info("User authenticated successfully")
 }
 

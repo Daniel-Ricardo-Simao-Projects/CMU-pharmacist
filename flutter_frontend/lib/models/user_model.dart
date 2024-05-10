@@ -15,9 +15,9 @@ class User {
 
   factory User.fromJson(Map json) {
     return User(
-      id: json['id'],
-      name: json['name'],
-      password: json['address'],
+      id: json['data']['id'],
+      name: json['data']['username'],
+      password: json['data']['password'],
     );
   }
 }

@@ -93,7 +93,7 @@ The default URL is localhost:5000
         - [x] Quantity;
         - [x] Purpose/Preferred Use;
     - [ ] Button to purchase/reduce stock (scan barcode);
-    - [ ] Button to add/remove from favorites;
+    - [x] Button to add/remove from favorites;
     - [x] Tapping medicines opens medicine information panel;
 - [ ] Medicine Information Panel:
     - [x] Show name and picture;

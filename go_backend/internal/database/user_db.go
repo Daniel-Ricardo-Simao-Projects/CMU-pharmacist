@@ -8,8 +8,32 @@ import (
 	models "go_backend/internal/models"
 )
 
+func GetUserInfoByUsername(username string) *models.User {
+	row := config.DB.QueryRow("SELECT * FROM users WHERE username = ?", username)
+
+	var userInfo models.User
+	err := row.Scan(&userInfo.Id, &userInfo.Username, &userInfo.Password)
+	if err != nil {
+		return nil
+	}
+
+	return &userInfo
+}
+
 func GetUserByUsername(username string) *models.User {
 	row := config.DB.QueryRow("SELECT * FROM users WHERE username = ?", username)
+
+	var user models.User
+	err := row.Scan(&user.Id, &user.Username, &user.Password)
+	if err != nil {
+		return nil
+	}
+
+	return &user
+}
+
+func GetUserById(id int) *models.User {
+	row := config.DB.QueryRow("SELECT * FROM users WHERE id = ?", id)
 
 	var user models.User
 	err := row.Scan(&user.Id, &user.Username, &user.Password)

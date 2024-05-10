@@ -4,7 +4,8 @@ import '../models/medicine_model.dart';
 import 'dart:convert';
 
 class MedicineService {
-  final String medicineURL = '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/medicines';
+  final String medicineURL =
+      '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/medicines';
   final Dio dio = Dio();
 
   MedicineService();
@@ -49,7 +50,8 @@ class MedicineService {
   Future<List<Pharmacy>> getPharmaciesWithMedicine(int medicineId) async {
     late List<Pharmacy> pharmacies;
     try {
-      final res = await dio.get('$medicineURL/pharmacies', data: {'medicineId': medicineId});
+      final res = await dio
+          .get('$medicineURL/pharmacies', data: {'medicineId': medicineId});
 
       pharmacies = res.data['pharmacies']
           .map<Pharmacy>(
@@ -66,7 +68,8 @@ class MedicineService {
   Future<List<Pharmacy>> getPharmaciesFromSearch(String medicineInput) async {
     late List<Pharmacy> pharmacies;
     try {
-      final res = await dio.get('$medicineURL/pharmacies-search', data: {'medicineInput': medicineInput});
+      final res = await dio.get('$medicineURL/pharmacies-search',
+          data: {'medicineInput': medicineInput});
 
       pharmacies = res.data['pharmacies']
           .map<Pharmacy>(

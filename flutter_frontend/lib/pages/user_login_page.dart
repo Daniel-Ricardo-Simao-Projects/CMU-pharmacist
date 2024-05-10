@@ -50,7 +50,8 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const CreateUserPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const CreateUserPage()),
                     ),
                     child: const Text('Create Username'),
                   ),
@@ -64,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = true;
     });
-    
+
     _dialogContext = context; // Store buildcontext temporarily
 
     String username = _usernameController.text.trim();
@@ -92,5 +93,4 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
-
 }

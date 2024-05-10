@@ -60,3 +60,23 @@ func AddPharmacy(pharmacy models.Pharmacy) {
 		log.Fatal(err)
 	}
 }
+
+func GetPharmacyById(id int) *models.Pharmacy {
+	row := config.DB.QueryRow("SELECT * FROM pharmacies WHERE id = ?", id)
+
+	var pharmacy models.Pharmacy
+	err := row.Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Date)
+	if err != nil {
+		return nil
+	}
+
+	// read picture
+	imageData, err := os.ReadFile(pharmacy.Picture)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pharmacy.Picture = base64.StdEncoding.EncodeToString(imageData)
+
+	return &pharmacy
+}

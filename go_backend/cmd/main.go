@@ -41,7 +41,9 @@ func main() {
 	r.GET("/medicines/pharmacies", api.GetPharmacyWithMedicineHandler)
 	r.GET("/medicines/pharmacies-search", api.SearchPharmacyWithMedicineHandler)
 
-	r.GET("/favorites", api.GetFavoritePharmaciesHandler)
+	r.GET("/pharmacies/favoriteget", api.GetFavoritePharmaciesHandler)
+	r.POST("/pharmacies/favoriteadd", api.AddFavoritePharmacyHandler)
+	r.DELETE("/pharmacies/favoritedelete", api.RemoveFavoritePharmacyHandler)
 
 	r.Run(":5000")
 }
