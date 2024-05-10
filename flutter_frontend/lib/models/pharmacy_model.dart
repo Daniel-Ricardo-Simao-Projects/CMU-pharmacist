@@ -14,7 +14,7 @@ class Pharmacy {
   });
 
   Map<String, dynamic> toJson() {
-    return {'name': name, 'address': address, 'picture': picture};
+    return {'id': id, 'name': name, 'address': address, 'picture': picture};
   }
 
   factory Pharmacy.fromJson(Map json) {

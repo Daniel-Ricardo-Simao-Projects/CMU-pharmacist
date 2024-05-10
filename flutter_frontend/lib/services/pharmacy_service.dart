@@ -39,14 +39,9 @@ class PharmacyService {
             (item) => Pharmacy.fromJson(item),
           )
           .toList();
-      // for (var pharmacy in pharmacies) {
-      //   log(pharmacy.name);
-      //   log(pharmacy.address);
-      // }
     } catch (e) {
       // verbose error with stack trace
       log(e.toString());
-
       pharmacies = [];
     }
     return pharmacies;

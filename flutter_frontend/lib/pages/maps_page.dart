@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
@@ -9,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
 
 class MapsPage extends StatefulWidget {
   const MapsPage({super.key});
@@ -17,8 +21,7 @@ class MapsPage extends StatefulWidget {
   State<MapsPage> createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<MapsPage>
-    with AutomaticKeepAliveClientMixin {
+class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
@@ -30,6 +33,9 @@ class _MapsPageState extends State<MapsPage>
   final Map<String, dynamic> _savedMarkers = {};
   String _mapTheme = '';
   LatLng? _currentPosition;
+  final List<Pharmacy> _pharmacies = [];
+  List<Pharmacy> _searchResults = [];
+  final _searchBarController = FloatingSearchBarController();
 
   @override
   bool get wantKeepAlive => true;
@@ -38,15 +44,8 @@ class _MapsPageState extends State<MapsPage>
   void initState() {
     super.initState();
 
-    _loadPosition().catchError((error) {
-      log(error);
-    });
-    _loadMarkers().catchError((error) {
-      log(error);
-    });
-
-    _pharmacyService.getPharmacies().then((pharmacies) {
-      _addPharmacyMarkers(pharmacies);
+    _initializeState().catchError((error) {
+      log(error.toString());
     });
 
     DefaultAssetBundle.of(context)
@@ -88,14 +87,11 @@ class _MapsPageState extends State<MapsPage>
     super.build(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
       body: _currentPosition == null
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Stack(children: [
+          : Stack(fit: StackFit.expand, children: [
               GoogleMap(
                 onMapCreated: _onMapCreated,
                 style: _mapTheme,
@@ -109,8 +105,8 @@ class _MapsPageState extends State<MapsPage>
                   Marker(
                     markerId: const MarkerId('currentPosition'),
                     position: _currentPosition!,
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                        BitmapDescriptor.hueAzure),
+                    icon:
+                        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
                     infoWindow: const InfoWindow(
                       title: 'Current Position',
                       snippet: 'You are here',
@@ -119,6 +115,7 @@ class _MapsPageState extends State<MapsPage>
                 }.union(_markers),
                 //_markers,
               ),
+              buildFloatingSearchBar(),
             ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -133,8 +130,24 @@ class _MapsPageState extends State<MapsPage>
         },
         child: const Icon(Icons.my_location),
       ),
-      //bottomNavigationBar: const BottomNavBar(),
     );
+  }
+
+  Future<void> _initializeState() async {
+    try {
+      await _loadPosition();
+      await _loadMarkers();
+      //await _loadPharmacies();
+      //log("pharmacies$_pharmacies");
+      //_addPharmacyMarkers(_pharmacies);
+      final pharmacies = await _pharmacyService.getPharmacies();
+      //pharmacies.removeWhere((element) => _pharmacies.contains(element));
+      _addPharmacyMarkers(pharmacies);
+      _pharmacies.addAll(pharmacies);
+      //await _savePharmacies();
+    } catch (error) {
+      log(error.toString());
+    }
   }
 
   Future<void> _loadPosition() async {
@@ -163,6 +176,24 @@ class _MapsPageState extends State<MapsPage>
     }
   }
 
+  Future<void> _loadPharmacies() async {
+    try {
+      log("loading pharmacies");
+      final cacheData = await DefaultCacheManager().getSingleFile('pharmacies');
+      final jsonString = cacheData.readAsStringSync();
+      //log("cached:$jsonString");
+      final List<dynamic> decodedData = jsonDecode(jsonString);
+      log("decode:$decodedData.toString()");
+      for (var pharmaciesStr in decodedData) {
+        log(pharmaciesStr.toString());
+        _pharmacies.add(Pharmacy.fromJson(pharmaciesStr));
+      }
+      //_pharmacies = decodedData.map((data) => Pharmacy.fromJson(data)).toList();
+    } catch (e) {
+      log("Error retrieving data from cache: $e");
+    }
+  }
+
   Future<void> _savePosition() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
@@ -176,11 +207,19 @@ class _MapsPageState extends State<MapsPage>
     List<String> markers = [];
     for (Marker marker in _markers) {
       final pharmacyid = marker.markerId.value;
-      final position =
-          '${marker.position.latitude},${marker.position.longitude}';
+      final position = '${marker.position.latitude},${marker.position.longitude}';
       markers.add(jsonEncode({pharmacyid: position}));
     }
     await prefs.setStringList('markers', markers);
+  }
+
+  Future<void> _savePharmacies() async {
+    log("saving pharmacies....");
+    final pharmaciesJson = _pharmacies.map((pharmacy) => pharmacy.toJson()).toList();
+    // Encode the list of pharmacy objects (not JSON strings)
+    final encodedData = jsonEncode(pharmaciesJson);
+    final bytes = utf8.encode(encodedData);
+    await DefaultCacheManager().putFile('pharmacies', bytes, key: 'pharmacies');
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -204,8 +243,8 @@ class _MapsPageState extends State<MapsPage>
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position =
+        await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
       _savePosition();
@@ -216,14 +255,12 @@ class _MapsPageState extends State<MapsPage>
       distanceFilter: 3,
     );
 
-    _statusListen =
-        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
-      log(status.toString());
+    _statusListen = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+      log("status:$status.toString()");
     });
 
-    _positionListen =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position? position) {
+    _positionListen = Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position? position) {
       log(position == null
           ? 'Unknown'
           : '${position.latitude.toString()}, ${position.longitude.toString()}');
@@ -240,12 +277,15 @@ class _MapsPageState extends State<MapsPage>
   }
 
   void _addPharmacyMarkers(List<Pharmacy> pharmacies) async {
+    if (pharmacies.isEmpty) {
+      return;
+    }
     for (Pharmacy p in pharmacies) {
+      log("adding marker for ${p.name}");
       LatLng? coordinates;
       if (_savedMarkers.containsKey(p.id.toString())) {
         log("marker already saved");
-        final positionStr =
-            _savedMarkers[p.id.toString()].toString().split(',');
+        final positionStr = _savedMarkers[p.id.toString()].toString().split(',');
         coordinates = LatLng(
           double.parse(positionStr[0]),
           double.parse(positionStr[1]),
@@ -255,7 +295,7 @@ class _MapsPageState extends State<MapsPage>
           coordinates = value;
         });
       }
-      log("new marker: ${p.name} at $coordinates");
+      //log("new marker: ${p.name} at $coordinates");
       final marker = Marker(
         markerId: MarkerId(p.id.toString()),
         position: coordinates!,
@@ -266,14 +306,16 @@ class _MapsPageState extends State<MapsPage>
         ),
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => PharmacyInfoPanel(pharmacy: p)),
+          MaterialPageRoute(builder: (context) => PharmacyInfoPanel(pharmacy: p)),
         ),
       );
-      _markers.add(marker);
+      if (!_markers.contains(marker)) {
+        setState(() {
+          _markers.add(marker);
+        });
+      }
     }
     log("saving markers....");
-    setState(() {});
     _saveMarkers().catchError((error) {
       log(error);
     });
@@ -289,6 +331,79 @@ class _MapsPageState extends State<MapsPage>
       log('Error: ${e.toString()}');
     }
     return const LatLng(0, 0);
+  }
+
+  Widget buildFloatingSearchBar() {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return FloatingSearchBar(
+      controller: _searchBarController,
+      hint: 'Search Pharmacies...',
+      borderRadius: BorderRadius.circular(50),
+      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
+      transitionDuration: const Duration(milliseconds: 5),
+      transitionCurve: Curves.easeInOut,
+      physics: const BouncingScrollPhysics(),
+      axisAlignment: isPortrait ? 0.0 : -1.0,
+      openAxisAlignment: 0.0,
+      width: isPortrait ? 600 : 500,
+      debounceDelay: const Duration(milliseconds: 1000),
+      onQueryChanged: (query) {
+        setState(() {
+          _searchResults = searchResults(query);
+        });
+      },
+      // Specify a custom transition to be used for
+      // animating between opened and closed stated.
+      transition: CircularFloatingSearchBarTransition(),
+      actions: [
+        FloatingSearchBarAction(
+          showIfOpened: false,
+          child: CircularButton(
+            icon: const Icon(Icons.place),
+            onPressed: () {},
+          ),
+        ),
+        FloatingSearchBarAction.searchToClear(
+          showIfClosed: false,
+        ),
+      ],
+      builder: (context, transition) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Material(
+            color: Colors.white,
+            elevation: 4.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _searchResults.map((pharmacy) {
+                return ListTile(
+                  title: Text(pharmacy.name),
+                  subtitle: Text(pharmacy.address),
+                  onTap: () {
+                    mapController.animateCamera(
+                      CameraUpdate.newLatLng(LatLng(
+                        double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[0]), 
+                        double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[1]),
+                      )),
+                    );
+                    _searchBarController.close();
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  List<Pharmacy> searchResults(String query) {
+    return _pharmacies.where((pharmacy) {
+      return pharmacy.name.toLowerCase().contains(query.toLowerCase()) ||
+          pharmacy.address.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+  
   }
 }
 
