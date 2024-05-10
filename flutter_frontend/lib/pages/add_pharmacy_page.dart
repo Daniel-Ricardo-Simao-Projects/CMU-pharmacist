@@ -63,7 +63,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           _nameField(),
           const SizedBox(height: 25),
           _addressField(),
-          const SizedBox(height: 150),
+          const SizedBox(height: 80),
           bottomButtons(),
         ],
       ),
@@ -98,38 +98,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
               elevation: 0,
             ),
             onPressed: () {
-              if (_name.isEmpty || _image == null || _address.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please enter a name, image, and a valid address.'),
-                    //backgroundColor: Colors.red,
-                  ),
-                );
-              } else {
-                savePharmacy(_name, _address, _image!);
-                // clear the fields
-                _name = '';
-                _image = null;
-                _address = '';
-                // Show a dialog
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Operation Successful'),
-                      content: const Text('The pharmacy has been created successfully.'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Close'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
+              submitNewPharmacy();
             },
             child: const Text(
               'Save',
@@ -173,6 +142,41 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
     );
   }
 
+  void submitNewPharmacy() {
+    if (_name.isEmpty || _image == null || _address.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a name, image, and a valid address.'),
+          //backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      savePharmacy(_name, _address, _image!);
+      // clear the fields
+      _name = '';
+      _image = null;
+      _address = '';
+      // Show a dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Operation Successful'),
+            content: const Text('The pharmacy has been created successfully.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   Column _addressField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,8 +196,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           googleAPIKey: apiKey,
           inputDecoration: const InputDecoration(
             border: UnderlineInputBorder(),
-            hintText: "Search your location",
-            enabledBorder: InputBorder.none,
+            enabledBorder: UnderlineInputBorder(),
           ),
           debounceTime: 400,
           countries: const ["pt"],
@@ -227,8 +230,50 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
               ),
             );
           },
-        
           isCrossBtnShown: true,
+        ),
+        const SizedBox(height: 10),
+        Center(
+          child: Container(
+            width: 250,
+            height: 55,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                padding: const EdgeInsets.all(15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 0,
+              ),
+              onPressed: () {
+                
+              },
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.my_location,
+                    color: textColor,
+                    size: 15,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'Use my current Location',
+                    style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontSize: 13,
+                      fontVariations: [FontVariation('wght', 500)],
+                      color: textColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ],
     );
