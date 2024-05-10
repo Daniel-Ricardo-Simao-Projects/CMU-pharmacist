@@ -1,21 +1,27 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/models/constants.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_frontend/themes/colors.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
 
 class AddPharmacyPage extends StatefulWidget {
   const AddPharmacyPage({super.key});
 
   @override
-  _AddPharmacyPageState createState() => _AddPharmacyPageState();
+  State<AddPharmacyPage> createState() => _AddPharmacyPageState();
 }
 
 class _AddPharmacyPageState extends State<AddPharmacyPage> {
   String _name = '';
   File? _image;
   String _address = '';
+  TextEditingController controller = TextEditingController();
+  final FocusNode _addressFocusNode = FocusNode();
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -41,8 +47,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
       backgroundColor: backgroundColor,
       appBar: _appBar(context),
       body: Padding(
-          padding:
-              const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
+          padding: const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
           child: _addPharmacyForm()),
     );
   }
@@ -50,6 +55,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   Form _addPharmacyForm() {
     return Form(
       child: ListView(
+        physics: const ClampingScrollPhysics(),
         children: [
           const SizedBox(height: 10),
           _imagePreview(),
@@ -73,8 +79,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           height: 55,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            border: const Border(
-                bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -93,7 +98,38 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
               elevation: 0,
             ),
             onPressed: () {
-              savePharmacy(_name, _address, _image!);
+              if (_name.isEmpty || _image == null || _address.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter a name, image, and a valid address.'),
+                    //backgroundColor: Colors.red,
+                  ),
+                );
+              } else {
+                savePharmacy(_name, _address, _image!);
+                // clear the fields
+                _name = '';
+                _image = null;
+                _address = '';
+                // Show a dialog
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Operation Successful'),
+                      content: const Text('The pharmacy has been created successfully.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Close'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             },
             child: const Text(
               'Save',
@@ -112,8 +148,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           decoration: BoxDecoration(
             color: primaryColor,
             borderRadius: BorderRadius.circular(15),
-            border: const Border(
-                bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -151,20 +186,49 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
             fontSize: 16,
           ),
         ),
-        TextFormField(
-          decoration: const InputDecoration(
+        GooglePlaceAutoCompleteTextField(
+          focusNode: _addressFocusNode,
+          textEditingController: controller,
+          googleAPIKey: apiKey,
+          inputDecoration: const InputDecoration(
             border: UnderlineInputBorder(),
-            suffixIcon: Icon(
-              Icons.add_location_alt_outlined,
-              color: accentColor,
-              size: 30,
-            ),
+            hintText: "Search your location",
+            enabledBorder: InputBorder.none,
           ),
-          onChanged: (value) {
+          debounceTime: 400,
+          countries: const ["pt"],
+          //isLatLngRequired: true,
+          // getPlaceDetailWithLatLng: (Prediction prediction) {
+          //   log("placeDetails${prediction.lat}");
+          // },
+          itemClick: (Prediction prediction) {
+            controller.text = prediction.description ?? "";
+            controller.selection = TextSelection.fromPosition(
+                TextPosition(offset: prediction.description?.length ?? 0));
             setState(() {
-              _address = value;
+              _address = prediction.description ?? "";
             });
+            
           },
+          seperatedBuilder: const Divider(),
+          containerHorizontalPadding: 10,
+          
+          itemBuilder: (context, index, Prediction prediction) {
+            return Container(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  const Icon(Icons.location_on),
+                  const SizedBox(
+                    width: 7,
+                  ),
+                  Expanded(child: Text(prediction.description ?? ""))
+                ],
+              ),
+            );
+          },
+        
+          isCrossBtnShown: true,
         ),
       ],
     );
@@ -254,6 +318,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
     List<int> imageBytes = file.readAsBytesSync();
     Pharmacy pharmacy =
         Pharmacy(id: 0, name: name, address: address, picture: imageBytes);
+    log('Pharmacy: $pharmacy.name, $pharmacy.address');
     PharmacyService().addPharmacy(pharmacy);
 
     //Navigator.pop(context);
@@ -272,12 +337,5 @@ AppBar _appBar(BuildContext context) {
         fontSize: 20,
       ),
     ),
-    // By default the appBar adds a back button, but we can customize it
-    // leading: IconButton(
-    //   icon: const Icon(Icons.arrow_back, color: accentColor),
-    //   onPressed: () {
-    //     Navigator.pop(context);
-    //   },
-    // ),
   );
 }

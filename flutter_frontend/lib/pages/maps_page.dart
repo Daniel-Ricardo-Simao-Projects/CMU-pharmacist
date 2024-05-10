@@ -381,13 +381,15 @@ class _MapsPageState extends State<MapsPage> with AutomaticKeepAliveClientMixin 
                   title: Text(pharmacy.name),
                   subtitle: Text(pharmacy.address),
                   onTap: () {
-                    mapController.animateCamera(
-                      CameraUpdate.newLatLng(LatLng(
-                        double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[0]), 
-                        double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[1]),
-                      )),
-                    );
-                    _searchBarController.close();
+                    if (_savedMarkers.containsKey(pharmacy.id.toString())) {
+                      mapController.animateCamera(
+                        CameraUpdate.newLatLng(LatLng(
+                          double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[0]), 
+                          double.parse(_savedMarkers[pharmacy.id.toString()].split(',')[1]),
+                        )),
+                      );
+                      _searchBarController.close();
+                    }
                   },
                 );
               }).toList(),
