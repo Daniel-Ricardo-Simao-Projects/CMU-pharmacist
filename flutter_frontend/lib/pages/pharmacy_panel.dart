@@ -46,7 +46,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
       body: CustomScrollView(slivers: [
         SliverAppBar(
           pinned: true,
-          backgroundColor: backgroundColor,
+          backgroundColor: primaryColor,
           floating: true,
           expandedHeight: 200,
           leading: backButton(context),
@@ -72,12 +72,12 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   List<Widget> get favoritePharmacyButton {
     return [
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(right: 15),
         child: Container(
-          width: 35,
-          height: 35,
+          width: 40,
+          height: 40,
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: backgroundColor,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
@@ -96,7 +96,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               },
               icon: Icon(
                 isFavorite ? Icons.star : Icons.star_outline,
-                color: isFavorite ? Colors.yellow : accentColor,
+                color: primaryColor,
               ),
             ),
           ),
@@ -107,12 +107,12 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
 
   Padding backButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 15),
       child: Container(
         width: 35,
         height: 35,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: backgroundColor,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -126,7 +126,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         child: Center(
           child: IconButton(
             iconSize: 20,
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: primaryColor),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -147,10 +147,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                   AddMedicinePage(PharmacyId: widget.pharmacy.id)),
         );
       },
-      backgroundColor: accentColor,
+      backgroundColor: primaryColor,
       child: const Icon(
         Icons.add,
-        color: Colors.white,
+        color: text2Color,
       ),
     );
   }
@@ -166,7 +166,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
             style: TextStyle(
               fontFamily: 'JosefinSans',
               fontVariations: [FontVariation('wght', 700)],
-              color: accentColor, // TODO: Add new text colors (t1, t2)
+              color: accentColor,
               fontSize: 20,
             ),
           ),
@@ -197,7 +197,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                       style: const TextStyle(
                         fontFamily: 'JosefinSans',
                         fontVariations: [FontVariation('wght', 700)],
-                        color: Colors.black,
+                        color: accentColor,
                         fontSize: 18,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -211,7 +211,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                       style: const TextStyle(
                         fontFamily: 'JosefinSans',
                         fontVariations: [FontVariation('wght', 400)],
-                        color: Colors.black54,
+                        color: subtext1Color,
                         fontSize: 13,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -226,7 +226,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               onTap: () {},
               child: const Icon(
                 Icons.location_on,
-                color: Colors.black,
+                color: accentColor,
                 size: 30,
               ),
             )
@@ -309,7 +309,7 @@ class _MedicineListState extends State<MedicineList> {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(bottom: 20),
                 child: InkWell(
                   splashColor: Colors.blue,
                   highlightColor: Colors.blue,
@@ -328,12 +328,14 @@ class _MedicineListState extends State<MedicineList> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: primaryColor,
-                      boxShadow: const [
+                      gradient: glossyColor,
+                      boxShadow:  [
                         BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 10),
+                          color: shadow1Color,
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3),
+                          blurStyle: BlurStyle.outer,
                         ),
                       ],
                     ),
@@ -378,7 +380,7 @@ class _MedicineListState extends State<MedicineList> {
                                         fontVariations: [
                                           FontVariation('wght', 700)
                                         ],
-                                        color: accentColor,
+                                        color: text1Color,
                                         fontSize: 14,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -394,7 +396,7 @@ class _MedicineListState extends State<MedicineList> {
                                         fontVariations: [
                                           FontVariation('wght', 400)
                                         ],
-                                        color: Colors.black87,
+                                        color: text1Color,
                                         fontSize: 13,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -410,7 +412,7 @@ class _MedicineListState extends State<MedicineList> {
                                         fontVariations: [
                                           FontVariation('wght', 400)
                                         ],
-                                        color: Colors.black87,
+                                        color: text1Color,
                                         fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -426,14 +428,14 @@ class _MedicineListState extends State<MedicineList> {
                               InkWell(
                                 onTap: () {},
                                 child: const Icon(Icons.add,
-                                    color: Colors.black,
+                                    color: text1Color,
                                     size: 25), // TODO: Implement add stock
                               ),
                               const SizedBox(width: 8),
                               InkWell(
                                 onTap: () {},
                                 child: const Icon(Icons.shopping_bag_outlined,
-                                    color: Colors.black,
+                                    color: text1Color,
                                     size: 25), // TODO: Implement reduce stock
                               ),
                             ],
