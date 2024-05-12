@@ -7,6 +7,7 @@ import 'package:flutter_frontend/pages/find_medicine_page.dart';
 import 'package:flutter_frontend/pages/maps_page.dart';
 import 'package:flutter_frontend/pages/pharmacy_panel.dart';
 import 'package:flutter_frontend/pages/user_login_page.dart';
+import 'package:flutter_frontend/themes/colors.dart';
 
 import 'models/pharmacy_model.dart';
 import 'services/pharmacy_service.dart';
@@ -15,7 +16,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Transparent status bar
-    //systemNavigationBarColor: Colors.transparent, // Transparent navigation bar
+    systemNavigationBarColor: backgroundColor, // Transparent navigation bar
   ));
   //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   log(const String.fromEnvironment('URL'));
