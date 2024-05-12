@@ -41,110 +41,133 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: _appBar(context),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 13),
-          child: _pharmacyInfo(widget.pharmacy),
-        ));
-  }
-
-  Stack _pharmacyInfo(Pharmacy pharmacy) {
-    return Stack(
-      children: [
-        ListView(
-          children: [
-            _pharmacyCard(pharmacy),
-            const SizedBox(height: 20),
-            _pharmacyMedicines(pharmacy),
-          ],
+      extendBodyBehindAppBar: true,
+      backgroundColor: backgroundColor,
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: backgroundColor,
+          floating: true,
+          expandedHeight: 200,
+          leading: backButton(context),
+          actions: favoritePharmacyButton,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Image.memory(
+              _decodeImage(widget.pharmacy.picture),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-        Positioned(
-          bottom: 15,
-          right: 5,
-          child: _addMedicineButton(pharmacy.id),
-        ),
-      ],
+        SliverList(
+            delegate: SliverChildListDelegate([
+          _pharmacyDetails(widget.pharmacy),
+          const SizedBox(height: 20),
+          _pharmacyMedicines(widget.pharmacy),
+        ])),
+      ]),
+      floatingActionButton: _addMedicineButton(context),
     );
   }
 
-  Widget _pharmacyCard(Pharmacy pharmacy) {
+  List<Widget> get favoritePharmacyButton {
+    return [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          width: 35,
+          height: 35,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                spreadRadius: 0,
+                blurRadius: 5,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Center(
+            child: IconButton(
+              iconSize: 20,
+              onPressed: () {
+                toggleFavorite();
+              },
+              icon: Icon(
+                isFavorite ? Icons.star : Icons.star_outline,
+                color: isFavorite ? Colors.yellow : accentColor,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  Padding backButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(8.0),
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: primaryColor,
-          boxShadow: const [
+        width: 35,
+        height: 35,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
             BoxShadow(
               color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 10),
+              spreadRadius: 0,
+              blurRadius: 5,
+              offset: Offset(0, 4),
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              _pharmacyImage(),
-              const SizedBox(height: 5),
-              _pharmacyDetails(pharmacy),
-            ],
+        child: Center(
+          child: IconButton(
+            iconSize: 20,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            padding: const EdgeInsets.all(8),
           ),
         ),
       ),
     );
   }
 
-  Widget _addMedicineButton(int pharmacyId) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          height: 60,
-          width: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: accentColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.45),
-                spreadRadius: 0,
-                blurRadius: 5,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        AddMedicinePage(PharmacyId: pharmacyId)),
-              );
-            },
-            icon: const Icon(Icons.add, color: backgroundColor, size: 30),
-          ),
-        ),
-      ],
+  FloatingActionButton _addMedicineButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  AddMedicinePage(PharmacyId: widget.pharmacy.id)),
+        );
+      },
+      backgroundColor: accentColor,
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
     );
   }
 
   Widget _pharmacyMedicines(Pharmacy pharmacy) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.only(top: 20, left: 25, right: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'Medicines',
             style: TextStyle(
-              fontFamily: 'RobotoMono',
-              fontVariations: [FontVariation('wght', 500)],
+              fontFamily: 'JosefinSans',
+              fontVariations: [FontVariation('wght', 700)],
               color: accentColor, // TODO: Add new text colors (t1, t2)
-              fontSize: 18,
+              fontSize: 20,
             ),
           ),
           const SizedBox(height: 10),
@@ -155,101 +178,61 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   }
 
   Widget _pharmacyDetails(Pharmacy pharmacy) {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pharmacy.name,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 700)],
-                    color: Colors.black,
-                    fontSize: 15,
-                    overflow: TextOverflow.ellipsis,
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 25, right: 25),
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    child: Text(
+                      pharmacy.name,
+                      style: const TextStyle(
+                        fontFamily: 'JosefinSans',
+                        fontVariations: [FontVariation('wght', 700)],
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
-                ),
-                Text(
-                  pharmacy.address,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 400)],
-                    color: Colors.black54,
-                    fontSize: 12,
+                  SizedBox(
+                    width: 250,
+                    child: Text(
+                      pharmacy.address,
+                      style: const TextStyle(
+                        fontFamily: 'JosefinSans',
+                        fontVariations: [FontVariation('wght', 400)],
+                        color: Colors.black54,
+                        fontSize: 13,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 5),
-          InkWell(
-            onTap: () {},
-            child: const Icon(
-              Icons.explore_outlined,
-              color: Colors.black,
-              size: 30,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _pharmacyImage() {
-    return Container(
-      height: 180,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: primaryColor,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Image.memory(
-          _decodeImage(widget.pharmacy.picture),
-          fit: BoxFit.cover,
+            const SizedBox(width: 5),
+            InkWell(
+              onTap: () {},
+              child: const Icon(
+                Icons.location_on,
+                color: Colors.black,
+                size: 30,
+              ),
+            )
+          ],
         ),
       ),
-    );
-  }
-
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: backgroundColor,
-      title: const Text(
-        'Pharmacy Info',
-        style: TextStyle(
-          fontFamily: 'RobotoMono',
-          fontVariations: [FontVariation('wght', 700)],
-          color: textColor,
-          fontSize: 20,
-        ),
-      ),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: accentColor),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            toggleFavorite();
-          },
-          icon: Icon(
-            isFavorite ? Icons.star : Icons.star_outline,
-            color: isFavorite ? Colors.yellow : accentColor,
-          ),
-        )
-      ],
     );
   }
 
@@ -299,6 +282,7 @@ class _MedicineListState extends State<MedicineList> {
   }
 
   Future<void> _refreshMedicines() async {
+    // TODO: Implement refresh
     setState(() {
       medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacyId);
     });
@@ -319,6 +303,7 @@ class _MedicineListState extends State<MedicineList> {
           return const Center(child: Text('Error'));
         } else {
           return ListView.builder(
+            padding: const EdgeInsets.all(0),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: snapshot.data!.length,
@@ -340,7 +325,6 @@ class _MedicineListState extends State<MedicineList> {
                     );
                   },
                   child: Container(
-                    height: 70,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
@@ -386,48 +370,50 @@ class _MedicineListState extends State<MedicineList> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width: 200,
+                                    width: 160,
                                     child: Text(
                                       snapshot.data![index].name,
                                       style: const TextStyle(
-                                        fontFamily: 'RobotoMono',
+                                        fontFamily: 'JosefinSans',
                                         fontVariations: [
                                           FontVariation('wght', 700)
                                         ],
                                         color: accentColor,
-                                        fontSize: 12,
-                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 14,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 200,
+                                    width: 160,
                                     child: Text(
                                       snapshot.data![index].details,
                                       style: const TextStyle(
-                                        fontFamily: 'RobotoMono',
+                                        fontFamily: 'JosefinSans',
                                         fontVariations: [
                                           FontVariation('wght', 400)
                                         ],
                                         color: Colors.black87,
-                                        fontSize: 10,
-                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 13,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 200,
+                                    width: 70,
                                     child: Text(
                                       'Stock: ${snapshot.data![index].stock}',
                                       style: const TextStyle(
-                                        fontFamily: 'RobotoMono',
+                                        fontFamily: 'JosefinSans',
                                         fontVariations: [
                                           FontVariation('wght', 400)
                                         ],
                                         color: Colors.black87,
-                                        fontSize: 10,
-                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 12,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
