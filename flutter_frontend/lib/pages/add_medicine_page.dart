@@ -76,33 +76,41 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       body: Padding(
         padding:
             const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
-        child: ListView(
-          children: [
-            // TODO: Maybe wrap this as a Form
-            // TODO: Add validation to the fields
-            _imagePreview(),
-            const SizedBox(height: 20),
-            _addNameField(),
-            const SizedBox(height: 20),
-            _addQuantityField(),
-            const SizedBox(height: 20),
-            _addDetailsField(),
-            const SizedBox(height: 30),
-            _bottomButtons(widget.PharmacyId),
-          ],
-        ),
+        child: _addMedicineForm(),
+      ),
+    );
+  }
+
+  Widget _addMedicineForm() {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // TODO: Maybe wrap this as a Form with validation
+          _imagePreview(),
+          const SizedBox(height: 20),
+          _nameField(),
+          const SizedBox(height: 20),
+          _quantityField(),
+          const SizedBox(height: 20),
+          _detailsField(),
+          const SizedBox(height: 30),
+          _bottomButtons(widget.PharmacyId),
+        ],
       ),
     );
   }
 
   Widget _bottomButtons(int pharmacyId) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-          width: 250,
           height: 55,
+          width: 220,
           decoration: BoxDecoration(
+            color: primaryColor,
             borderRadius: BorderRadius.circular(15),
             border: const Border(
                 bottom: BorderSide(color: primaryBorderColor, width: 4)),
@@ -114,28 +122,19 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
               ),
             ],
           ),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              padding: const EdgeInsets.all(15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 0,
-            ),
-            onPressed: () {
-              _saveMedicine(_name, _stock, _details, _image!, pharmacyId);
-            },
-            child: const Text(
-              'Save',
-              style: TextStyle(
-                fontFamily: 'RobotoMono',
-                fontSize: 15,
-                fontVariations: [FontVariation('wght', 500)],
-                color: textColor,
-              ),
-            ),
-          ),
+          child: TextButton(
+              onPressed: () {
+                _saveMedicine(_name, _stock, _details, _image!, pharmacyId);
+              },
+              child: const Text(
+                'Save',
+                style: TextStyle(
+                  fontFamily: 'JosefinSans',
+                  fontVariations: [FontVariation('wght', 500)],
+                  color: text2Color,
+                  fontSize: 16,
+                ),
+              )),
         ),
         Container(
           height: 55,
@@ -159,52 +158,54 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             },
             icon: const Icon(
               Icons.photo_camera_outlined,
+              color: text2Color,
             ),
             iconSize: 30,
             padding: EdgeInsets.zero,
             visualDensity: VisualDensity.compact,
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget _addDetailsField() {
+  Widget _detailsField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Details',
           style: TextStyle(
-            fontFamily: 'RobotoMono',
-            fontVariations: [FontVariation('wght', 500)],
-            color: textColor,
+            fontFamily: 'JosefinSans',
+            fontVariations: [FontVariation('wght', 700)],
+            color: text1Color,
             fontSize: 18,
           ),
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 10),
         TextFormField(
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             filled: true,
-            fillColor: primaryColor,
-            contentPadding: EdgeInsets.all(5),
-            border: OutlineInputBorder(
+            fillColor: Colors.white.withOpacity(0.5),
+            contentPadding: const EdgeInsets.all(10),
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               borderSide: BorderSide(color: accentColor),
             ),
-            focusedBorder: OutlineInputBorder(
+            focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),
-              borderSide: BorderSide(color: accentColor),
+              borderSide: BorderSide(color: primaryColor, width: 2),
             ),
           ),
+          cursorColor: primaryColor,
           style: const TextStyle(
-            fontFamily: 'RobotoMono',
+            fontFamily: 'JosefinSans',
             fontVariations: [FontVariation('wght', 400)],
-            color: textColor,
+            color: text1Color,
             fontSize: 14,
           ),
           maxLines: null,
-          minLines: 7,
+          minLines: 6,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter some details about the medicine.';
@@ -221,14 +222,14 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     );
   }
 
-  Widget _addQuantityField() {
+  Widget _quantityField() {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       const Text(
         'Quantity',
         style: TextStyle(
-          fontFamily: 'RobotoMono',
-          fontVariations: [FontVariation('wght', 500)],
-          color: textColor,
+          fontFamily: 'JosefinSans',
+          fontVariations: [FontVariation('wght', 700)],
+          color: accentColor,
           fontSize: 18,
         ),
       ),
@@ -247,9 +248,9 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             //TODO: Change this to input field
             '$_stock',
             style: const TextStyle(
-              fontFamily: 'RobotoMono',
+              fontFamily: 'JosefinSans',
               fontVariations: [FontVariation('wght', 400)],
-              color: textColor,
+              color: text1Color,
               fontSize: 16,
             ),
           ),
@@ -267,33 +268,34 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     ]);
   }
 
-  Widget _addNameField() {
+  Widget _nameField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Name',
           style: TextStyle(
-            fontFamily: 'RobotoMono',
-            fontVariations: [FontVariation('wght', 500)],
-            color: textColor,
+            fontFamily: 'JosefinSans',
+            fontVariations: [FontVariation('wght', 700)],
+            color: text1Color,
             fontSize: 18,
           ),
         ),
         const SizedBox(height: 5),
         TextFormField(
           style: const TextStyle(
-            fontFamily: 'RobotoMono',
+            fontFamily: 'JosefinSans',
             fontVariations: [FontVariation('wght', 400)],
-            color: textColor,
-            fontSize: 16,
+            color: text1Color,
+            fontSize: 15,
           ),
+          cursorColor: primaryColor,
           decoration: const InputDecoration(
-            border: UnderlineInputBorder(
-              borderSide: BorderSide(color: accentColor),
-            ),
+            isDense: true,
+            contentPadding: EdgeInsets.only(bottom: 10),
+            border: UnderlineInputBorder(),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: accentColor),
+              borderSide: BorderSide(color: primaryColor),
             ),
           ),
           onChanged: (value) {
@@ -312,16 +314,16 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
         _pickImage(ImageSource.gallery);
       },
       child: Container(
-        width: double.infinity,
         height: 200,
+        width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: primaryColor,
-          boxShadow: const [
+          color: Colors.white.withOpacity(0.5),
+          boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 10),
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 3,
+              blurStyle: BlurStyle.outer,
             ),
           ],
         ),
@@ -344,7 +346,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                   Text(
                     'Click to add picture',
                     style: TextStyle(
-                      fontFamily: 'RobotoMono',
+                      fontFamily: 'JosefinSans',
                       fontVariations: [FontVariation('wght', 400)],
                       fontSize: 15,
                     ),
@@ -361,9 +363,9 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       title: const Text(
         'New Medicine',
         style: TextStyle(
-          fontFamily: 'RobotoMono',
+          fontFamily: 'JosefinSans',
           fontVariations: [FontVariation('wght', 700)],
-          color: textColor,
+          color: text1Color,
           fontSize: 20,
         ),
       ),

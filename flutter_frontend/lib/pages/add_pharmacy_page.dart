@@ -44,42 +44,46 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: backgroundColor,
       appBar: _appBar(context),
       body: Padding(
-          padding: const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
+          padding:
+              const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 20),
           child: _addPharmacyForm()),
     );
   }
 
-  Form _addPharmacyForm() {
-    return Form(
-      child: ListView(
-        physics: const ClampingScrollPhysics(),
+  Widget _addPharmacyForm() {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(height: 10),
           _imagePreview(),
-          const SizedBox(height: 60),
+          const SizedBox(height: 40),
           _nameField(),
           const SizedBox(height: 25),
           _addressField(),
-          const SizedBox(height: 80),
-          bottomButtons(),
+          const SizedBox(height: 120),
+          _bottomButtons(),
         ],
       ),
     );
   }
 
-  Row bottomButtons() {
+  Row _bottomButtons() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-          width: 250,
           height: 55,
+          width: 220,
           decoration: BoxDecoration(
+            color: primaryColor,
             borderRadius: BorderRadius.circular(15),
-            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: const Border(
+                bottom: BorderSide(color: primaryBorderColor, width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -88,28 +92,17 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
               ),
             ],
           ),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              padding: const EdgeInsets.all(15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 0,
-            ),
-            onPressed: () {
-              submitNewPharmacy();
-            },
-            child: const Text(
-              'Save',
-              style: TextStyle(
-                fontFamily: 'RobotoMono',
-                fontSize: 15,
-                fontVariations: [FontVariation('wght', 500)],
-                color: textColor,
-              ),
-            ),
-          ),
+          child: TextButton(
+              onPressed: submitNewPharmacy,
+              child: const Text(
+                'Save',
+                style: TextStyle(
+                  fontFamily: 'JosefinSans',
+                  fontVariations: [FontVariation('wght', 500)],
+                  color: text2Color,
+                  fontSize: 16,
+                ),
+              )),
         ),
         Container(
           height: 55,
@@ -117,7 +110,8 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           decoration: BoxDecoration(
             color: primaryColor,
             borderRadius: BorderRadius.circular(15),
-            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: const Border(
+                bottom: BorderSide(color: primaryBorderColor, width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -132,6 +126,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
             },
             icon: const Icon(
               Icons.photo_camera_outlined,
+              color: text2Color,
             ),
             iconSize: 30,
             padding: EdgeInsets.zero,
@@ -184,96 +179,80 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
         const Text(
           'Address',
           style: TextStyle(
-            fontFamily: 'RobotoMono',
-            color: textColor,
-            fontVariations: [FontVariation('wght', 500)],
-            fontSize: 16,
+            fontFamily: 'JosefinSans',
+            color: text1Color,
+            fontVariations: [FontVariation('wght', 700)],
+            fontSize: 18,
           ),
         ),
-        GooglePlaceAutoCompleteTextField(
-          focusNode: _addressFocusNode,
-          textEditingController: controller,
-          googleAPIKey: apiKey,
-          inputDecoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(),
-          ),
-          debounceTime: 400,
-          countries: const ["pt"],
-          //isLatLngRequired: true,
-          // getPlaceDetailWithLatLng: (Prediction prediction) {
-          //   log("placeDetails${prediction.lat}");
-          // },
-          itemClick: (Prediction prediction) {
-            controller.text = prediction.description ?? "";
-            controller.selection = TextSelection.fromPosition(
-                TextPosition(offset: prediction.description?.length ?? 0));
-            setState(() {
-              _address = prediction.description ?? "";
-            });
-            
-          },
-          seperatedBuilder: const Divider(),
-          containerHorizontalPadding: 10,
-          
-          itemBuilder: (context, index, Prediction prediction) {
-            return Container(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  const Icon(Icons.location_on),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  Expanded(child: Text(prediction.description ?? ""))
-                ],
-              ),
-            );
-          },
-          isCrossBtnShown: true,
-        ),
-        const SizedBox(height: 10),
-        Center(
-          child: Container(
-            width: 250,
-            height: 55,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
-            ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: 260,
+              child: GooglePlaceAutoCompleteTextField(
+                textStyle: const TextStyle(
+                  fontFamily: 'JosefinSans',
+                  fontVariations: [FontVariation('wght', 400)],
+                  color: text1Color,
+                  fontSize: 15,
                 ),
-                elevation: 0,
-              ),
-              onPressed: () {
-                
-              },
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.my_location,
-                    color: textColor,
-                    size: 15,
+                focusNode: _addressFocusNode,
+                textEditingController: controller,
+                googleAPIKey: apiKey,
+                inputDecoration: const InputDecoration(
+                  contentPadding: EdgeInsets.only(bottom: 10),
+                  border: UnderlineInputBorder(),
+                  isDense: true,
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: primaryColor, width: 2),
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Use my current Location',
-                    style: TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontSize: 13,
-                      fontVariations: [FontVariation('wght', 500)],
-                      color: textColor,
+                ),
+                boxDecoration: const BoxDecoration(
+                  border: null,
+                ),
+                containerVerticalPadding: 0,
+                containerHorizontalPadding: 0,
+                debounceTime: 400,
+                countries: const ["pt"],
+                // TODO: Review this comment
+                //isLatLngRequired: true,
+                // getPlaceDetailWithLatLng: (Prediction prediction) {
+                //   log("placeDetails${prediction.lat}");
+                // },
+                itemClick: (Prediction prediction) {
+                  controller.text = prediction.description ?? "";
+                  controller.selection = TextSelection.fromPosition(
+                      TextPosition(
+                          offset: prediction.description?.length ?? 0));
+                  setState(() {
+                    _address = prediction.description ?? "";
+                  });
+                },
+                seperatedBuilder: const Divider(),
+
+                itemBuilder: (context, index, Prediction prediction) {
+                  return Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.location_on),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Expanded(child: Text(prediction.description ?? ""))
+                      ],
                     ),
-                  ),
-                ],
+                  );
+                },
+                isCrossBtnShown: true,
               ),
             ),
-          ),
+            IconButton(
+                onPressed: () {}, // TODO: Implement my current location button
+                icon: const Icon(Icons.my_location,
+                    color: accentColor, size: 25)),
+          ],
         ),
       ],
     );
@@ -286,21 +265,28 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
         const Text(
           'Name',
           style: TextStyle(
-            fontFamily: 'RobotoMono',
-            color: textColor,
-            fontVariations: [FontVariation('wght', 500)],
-            fontSize: 16,
+            fontFamily: 'JosefinSans',
+            color: text1Color,
+            fontVariations: [FontVariation('wght', 700)],
+            fontSize: 18,
           ),
         ),
         TextFormField(
+          style: const TextStyle(
+            fontFamily: 'JosefinSans',
+            fontVariations: [FontVariation('wght', 400)],
+            color: text1Color,
+            fontSize: 15,
+          ),
+          cursorColor: primaryColor,
           decoration: const InputDecoration(
-              //  labelText: 'Name',
-              //  labelStyle: TextStyle(
-              //    fontFamily: 'RobotoMono',
-              //    color: textColor,
-              //    fontVariations: [FontVariation('wght', 500)],
-              //  ),
-              border: UnderlineInputBorder()),
+            isDense: true,
+            contentPadding: EdgeInsets.only(bottom: 10),
+            border: UnderlineInputBorder(),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: primaryColor, width: 2),
+            ),
+          ),
           onChanged: (value) {
             setState(() {
               _name = value;
@@ -318,14 +304,15 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
       },
       child: Container(
         height: 200,
+        width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: primaryColor,
-          boxShadow: const [
+          color: Colors.white.withOpacity(0.5),
+          boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 10),
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 3,
+              blurStyle: BlurStyle.outer,
             ),
           ],
         ),
@@ -348,7 +335,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
                   Text(
                     'Click to add picture',
                     style: TextStyle(
-                      fontFamily: 'RobotoMono',
+                      fontFamily: 'JosefinSans',
                       fontVariations: [FontVariation('wght', 400)],
                       fontSize: 15,
                     ),
@@ -373,12 +360,13 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
 AppBar _appBar(BuildContext context) {
   return AppBar(
     backgroundColor: backgroundColor,
+    centerTitle: true,
     title: const Text(
       'New Pharmacy',
       style: TextStyle(
-        fontFamily: 'RobotoMono',
+        fontFamily: 'JosefinSans',
         fontVariations: [FontVariation('wght', 700)],
-        color: textColor,
+        color: accentColor,
         fontSize: 20,
       ),
     ),
