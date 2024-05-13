@@ -41,6 +41,7 @@ class _FindMedicinePageState extends State<FindMedicinePage> {
     return Scaffold(
         backgroundColor: backgroundColor,
         appBar: AppBar(
+          toolbarHeight: 10,
           backgroundColor: backgroundColor,
         ),
         body: Column(
@@ -56,19 +57,52 @@ class _FindMedicinePageState extends State<FindMedicinePage> {
 
   Widget _searchBox() {
     return Padding(
-      padding: const EdgeInsets.only(top: 5, right: 22, left: 22),
-      child: TextField(
-        decoration: const InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(50)),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: primaryColor,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(10),
+              child: Icon(Icons.search_outlined, color: text2Color),
             ),
-            labelText: "Search for medicine"),
-        onChanged: (value) {
-          setState(() {
-            _input = value;
-          });
-          fetchPharmacies(_input);
-        },
+            SizedBox(
+              width: 200,
+              child: TextField(
+                style: const TextStyle(
+                  fontFamily: 'JosefinSans',
+                  fontVariations: [FontVariation('wght', 500)],
+                  color: text2Color,
+                  fontSize: 16,
+                ),
+                cursorColor: text2Color,
+                decoration: const InputDecoration(
+                  hintText: "Search for medicine",
+                  hintStyle: TextStyle(
+                    fontFamily: 'JosefinSans',
+                    fontVariations: [FontVariation('wght', 500)],
+                    color: text2Color,
+                    fontSize: 16,
+                  ),
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _input = value;
+                  });
+                  fetchPharmacies(_input);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -97,8 +131,25 @@ class PharmacyResultsListState extends State<PharmacyResultsList> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(snapshot.data![index].name),
-                  subtitle: Text(snapshot.data![index].address),
+                  leading: const Icon(Icons.local_pharmacy, color: accentColor),
+                  title: Text(
+                    snapshot.data![index].name,
+                    style: const TextStyle(
+                      fontFamily: 'JosefinSans',
+                      fontVariations: [FontVariation('wght', 500)],
+                      color: primaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                  subtitle: Text(
+                    snapshot.data![index].address,
+                    style: const TextStyle(
+                      fontFamily: 'JosefinSans',
+                      fontVariations: [FontVariation('wght', 400)],
+                      color: subtext1Color,
+                      fontSize: 14,
+                    ),
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
