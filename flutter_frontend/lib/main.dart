@@ -70,31 +70,31 @@ class _HomePageState extends State<HomePage> {
             _currentPageIndex = index;
           });
         },
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        indicatorColor: const Color.fromARGB(127, 20, 219, 203),
+        backgroundColor: backgroundColor,
+        indicatorColor: primaryColor,
         selectedIndex: _currentPageIndex,
         height: 50,
         elevation: 0,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.map),
-            icon: Icon(Icons.map_outlined),
+            selectedIcon: Icon(Icons.map_outlined, color: text2Color),
+            icon: Icon(Icons.map_outlined, color: text1Color),
             label: 'Map',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.add_circle),
-            icon: Icon(Icons.add_circle_outline),
+            selectedIcon: Icon(Icons.add_circle_outline, color: text2Color),
+            icon: Icon(Icons.add_circle_outline, color: text1Color),
             label: 'Add Pharmacy',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.search),
-            icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(Icons.search_outlined, color: text2Color),
+            icon: Icon(Icons.search_outlined, color: text1Color),
             label: 'Search',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.account_circle),
-            icon: Icon(Icons.account_circle_outlined),
+            selectedIcon: Icon(Icons.account_circle_outlined, color: text2Color),
+            icon: Icon(Icons.account_circle_outlined, color: text1Color),
             label: 'Profile',
           ),
         ],
