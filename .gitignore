@@ -26,4 +26,8 @@ go.work
 # Ignore pharmacies and medicines images
 go_backend/internal/images/pharmacies/*
 go_backend/internal/images/medicines/*
+
 .vscode/
+
+# Ignore flutter jank metrics
+flutter_frontend/flutter_jank_metrics_*.json
