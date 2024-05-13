@@ -311,8 +311,8 @@ class _MedicineListState extends State<MedicineList> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: InkWell(
-                  splashColor: Colors.blue,
-                  highlightColor: Colors.blue,
+                  splashColor: primaryColor,
+                  highlightColor: primaryColor,
                   borderRadius: BorderRadius.circular(15),
                   onTap: () {
                     Navigator.push(

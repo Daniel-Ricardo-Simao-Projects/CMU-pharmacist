@@ -22,48 +22,94 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: backgroundColor,
-      appBar: _appBar(context),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 8, right: 8, top: 0, bottom: 13),
-        child: _medicineInfo(),
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: primaryColor,
+          floating: true,
+          expandedHeight: 200,
+          leading: backButton(context),
+          actions: notifyButton,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Container(
+              color: Colors.white,
+              child: Image.memory(
+                _decodeImage(widget.medicine.picture),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        SliverList(
+            delegate: SliverChildListDelegate([
+          _medicineDescription(widget.medicine),
+          const SizedBox(height: 20),
+          _pharmaciesAvailable(widget.medicine),
+        ])),
+      ]),
+    );
+  }
+
+  List<Widget> get notifyButton {
+    return [
+      Padding(
+        padding: const EdgeInsets.only(right: 15),
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: const BoxDecoration(
+            color: backgroundColor,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                spreadRadius: 0,
+                blurRadius: 5,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Center(
+            child: IconButton(
+              iconSize: 20,
+              onPressed: () {}, //TODO: Implement notification logic
+              icon:
+                  const Icon(Icons.notifications_outlined, color: primaryColor),
+            ),
+          ),
+        ),
       ),
-    );
+    ];
   }
 
-  ListView _medicineInfo() {
-    return ListView(
-      children: [
-        _medicineCard(widget.medicine),
-        const SizedBox(height: 20),
-        _pharmaciesAvailable(widget.medicine),
-      ],
-    );
-  }
-
-  Widget _medicineCard(Medicine medicine) {
+  Padding backButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.only(left: 15),
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: primaryColor,
-          boxShadow: const [
+        width: 35,
+        height: 35,
+        decoration: const BoxDecoration(
+          color: backgroundColor,
+          shape: BoxShape.circle,
+          boxShadow: [
             BoxShadow(
               color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 10),
+              spreadRadius: 0,
+              blurRadius: 5,
+              offset: Offset(0, 4),
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              _medicineImage(),
-              const SizedBox(height: 5),
-              _medicineDescription(medicine),
-            ],
+        child: Center(
+          child: IconButton(
+            iconSize: 20,
+            icon: const Icon(Icons.arrow_back, color: primaryColor),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            padding: const EdgeInsets.all(8),
           ),
         ),
       ),
@@ -72,17 +118,17 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
 
   Widget _pharmaciesAvailable(Medicine medicine) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.only(top: 20, left: 25, right: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'Pharmacies Available',
             style: TextStyle(
-              fontFamily: 'RobotoMono',
-              fontVariations: [FontVariation('wght', 500)],
-              color: accentColor, // TODO: Add new text colors (t1, t2)
-              fontSize: 18,
+              fontFamily: 'JosefinSans',
+              fontVariations: [FontVariation('wght', 700)],
+              color: accentColor,
+              fontSize: 20,
             ),
           ),
           const SizedBox(height: 10),
@@ -93,94 +139,52 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
   }
 
   Widget _medicineDescription(Medicine medicine) {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  medicine.name,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 700)],
-                    color: Colors.black,
-                    fontSize: 15,
-                    overflow: TextOverflow.ellipsis,
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 25, right: 25),
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      medicine.name,
+                      style: const TextStyle(
+                        fontFamily: 'JosefinSans',
+                        fontVariations: [FontVariation('wght', 700)],
+                        color: accentColor,
+                        fontSize: 18,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 5,
+                    ),
                   ),
-                ),
-                Text(
-                  medicine.details,
-                  style: const TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontVariations: [FontVariation('wght', 400)],
-                    color: Colors.black54,
-                    fontSize: 12,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      medicine.details,
+                      style: const TextStyle(
+                        fontFamily: 'JosefinSans',
+                        fontVariations: [FontVariation('wght', 400)],
+                        color: subtext1Color,
+                        fontSize: 13,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 10,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _medicineImage() {
-    return Container(
-      height: 180,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Image.memory(
-          _decodeImage(widget.medicine.picture),
-          fit: BoxFit.cover,
+          ],
         ),
       ),
-    );
-  }
-
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: backgroundColor,
-      title: const Text(
-        'Medicine Info',
-        style: TextStyle(
-          fontFamily: 'RobotoMono',
-          fontVariations: [FontVariation('wght', 700)],
-          color: textColor,
-          fontSize: 20,
-        ),
-      ),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: accentColor),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {}, // TODO: Implement notification logic
-          icon: const Icon(Icons.notifications_outlined, color: accentColor),
-        )
-      ],
     );
   }
 }
@@ -224,36 +228,38 @@ class _PharmacyListState extends State<PharmacyList> {
           return const Center(child: Text('Error fetching pharmacies'));
         } else {
           return ListView.builder(
+            padding: const EdgeInsets.all(0),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(bottom: 20),
                 child: InkWell(
-                  splashColor: Colors.blue,
-                  highlightColor: Colors.blue,
+                  splashColor: primaryColor,
+                  highlightColor: primaryColor,
                   borderRadius: BorderRadius.circular(15),
                   onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          PharmacyInfoPanel(pharmacy: snapshot.data![index]),
-                    ),
-                  );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PharmacyInfoPanel(pharmacy: snapshot.data![index]),
+                      ),
+                    );
                   },
                   child: Container(
-                    height: 70,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: primaryColor,
-                      boxShadow: const [
+                      gradient: glossyColor,
+                      boxShadow: [
                         BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 10),
+                          color: shadow1Color,
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3),
+                          blurStyle: BlurStyle.outer,
                         ),
                       ],
                     ),
@@ -291,35 +297,35 @@ class _PharmacyListState extends State<PharmacyList> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width: 250,
+                                    width: 230,
                                     child: Text(
                                       snapshot.data![index].name,
                                       style: const TextStyle(
-                                        fontFamily: 'RobotoMono',
+                                        fontFamily: 'JosefinSans',
                                         fontVariations: [
                                           FontVariation('wght', 700)
                                         ],
-                                        color: accentColor,
-                                        fontSize: 12,
-                                        overflow: TextOverflow.ellipsis,
+                                        color: text1Color,
+                                        fontSize: 14,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 250,
+                                    width: 230,
                                     child: Text(
                                       snapshot.data![index].address,
                                       style: const TextStyle(
-                                        fontFamily: 'RobotoMono',
+                                        fontFamily: 'JosefinSans',
                                         fontVariations: [
                                           FontVariation('wght', 400)
                                         ],
-                                        color: Colors.black54,
-                                        fontSize: 10,
-                                        overflow: TextOverflow.ellipsis,
+                                        color: subtext1Color,
+                                        fontSize: 12,
                                       ),
-                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
                                     ),
                                   ),
                                 ],
