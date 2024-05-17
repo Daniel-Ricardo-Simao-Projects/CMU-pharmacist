@@ -1,13 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_medicine_page.dart';
+import 'package:flutter_frontend/pages/add_medicine_panel.dart';
 import 'package:flutter_frontend/pages/medicine_panel.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class PharmacyInfoPanel extends StatefulWidget {
   final Pharmacy pharmacy;
@@ -139,13 +142,44 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
 
   FloatingActionButton _addMedicineButton(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  AddMedicinePage(PharmacyId: widget.pharmacy.id)),
-        );
+      onPressed: () async {
+        var res = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SimpleBarcodeScannerPage(),
+            ));
+        if (res != null) {
+          var medicine =
+              await MedicineService().getMedicineFromBarcode(res.toString());
+          if (medicine.id != 0) {
+            showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return AddMedicinePanel(
+                    pharmacyId: widget.pharmacy.id,
+                    medicine: medicine,
+                  );
+                });
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddMedicinePage(
+                  PharmacyId: widget.pharmacy.id,
+                  barcode: res.toString(),
+                ),
+              ),
+            );
+          }
+        } else {
+          // If the barcode is not found
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Barcode not found'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       },
       backgroundColor: primaryColor,
       child: const Icon(
@@ -329,7 +363,7 @@ class _MedicineListState extends State<MedicineList> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       gradient: glossyColor,
-                      boxShadow:  [
+                      boxShadow: [
                         BoxShadow(
                           color: shadow1Color,
                           spreadRadius: 5,

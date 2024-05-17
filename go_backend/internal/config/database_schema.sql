@@ -16,7 +16,8 @@ CREATE TABLE medicines (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   details TEXT NOT NULL,
-  image_path VARCHAR(255) DEFAULT NULL
+  image_path VARCHAR(255) DEFAULT NULL,
+  barcode VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE medicine_pharmacy (

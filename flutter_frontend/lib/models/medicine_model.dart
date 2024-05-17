@@ -7,6 +7,7 @@ class Medicine {
   final List<int> picture;
   final int stock;
   final int pharmacyId;
+  final String barcode;
 
   const Medicine({
     required this.id,
@@ -15,6 +16,7 @@ class Medicine {
     required this.picture,
     required this.stock,
     required this.pharmacyId,
+    required this.barcode,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,7 +25,8 @@ class Medicine {
       'details': details,
       'picture': picture,
       'stock': stock,
-      'pharmacyId': pharmacyId
+      'pharmacyId': pharmacyId,
+      'barcode': barcode,
     };
   }
 
@@ -34,6 +37,7 @@ class Medicine {
         details: json['details'],
         picture: base64Decode(json['picture']),
         stock: json['stock'],
-        pharmacyId: json['pharmacyId']);
+        pharmacyId: json['pharmacyId'],
+        barcode: json['barcode']);
   }
 }

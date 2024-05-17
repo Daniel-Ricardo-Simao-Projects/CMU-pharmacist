@@ -8,8 +8,13 @@ import 'package:image_picker/image_picker.dart';
 
 class AddMedicinePage extends StatefulWidget {
   final int PharmacyId;
+  final String barcode;
 
-  const AddMedicinePage({super.key, required this.PharmacyId});
+  const AddMedicinePage({
+    super.key,
+    required this.PharmacyId,
+    required this.barcode,
+  });
 
   @override
   _AddMedicinePageState createState() => _AddMedicinePageState();
@@ -20,6 +25,13 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   int _stock = 0;
   String _details = '';
   File? _image;
+  String barcode = '';
+
+  @override
+  void initState() {
+    super.initState();
+    barcode = widget.barcode;
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -63,6 +75,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       details: details,
       picture: imageBytes,
       pharmacyId: pharmacyId,
+      barcode: barcode,
     );
     MedicineService().addMedicine(newMedicine);
     Navigator.pop(context);
@@ -91,7 +104,9 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           _imagePreview(),
           const SizedBox(height: 20),
           _nameField(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 25),
+          _barcodeField(widget.barcode),
+          const SizedBox(height: 15),
           _quantityField(),
           const SizedBox(height: 20),
           _detailsField(),
@@ -169,6 +184,32 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     );
   }
 
+  Widget _barcodeField(String barcode) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Barcode:',
+          style: TextStyle(
+            fontFamily: 'JosefinSans',
+            fontVariations: [FontVariation('wght', 700)],
+            color: text1Color,
+            fontSize: 18,
+          ),
+        ),
+        Text(
+          barcode,
+          style: const TextStyle(
+            fontFamily: 'JosefinSans',
+            fontVariations: [FontVariation('wght', 400)],
+            color: text1Color,
+            fontSize: 15,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _detailsField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +246,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             fontSize: 14,
           ),
           maxLines: null,
-          minLines: 6,
+          minLines: 4,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter some details about the medicine.';

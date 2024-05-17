@@ -76,6 +76,7 @@ func PopulateDatabase() {
 			Stock:      100 + i,
 			PharmacyId: i,
 			Picture:    picture,
+      Barcode:    "1234567890123",
 		}
 		database.AddMedicine(medicine)
 	}

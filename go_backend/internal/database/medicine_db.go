@@ -5,12 +5,14 @@ import (
 	"encoding/base64"
 	"log"
 	"os"
+	"strings"
 
 	config "go_backend/internal/config"
 	models "go_backend/internal/models"
 	//utils "go_backend/internal/utils"
 )
 
+// TODO: Substitute primary key for barcode
 func GetMedicines(pharmacyId int) []models.Medicine {
 	rows, err := config.DB.Query("SELECT * FROM medicine_pharmacy WHERE pharmacy_id = ?", pharmacyId)
 	if err != nil {
@@ -26,7 +28,7 @@ func GetMedicines(pharmacyId int) []models.Medicine {
 		}
 		var image_path string
 		err = config.DB.QueryRow("SELECT * FROM medicines WHERE id = ?", medicine.Id).
-			Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path)
+			Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path, &medicine.Barcode)
 
 		if err != nil {
 			log.Fatal(err)
@@ -44,14 +46,63 @@ func GetMedicines(pharmacyId int) []models.Medicine {
 	return medicines
 }
 
+// TODO: Substitute primary key for barcode
+func GetMedicineFromBarcode(barcode string) models.Medicine {
+	var medicine models.Medicine
+	var image_path string
+	err := config.DB.QueryRow("SELECT * FROM medicines WHERE barcode = ?", barcode).
+		Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path, &medicine.Barcode)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return models.Medicine{Id: 0,
+				Name:       "",
+				Details:    "",
+				Picture:    "",
+				Barcode:    "",
+				PharmacyId: 0,
+				Stock:      0,
+			}
+		}
+		log.Fatal(err)
+	}
+
+	imageData, err := os.ReadFile(image_path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	medicine.Picture = base64.StdEncoding.EncodeToString(imageData)
+
+	return medicine
+}
+
 func AddMedicine(medicine models.Medicine) {
+	var medicineId int
+
+  // Find if medicine already exists
+	err := config.DB.QueryRow("SELECT id FROM medicines WHERE barcode = ?", medicine.Barcode).Scan(&medicineId)
+	if err != nil && err != sql.ErrNoRows {
+		log.Fatal(err)
+	}
+
+	if medicineId != 0 { // Only add medicine to pharmacy
+		_, err = config.DB.Exec("INSERT INTO medicine_pharmacy (medicine_id, pharmacy_id, stock) VALUES (?, ?, ?)", medicineId, medicine.PharmacyId, medicine.Stock)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+  // Register new medicine in the system
 	imageData, err := base64.StdEncoding.DecodeString(medicine.Picture)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// save picture (create directory if not exists)
-	imagePath := "internal/images/medicines/" + medicine.Name + ".png"
+	// trim spaces from medicine name
+	medicine.Name = strings.TrimSpace(medicine.Name)
+	medicinePathName := strings.ReplaceAll(medicine.Name, " ", "_")
+	imagePath := "internal/images/medicines/" + medicinePathName + ".png"
 
 	err = os.WriteFile(imagePath, imageData, 0644)
 	if err != nil {
@@ -61,7 +112,6 @@ func AddMedicine(medicine models.Medicine) {
 	// print picture
 	//utils.Info(medicine.Picture)
 
-	var medicineId int
 	err = config.DB.QueryRow("SELECT id FROM medicines WHERE name = ?", medicine.Name).Scan(&medicineId)
 	if err != nil && err != sql.ErrNoRows {
 		log.Fatal(err)
@@ -69,7 +119,7 @@ func AddMedicine(medicine models.Medicine) {
 
 	// Register new medicine in the system
 	if medicineId == 0 {
-		_, err = config.DB.Exec("INSERT INTO medicines (name, details, image_path) VALUES (?, ?, ?)", medicine.Name, medicine.Details, imagePath)
+		_, err = config.DB.Exec("INSERT INTO medicines (name, details, image_path, barcode) VALUES (?, ?, ?, ?)", medicine.Name, medicine.Details, imagePath, medicine.Barcode)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -128,7 +178,7 @@ func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
 }
 
 func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
-    // TODO: Maybe sanitize input (?)
+	// TODO: Maybe sanitize input (?)
 	medicineInput = "%" + medicineInput + "%"
 	medicineRows, err := config.DB.Query("SELECT id FROM medicines WHERE name LIKE ?", medicineInput)
 	if err != nil {

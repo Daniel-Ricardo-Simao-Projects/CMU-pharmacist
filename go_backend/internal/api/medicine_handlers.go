@@ -14,6 +14,10 @@ type GetMedicineMessage struct {
 	PharmacyID int `json:"pharmacyId"`
 }
 
+type GetMedicineFromBarcodeMessage struct {
+  Barcode string `json:"barcode"`
+}
+
 type getPharmaciesMessage struct {
 	MedicineID int `json:"medicineId"`
 }
@@ -32,6 +36,19 @@ func GetMedicineHandler(c *gin.Context) {
 	medicines := db.GetMedicines(message.PharmacyID)
 
 	c.JSON(http.StatusOK, gin.H{"medicines": medicines})
+}
+
+func GetMedicineFromBarcodeHandler(c *gin.Context) {
+  var message GetMedicineFromBarcodeMessage
+  if err := c.ShouldBindJSON(&message); err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    utils.Error("Error binding JSON")
+    return
+  }
+  medicine := db.GetMedicineFromBarcode(message.Barcode)
+  println("Found Medicine with barcode: ")
+  println(medicine.Name)
+  c.JSON(http.StatusOK, gin.H{"medicine": medicine})
 }
 
 func AddMedicineHandler(c *gin.Context) {

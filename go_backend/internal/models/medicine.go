@@ -7,4 +7,5 @@ type Medicine struct {
 	Picture    string `json:"picture"`
 	Stock      int    `json:"stock"`
 	PharmacyId int    `json:"pharmacyId"`
+  Barcode    string `json:"barcode"`
 }

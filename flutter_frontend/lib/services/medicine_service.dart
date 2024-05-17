@@ -21,6 +21,7 @@ class MedicineService {
         'details': medicine.details,
         'picture': pictureBase64,
         'pharmacyId': medicine.pharmacyId,
+        'barcode': medicine.barcode,
       };
 
       await dio.post(medicineURL, data: medicineJson);
@@ -29,6 +30,7 @@ class MedicineService {
     }
   }
 
+  // TODO: Review if it is necessary to add barcode specification/implementation down here
   // To Show in the pharmacy panel
   Future<List<Medicine>> getMedicinesFromPharmacy(int pharmacyId) async {
     late List<Medicine> medicines;
@@ -80,6 +82,19 @@ class MedicineService {
       pharmacies = [];
     }
     return pharmacies;
+  }
+
+  // Get medicine given a barcode
+  Future<Medicine> getMedicineFromBarcode(String barcode) async {
+    late Medicine medicine;
+    try {
+      final res = await dio.get('$medicineURL/barcode', data: {'barcode': barcode});
+
+      medicine = Medicine.fromJson(res.data['medicine']);
+    } catch (e) {
+      medicine = const Medicine(id: 0, name: '', stock: 0, details: '', picture: [], pharmacyId: 0, barcode: '');
+    }
+    return medicine;
   }
 
   // TODO: Maybe add a new method to update the stock of a medicine
