@@ -50,11 +50,11 @@ class _MapsPageState extends State<MapsPage>
       log(error.toString());
     });
 
-    DefaultAssetBundle.of(context)
-        .loadString('assets/map_themes/silver_map.json')
-        .then((value) {
-      _mapTheme = value;
-    });
+    // DefaultAssetBundle.of(context)
+    //     .loadString('assets/map_themes/silver_map.json')
+    //     .then((value) {
+    //   _mapTheme = value;
+    // });
 
     BitmapDescriptor.fromAssetImage(
       ImageConfiguration.empty,
