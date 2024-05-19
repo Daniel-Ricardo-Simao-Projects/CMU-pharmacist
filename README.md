@@ -100,6 +100,7 @@ The default URL is localhost:5000.
     - [x] The map can be dragged or centered on current location;
     - [ ] Search for pharmacy given the address
     - [x] Favorite pharmacies have a different marker;
+        - [ ] *Note: fix this, the map is not refreshed when a marker is set (and/or in another cases)*
     - [x] Tapping a marker goes to a pharmacy information panel;
 - [ ] There should be an option to add a new pharmacy with:
     - [x] Name;
@@ -109,19 +110,21 @@ The default URL is localhost:5000.
 - [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
     - [x] Search with a sub-string;
     - [ ] *Note: Closest pharmacy is not implemented yet.*
+    - [ ] *Note: fix performance issue, maybe fetch only the first 10 results and load more on demand/render only a subset*
 - [ ] Pharmacy Information Panel:
     - [x] Show name
     - [ ] Show location. Button to navigate there;
         - *Note: location is just a string, no map integration yet.*
     - [x] Show picture
     - [x] List available medicines;
-    - [ ] Button to add medicine stock (scan barcode)or create medicine if code unknown:
-        - [ ] *Note: Add barcode and automated support*
+    - [x] Button to add medicine stock (scan barcode)or create medicine if code unknown:
+        - [x] Scan barcode
+            - [ ] *Note: Now is mandatory to scan barcodes, **maybe** add manual input*
         - [x] Name;
         - [x] Box photo (from camera or file);
         - [x] Quantity;
         - [x] Purpose/Preferred Use;
-    - [ ] Button to purchase/reduce stock (scan barcode);
+    - [x] Button to purchase/reduce stock (scan barcode);
     - [x] Button to add/remove from favorites;
     - [x] Tapping medicines opens medicine information panel;
 - [ ] Medicine Information Panel:
@@ -138,7 +141,7 @@ The default URL is localhost:5000.
 - [ ] User Accounts;
 - [ ] Social Sharing To Other Apps;
 - [ ] Localization (L10n);
-- [ ] UI Adaptability: Rotation;
+- [x] UI Adaptability: Rotation; *Note: **Maybe** done, automagically*
 - [ ] UI Adaptability: Light/Dark Theme;
 - [ ] Recommendations;
 

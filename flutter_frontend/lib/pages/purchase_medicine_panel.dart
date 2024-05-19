@@ -3,45 +3,38 @@ import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 
-class AddMedicinePanel extends StatefulWidget {
+class PurchaseMedicinePanel extends StatefulWidget {
   final int pharmacyId;
   final Medicine medicine;
 
-  const AddMedicinePanel(
+  const PurchaseMedicinePanel(
       {super.key, required this.pharmacyId, required this.medicine});
 
   @override
-  State<AddMedicinePanel> createState() => _AddMedicinePanelState();
+  State<PurchaseMedicinePanel> createState() => _PurchaseMedicinePanelState();
 }
 
-class _AddMedicinePanelState extends State<AddMedicinePanel> {
-  int _stock = 0;
+class _PurchaseMedicinePanelState extends State<PurchaseMedicinePanel> {
+  int _quantity = 0;
 
-  void _incrementStock() {
+  void _incrementPurchase() {
     setState(() {
-      _stock++;
-    });
-  }
-
-  void _decrementStock() {
-    setState(() {
-      if (_stock > 0) {
-        _stock--;
+      if (_quantity < widget.medicine.stock) {
+        _quantity++;
       }
     });
   }
 
-  void _addMedicine() {
-    Medicine newMedicine = Medicine(
-      id: widget.medicine.id,
-      name: widget.medicine.name,
-      details: widget.medicine.details,
-      picture: widget.medicine.picture,
-      stock: _stock,
-      pharmacyId: widget.pharmacyId,
-      barcode: widget.medicine.barcode,
-    );
-    MedicineService().addMedicine(newMedicine);
+  void _decrementPurchase() {
+    setState(() {
+      if (_quantity > 0) {
+        _quantity--;
+      }
+    });
+  }
+
+  void _purchaseMedicine() {
+    MedicineService().purchaseMedicine(widget.medicine.id, widget.pharmacyId, _quantity);
     Navigator.pop(context);
   }
 
@@ -64,13 +57,12 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
           Padding(
             padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.add_box, color: accentColor, size: 30),
+                const Icon(Icons.shopping_bag, color: accentColor, size: 30),
                 const SizedBox(width: 10),
                 const Text(
-                  'Add ',
+                  'Purchase ',
                   style: TextStyle(
                     fontFamily: 'JosefinSans',
                     fontVariations: [FontVariation('wght', 400)],
@@ -138,7 +130,7 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        _decrementStock();
+                        _decrementPurchase();
                       },
                       icon: const Icon(
                         Icons.remove,
@@ -146,7 +138,7 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                       ),
                     ),
                     Text(
-                      '$_stock',
+                      '$_quantity',
                       style: const TextStyle(
                         fontFamily: 'JosefinSans',
                         fontVariations: [FontVariation('wght', 400)],
@@ -156,7 +148,7 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                     ),
                     IconButton(
                       onPressed: () {
-                        _incrementStock();
+                        _incrementPurchase();
                       },
                       icon: const Icon(
                         Icons.add,
@@ -188,10 +180,10 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
               ),
               child: TextButton(
                   onPressed: () {
-                    _addMedicine();
+                    _purchaseMedicine();
                   },
                   child: const Text(
-                    'Save',
+                    'Purchase',
                     style: TextStyle(
                       fontFamily: 'JosefinSans',
                       fontVariations: [FontVariation('wght', 500)],

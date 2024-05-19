@@ -38,6 +38,7 @@ func main() {
 
 	r.GET("/medicines", api.GetMedicineHandler)
 	r.POST("/medicines", api.AddMedicineHandler)
+  r.PUT("/medicines/purchase", api.UpdateMedicineHandler)
   r.GET("/medicines/barcode", api.GetMedicineFromBarcodeHandler)
 	r.GET("/medicines/pharmacies", api.GetPharmacyWithMedicineHandler)
 	r.GET("/medicines/pharmacies-search", api.SearchPharmacyWithMedicineHandler)

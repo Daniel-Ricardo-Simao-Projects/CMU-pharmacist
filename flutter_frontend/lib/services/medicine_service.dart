@@ -97,5 +97,13 @@ class MedicineService {
     return medicine;
   }
 
+  void purchaseMedicine(int medicineId, int pharmacyId, int quantity) {
+    try {
+      dio.put('$medicineURL/purchase',
+          data: {'medicineId': medicineId, 'pharmacyId': pharmacyId, 'quantity': quantity});
+    } catch (e) {
+      rethrow;
+    }
+  }
   // TODO: Maybe add a new method to update the stock of a medicine
 }

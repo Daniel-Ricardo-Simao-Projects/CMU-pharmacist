@@ -7,6 +7,7 @@ import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_medicine_page.dart';
 import 'package:flutter_frontend/pages/add_medicine_panel.dart';
 import 'package:flutter_frontend/pages/medicine_panel.dart';
+import 'package:flutter_frontend/pages/purchase_medicine_panel.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
@@ -358,6 +359,17 @@ class _MedicineListState extends State<MedicineList> {
                       ),
                     );
                   },
+                  onLongPress: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddMedicinePanel(
+                          pharmacyId: widget.pharmacyId,
+                          medicine: snapshot.data![index],
+                        );
+                      },
+                    );
+                  },
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -460,17 +472,20 @@ class _MedicineListState extends State<MedicineList> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               InkWell(
-                                onTap: () {},
-                                child: const Icon(Icons.add,
-                                    color: text1Color,
-                                    size: 25), // TODO: Implement add stock
-                              ),
-                              const SizedBox(width: 8),
-                              InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return PurchaseMedicinePanel(
+                                        pharmacyId: widget.pharmacyId,
+                                        medicine: snapshot.data![index],
+                                      );
+                                    },
+                                  );
+                                },
                                 child: const Icon(Icons.shopping_bag_outlined,
                                     color: text1Color,
-                                    size: 25), // TODO: Implement reduce stock
+                                    size: 28),
                               ),
                             ],
                           ),

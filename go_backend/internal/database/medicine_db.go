@@ -26,6 +26,11 @@ func GetMedicines(pharmacyId int) []models.Medicine {
 		if err != nil {
 			log.Fatal(err)
 		}
+    
+    if medicine.Stock == 0 {
+      continue
+    }
+
 		var image_path string
 		err = config.DB.QueryRow("SELECT * FROM medicines WHERE id = ?", medicine.Id).
 			Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path, &medicine.Barcode)
@@ -150,6 +155,13 @@ func AddMedicine(medicine models.Medicine) {
 		log.Fatal(err)
 	}
 
+}
+
+func UpdateMedicine(medicineId, pharmacyId, quantity int) {
+	_, err := config.DB.Exec("UPDATE medicine_pharmacy SET stock = stock - ? WHERE medicine_id = ? AND pharmacy_id = ?", quantity, medicineId, pharmacyId)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
