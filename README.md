@@ -96,15 +96,18 @@ The default URL is localhost:5000.
 
 ## Mandatory Features
 - [x] Allow users to create a username in the application/system.
-- [ ] Show a map with pharmacy locations:
+- [x] Show a map with pharmacy locations:
     - [x] The map can be dragged or centered on current location;
-    - [ ] Search for pharmacy given the address
+    - [x] Search for pharmacy given the address
     - [x] Favorite pharmacies have a different marker;
         - [ ] *Note: fix this, the map is not refreshed when a marker is set (and/or in another cases)*
     - [x] Tapping a marker goes to a pharmacy information panel;
 - [ ] There should be an option to add a new pharmacy with:
     - [x] Name;
-    - [ ] Pick location on map, use address, or current location;
+    - [ ] Pick location 
+        - [ ] on map, 
+        - [x] use address, or 
+        - [ ] current location;
         - *Note: location is just a string, no map integration yet.*
     - [x] Take picture;
 - [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
@@ -133,6 +136,7 @@ The default URL is localhost:5000.
     - [ ] List pharmacies where available, sorted by distance.
         - [x] List pharmacies where available.
         - [ ] *Note: Sorted by distance.*
+- [ ] Do map directions ?????
 
 ## Optional Features
 - [ ] Securing Communication;
