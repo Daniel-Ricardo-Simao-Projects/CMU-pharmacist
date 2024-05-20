@@ -11,8 +11,10 @@ import 'package:flutter_frontend/themes/colors.dart';
 
 import 'models/pharmacy_model.dart';
 import 'services/pharmacy_service.dart';
+import 'database/app_database.dart';
+import 'models/user_model.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Transparent status bar
@@ -20,11 +22,20 @@ void main() {
   ));
   //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   log(const String.fromEnvironment('URL'));
-  runApp(const MyApp());
+
+  final database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+  final userDao = database.userDao;
+  User? loggedInUser = await userDao.findLoggedInUser();
+
+  runApp(MyApp(loggedInUser: loggedInUser));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final User? loggedInUser;
+
+  const MyApp({super.key, this.loggedInUser});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +47,7 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromARGB(255, 73, 168, 112)),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: loggedInUser == null ? const LoginPage() : const HomePage(),
     );
   }
 }
@@ -93,7 +104,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Search',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.account_circle_outlined, color: text2Color),
+            selectedIcon:
+                Icon(Icons.account_circle_outlined, color: text2Color),
             icon: Icon(Icons.account_circle_outlined, color: text1Color),
             label: 'Profile',
           ),

@@ -3,6 +3,8 @@ import 'package:flutter_frontend/main.dart';
 import 'package:flutter_frontend/pages/create_user_page.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 import '../services/user_service.dart';
+import '../models/user_model.dart';
+import '../database/app_database.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -83,7 +85,8 @@ class _LoginPageState extends State<LoginPage> {
                           contentPadding: EdgeInsets.only(bottom: 10),
                           border: UnderlineInputBorder(),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor, width: 2),
+                            borderSide:
+                                BorderSide(color: primaryColor, width: 2),
                           ),
                         ),
                       ),
@@ -110,7 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                           contentPadding: EdgeInsets.only(bottom: 10),
                           border: UnderlineInputBorder(),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: primaryColor, width: 2),
+                            borderSide:
+                                BorderSide(color: primaryColor, width: 2),
                           ),
                         ),
                       ),
@@ -171,11 +175,46 @@ class _LoginPageState extends State<LoginPage> {
     // Check if BuildContext is valid
     if (_dialogContext != null && mounted) {
       if (isAuthenticated) {
+        final database =
+            await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+        final userDao = database.userDao;
+
+        // Clear previous logged in status
+        User? loggedInUser = await userDao.findLoggedInUser();
+        if (loggedInUser != null) {
+          await userDao.updateUser(User(
+            id: loggedInUser.id,
+            name: loggedInUser.name,
+            password: loggedInUser.password,
+            isLogged: false,
+          ));
+        }
+
+        // Insert or update the current user
+        User? user = await userDao.findUserById(1);
+        if (user != null) {
+          await userDao.updateUser(User(
+            id: 1,
+            name: username,
+            password: password,
+            isLogged: true,
+          ));
+        } else {
+          await userDao.insertUser(User(
+            id: 1,
+            name: username,
+            password: password,
+            isLogged: true,
+          ));
+        }
+
         Navigator.pushReplacement(
           _dialogContext!,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
+        print(
+            "Failed to login with username: $username and password: $password");
         ScaffoldMessenger.of(_dialogContext!).showSnackBar(
           const SnackBar(
             content: Text('Failed to login'),

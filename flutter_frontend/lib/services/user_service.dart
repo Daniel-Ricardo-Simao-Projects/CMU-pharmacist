@@ -59,7 +59,7 @@ class UserService {
       // Check if the response contains a message indicating successful authentication
       if (response.statusCode == 200) {
         print("User authenticated successfully" + response.data.toString());
-        user = User.fromJson(response.data);
+        user = User.fromJsonWithoutLastAttribute(response.data);
         saveUser(user);
         // Store the authenticated user in the user object
         // User authenticated successfully
