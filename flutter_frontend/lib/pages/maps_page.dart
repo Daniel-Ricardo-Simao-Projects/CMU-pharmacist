@@ -321,7 +321,7 @@ class _MapsPageState extends State<MapsPage>
         markerId: MarkerId(p.id.toString()),
         position: coordinates!,
         icon: favoritePharmacies.contains(p.id)
-            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
+            ? _favoritePharmacyIcon
             : _pharmacyIcon,
         infoWindow: InfoWindow(
           title: p.name,
