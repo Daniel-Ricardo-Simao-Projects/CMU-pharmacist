@@ -54,8 +54,8 @@ class MedicineService {
     List<Medicine> medicines = [];
     try {
       //TODO: Change URL
-      final res =
-          await dio.get('$medicineURL/from_pharmacy', data: {'pharmacyId': pharmacyId});
+      final res = await dio
+          .get('$medicineURL/from_pharmacy', data: {'pharmacyId': pharmacyId});
 
       medicinesInPharmacy = res.data['medicinesInPharmacy']
           .map<MedicineInPharmacy>(
@@ -83,9 +83,13 @@ class MedicineService {
 
       final newMedicines = await getMedicinesFromIds(medicineIdsNotCached);
       for (var newMedicine in newMedicines) {
+        newMedicine.stock = medicinesInPharmacy
+            .firstWhere((element) => element.medicineId == newMedicine.id)
+            .stock;
         medicines.add(newMedicine);
         await database.medicineDao.insertMedicine(newMedicine);
       }
+      database.close();
     } catch (e) {
       medicinesInPharmacy = [];
     }
@@ -98,7 +102,8 @@ class MedicineService {
     late List<Medicine> medicines;
     try {
       //TODO: Maybe Change URL
-      final res = await dio.get('$medicineURL/with_ids', data: {'medicineIds': medicineIds});
+      final res = await dio
+          .get('$medicineURL/with_ids', data: {'medicineIds': medicineIds});
 
       medicines = res.data['medicines']
           .map<Medicine>(
