@@ -74,6 +74,8 @@ class _$AppDatabase extends AppDatabase {
 
   UserDao? _userDaoInstance;
 
+  MedicineDao? _medicineDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -97,6 +99,8 @@ class _$AppDatabase extends AppDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `password` TEXT NOT NULL, `isLogged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Medicine` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `details` TEXT NOT NULL, `picture` TEXT NOT NULL, `stock` INTEGER NOT NULL, `pharmacyId` INTEGER NOT NULL, `barcode` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -107,6 +111,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   UserDao get userDao {
     return _userDaoInstance ??= _$UserDao(database, changeListener);
+  }
+
+  @override
+  MedicineDao get medicineDao {
+    return _medicineDaoInstance ??= _$MedicineDao(database, changeListener);
   }
 }
 
@@ -191,5 +200,104 @@ class _$UserDao extends UserDao {
   @override
   Future<void> deleteUser(User user) async {
     await _userDeletionAdapter.delete(user);
+  }
+}
+
+class _$MedicineDao extends MedicineDao {
+  _$MedicineDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _medicineInsertionAdapter = InsertionAdapter(
+            database,
+            'Medicine',
+            (Medicine item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'details': item.details,
+                  'picture': item.picture,
+                  'stock': item.stock,
+                  'pharmacyId': item.pharmacyId,
+                  'barcode': item.barcode
+                }),
+        _medicineUpdateAdapter = UpdateAdapter(
+            database,
+            'Medicine',
+            ['id'],
+            (Medicine item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'details': item.details,
+                  'picture': item.picture,
+                  'stock': item.stock,
+                  'pharmacyId': item.pharmacyId,
+                  'barcode': item.barcode
+                }),
+        _medicineDeletionAdapter = DeletionAdapter(
+            database,
+            'Medicine',
+            ['id'],
+            (Medicine item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'details': item.details,
+                  'picture': item.picture,
+                  'stock': item.stock,
+                  'pharmacyId': item.pharmacyId,
+                  'barcode': item.barcode
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Medicine> _medicineInsertionAdapter;
+
+  final UpdateAdapter<Medicine> _medicineUpdateAdapter;
+
+  final DeletionAdapter<Medicine> _medicineDeletionAdapter;
+
+  @override
+  Future<List<Medicine>> findAllMedicines() async {
+    return _queryAdapter.queryList('SELECT * FROM Medicine',
+        mapper: (Map<String, Object?> row) => Medicine(
+            id: row['id'] as int,
+            name: row['name'] as String,
+            details: row['details'] as String,
+            picture: row['picture'] as String,
+            stock: row['stock'] as int,
+            pharmacyId: row['pharmacyId'] as int,
+            barcode: row['barcode'] as String));
+  }
+
+  @override
+  Future<Medicine?> findMedicineById(int id) async {
+    return _queryAdapter.query('SELECT * FROM Medicine WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Medicine(
+            id: row['id'] as int,
+            name: row['name'] as String,
+            details: row['details'] as String,
+            picture: row['picture'] as String,
+            stock: row['stock'] as int,
+            pharmacyId: row['pharmacyId'] as int,
+            barcode: row['barcode'] as String),
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> insertMedicine(Medicine medicine) async {
+    await _medicineInsertionAdapter.insert(medicine, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateMedicine(Medicine medicine) async {
+    await _medicineUpdateAdapter.update(medicine, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteMedicine(Medicine medicine) async {
+    await _medicineDeletionAdapter.delete(medicine);
   }
 }

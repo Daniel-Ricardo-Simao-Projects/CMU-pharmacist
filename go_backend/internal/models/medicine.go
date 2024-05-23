@@ -9,3 +9,9 @@ type Medicine struct {
 	PharmacyId int    `json:"pharmacyId"`
   Barcode    string `json:"barcode"`
 }
+
+type MedicineFromPharmacy struct {
+  MedicineId int `json:"medicineId"`
+  PharmacyId int `json:"pharmacyId"`
+  Stock      int `json:"stock"`
+}

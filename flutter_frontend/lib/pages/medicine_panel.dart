@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
@@ -15,8 +17,8 @@ class MedicineInfoPage extends StatefulWidget {
 }
 
 class _MedicineInfoPageState extends State<MedicineInfoPage> {
-  Uint8List _decodeImage(List<int> imageBytes) {
-    return Uint8List.fromList(imageBytes);
+  Uint8List _decodeImage(String imageBytes) {
+    return base64Decode(imageBytes);
   }
 
   @override

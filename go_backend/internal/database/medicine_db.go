@@ -12,7 +12,7 @@ import (
 	//utils "go_backend/internal/utils"
 )
 
-// TODO: Substitute primary key for barcode
+// TODO: This will probably be removed
 func GetMedicines(pharmacyId int) []models.Medicine {
 	rows, err := config.DB.Query("SELECT * FROM medicine_pharmacy WHERE pharmacy_id = ?", pharmacyId)
 	if err != nil {
@@ -51,7 +51,54 @@ func GetMedicines(pharmacyId int) []models.Medicine {
 	return medicines
 }
 
-// TODO: Substitute primary key for barcode
+func GetMedicinesFromPharmacy(pharmacyId int) []models.MedicineFromPharmacy {
+	rows, err := config.DB.Query("SELECT * FROM medicine_pharmacy WHERE pharmacy_id = ?", pharmacyId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+  medicines := []models.MedicineFromPharmacy{}
+	for rows.Next() {
+		var medicine models.MedicineFromPharmacy
+		err := rows.Scan(&medicine.MedicineId, &medicine.PharmacyId, &medicine.Stock)
+		if err != nil {
+			log.Fatal(err)
+		}
+    
+    if medicine.Stock == 0 {
+      continue
+    }
+		medicines = append(medicines, medicine)
+	}
+
+	return medicines
+}
+
+func GetMedicinesWithIds(medicineIds []int) []models.Medicine {
+  medicines := []models.Medicine{}
+  println("Received Medicine IDs: ")
+  for _, medicineId := range medicineIds {
+    println(medicineId)
+    var medicine models.Medicine
+    var image_path string
+    err := config.DB.QueryRow("SELECT * FROM medicines WHERE id = ?", medicineId).
+      Scan(&medicine.Id, &medicine.Name, &medicine.Details, &image_path, &medicine.Barcode)
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    imageData, err := os.ReadFile(image_path)
+    if err != nil {
+      log.Fatal(err)
+    }
+    medicine.Picture = base64.StdEncoding.EncodeToString(imageData)
+
+    medicines = append(medicines, medicine)
+  }
+
+  return medicines
+}
+
 func GetMedicineFromBarcode(barcode string) models.Medicine {
 	var medicine models.Medicine
 	var image_path string

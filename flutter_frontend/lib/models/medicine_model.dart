@@ -1,15 +1,17 @@
-import 'dart:convert';
+import 'package:floor/floor.dart';
 
+@entity
 class Medicine {
+  @primaryKey
   final int id;
   final String name;
   final String details;
-  final List<int> picture;
-  final int stock;
-  final int pharmacyId;
+  final String picture;
+  int stock;
+  int pharmacyId;
   final String barcode;
 
-  const Medicine({
+  Medicine({
     required this.id,
     required this.name,
     required this.details,
@@ -35,7 +37,7 @@ class Medicine {
         id: json['id'],
         name: json['name'],
         details: json['details'],
-        picture: base64Decode(json['picture']),
+        picture: json['picture'],
         stock: json['stock'],
         pharmacyId: json['pharmacyId'],
         barcode: json['barcode']);

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -313,7 +314,7 @@ class _MedicineListState extends State<MedicineList> {
   @override
   initState() {
     super.initState();
-    medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacyId);
+    medicines = medicineService.getMedicinesFromPharmacyWithCache(widget.pharmacyId);
   }
 
   Future<void> _refreshMedicines() async {
@@ -323,8 +324,8 @@ class _MedicineListState extends State<MedicineList> {
     });
   }
 
-  Uint8List _decodeImage(List<int> imageBytes) {
-    return Uint8List.fromList(imageBytes);
+  Uint8List _decodeImage(String imageBytes) {
+    return base64Decode(imageBytes);
   }
 
   @override
