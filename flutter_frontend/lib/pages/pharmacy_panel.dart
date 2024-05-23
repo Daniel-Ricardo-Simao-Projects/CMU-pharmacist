@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_medicine_page.dart';
@@ -26,12 +24,15 @@ class PharmacyInfoPanel extends StatefulWidget {
 
 class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   bool isFavorite = false; // Initially not a favorite
+  final medicineService = MedicineService();
+  late Future<List<Medicine>> medicines;
 
   @override
   void initState() {
     super.initState();
     // Check if the pharmacy is already in user's favorites when the widget is initialized
     checkFavoriteStatus();
+    medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacy.id);
   }
 
   void checkFavoriteStatus() async {
@@ -44,33 +45,42 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
     });
   }
 
+  Future<void> _refreshMedicines() async {
+    setState(() {
+      medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacy.id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: backgroundColor,
-      body: CustomScrollView(slivers: [
-        SliverAppBar(
-          pinned: true,
-          backgroundColor: primaryColor,
-          floating: true,
-          expandedHeight: 200,
-          leading: backButton(context),
-          actions: favoritePharmacyButton,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Image.memory(
-              _decodeImage(widget.pharmacy.picture),
-              fit: BoxFit.cover,
+      body: RefreshIndicator(
+        onRefresh: _refreshMedicines,
+        child: CustomScrollView(slivers: [
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: primaryColor,
+            floating: true,
+            expandedHeight: 200,
+            leading: backButton(context),
+            actions: favoritePharmacyButton,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Image.memory(
+                _decodeImage(widget.pharmacy.picture),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ),
-        SliverList(
-            delegate: SliverChildListDelegate([
-          _pharmacyDetails(widget.pharmacy),
-          const SizedBox(height: 20),
-          _pharmacyMedicines(widget.pharmacy),
-        ])),
-      ]),
+          SliverList(
+              delegate: SliverChildListDelegate([
+            _pharmacyDetails(widget.pharmacy),
+            const SizedBox(height: 20),
+            _pharmacyMedicines(widget.pharmacy),
+          ])),
+        ]),
+      ),
       floatingActionButton: _addMedicineButton(context),
     );
   }
@@ -208,7 +218,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
             ),
           ),
           const SizedBox(height: 10),
-          MedicineList(pharmacyId: pharmacy.id),
+          _medicines(context, medicines),
         ],
       ),
     );
@@ -295,42 +305,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
     }
   }
 
-  Uint8List _decodeImage(List<int> imageBytes) {
-    return Uint8List.fromList(imageBytes);
-  }
-}
-
-class MedicineList extends StatefulWidget {
-  final int pharmacyId;
-  const MedicineList({super.key, required this.pharmacyId});
-
-  @override
-  State<MedicineList> createState() => _MedicineListState();
-}
-
-class _MedicineListState extends State<MedicineList> {
-  final medicineService = MedicineService();
-  late Future<List<Medicine>> medicines;
-
-  @override
-  initState() {
-    super.initState();
-    medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacyId);
-  }
-
-  Future<void> _refreshMedicines() async {
-    // TODO: Implement refresh
-    setState(() {
-      medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacyId);
-    });
-  }
-
-  Uint8List _decodeImage(String imageBytes) {
-    return base64Decode(imageBytes);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _medicines(BuildContext context, Future<List<Medicine>> medicines) {
     return FutureBuilder<List<Medicine>>(
       future: medicines,
       builder: (context, snapshot) {
@@ -366,7 +341,7 @@ class _MedicineListState extends State<MedicineList> {
                       context: context,
                       builder: (BuildContext context) {
                         return AddMedicinePanel(
-                          pharmacyId: widget.pharmacyId,
+                          pharmacyId: widget.pharmacy.id,
                           medicine: snapshot.data![index],
                         );
                       },
@@ -478,7 +453,7 @@ class _MedicineListState extends State<MedicineList> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return PurchaseMedicinePanel(
-                                        pharmacyId: widget.pharmacyId,
+                                        pharmacyId: widget.pharmacy.id,
                                         medicine: snapshot.data![index],
                                       );
                                     },
@@ -500,5 +475,9 @@ class _MedicineListState extends State<MedicineList> {
         }
       },
     );
+  }
+
+  Uint8List _decodeImage(List<int> imageBytes) {
+    return Uint8List.fromList(imageBytes);
   }
 }
