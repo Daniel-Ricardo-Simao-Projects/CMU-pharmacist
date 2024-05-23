@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_frontend/database/app_database.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import '../models/medicine_in_pharmacy.dart';
 import '../models/medicine_model.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MedicineService {
   final String medicineURL =
@@ -30,26 +33,7 @@ class MedicineService {
   }
 
   // To Show in the pharmacy panel
-  // TODO: Delete this method
   Future<List<Medicine>> getMedicinesFromPharmacy(int pharmacyId) async {
-    late List<Medicine> medicines;
-    try {
-      final res = await dio.get(medicineURL, data: {'pharmacyId': pharmacyId});
-
-      medicines = res.data['medicines']
-          .map<Medicine>(
-            (item) => Medicine.fromJson(item),
-          )
-          .toList();
-    } catch (e) {
-      medicines = [];
-    }
-    return medicines;
-  }
-
-  // To show in the pharmacy panel
-  Future<List<Medicine>> getMedicinesFromPharmacyWithCache(
-      int pharmacyId) async {
     late List<MedicineInPharmacy> medicinesInPharmacy;
     List<Medicine> medicines = [];
     try {
@@ -86,6 +70,14 @@ class MedicineService {
         newMedicine.stock = medicinesInPharmacy
             .firstWhere((element) => element.medicineId == newMedicine.id)
             .stock;
+
+        // Save image in file and register the path
+        final fileName = '${newMedicine.name.replaceAll(' ', '_')}.jpg';
+        final appDocDir = await getApplicationDocumentsDirectory();
+        final file = File('${appDocDir.path}/$fileName');
+        await file.writeAsBytes(base64Decode(newMedicine.picture));
+        newMedicine.picture = file.path;
+
         medicines.add(newMedicine);
         await database.medicineDao.insertMedicine(newMedicine);
       }

@@ -6,7 +6,7 @@ class Medicine {
   final int id;
   final String name;
   final String details;
-  final String picture;
+  String picture;
   int stock;
   int pharmacyId;
   final String barcode;
