@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,9 +18,6 @@ class MedicineInfoPage extends StatefulWidget {
 }
 
 class _MedicineInfoPageState extends State<MedicineInfoPage> {
-  Uint8List _decodeImage(String imageBytes) {
-    return base64Decode(imageBytes);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +35,10 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
               color: Colors.white,
-              child: Image.memory(
-                _decodeImage(widget.medicine.picture),
+              child: Image.file(
+                height: 50,
+                width: 50,
+                File(widget.medicine.picture),
                 fit: BoxFit.cover,
               ),
             ),
