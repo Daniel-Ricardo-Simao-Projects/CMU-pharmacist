@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
@@ -67,8 +65,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
             leading: backButton(context),
             actions: favoritePharmacyButton,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.memory(
-                _decodeImage(widget.pharmacy.picture),
+              background: Image.file(
+                height: 50,
+                width: 50,
+                File(widget.pharmacy.picture),
                 fit: BoxFit.cover,
               ),
             ),
@@ -475,9 +475,5 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         }
       },
     );
-  }
-
-  Uint8List _decodeImage(List<int> imageBytes) {
-    return Uint8List.fromList(imageBytes);
   }
 }

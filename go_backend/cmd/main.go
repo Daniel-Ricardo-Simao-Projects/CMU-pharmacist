@@ -40,6 +40,10 @@ func main() {
 	r.GET("/medicines/from_pharmacy", api.GetMedicinesFromPharmacyHandler)
 	r.GET("/medicines/with_ids", api.GetMedicinesWithIds)
 
+	// TODO : Change names
+	r.GET("/medicines/pharmaciesWithCache", api.GetPharmaciesWithMedicineWithCacheHandler)
+	r.GET("/medicines/pharmaciesWithIds", api.GetPharmaciesWithIdsHandler)
+
 	r.GET("/medicines", api.GetMedicineHandler)
 	r.POST("/medicines", api.AddMedicineHandler)
 	r.PUT("/medicines/purchase", api.UpdateMedicineHandler)

@@ -1,12 +1,14 @@
-import 'dart:convert';
+import 'package:floor/floor.dart';
 
+@entity
 class Pharmacy {
+  @primaryKey
   final int id;
   final String name;
   final String address;
-  final List<int> picture;
+  String picture;
 
-  const Pharmacy({
+  Pharmacy({
     required this.id,
     required this.name,
     required this.address,
@@ -22,7 +24,6 @@ class Pharmacy {
         id: json['id'],
         name: json['name'],
         address: json['address'],
-        // Convert base64 string to List<int>
-        picture: base64Decode(json['picture']));
+        picture: json['picture']);
   }
 }

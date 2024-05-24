@@ -110,10 +110,63 @@ class MedicineService {
 
   // To show in the medicine panel
   Future<List<Pharmacy>> getPharmaciesWithMedicine(int medicineId) async {
+    late List<MedicineInPharmacy> pharmaciesWithMedicine;
+    List<Pharmacy> pharmacies = [];
+    try {
+      // TODO: Change URL
+      final res = await dio.get('$medicineURL/pharmaciesWithCache',
+          data: {'medicineId': medicineId});
+
+      pharmaciesWithMedicine = res.data['pharmacies']
+          .map<MedicineInPharmacy>(
+            (item) => MedicineInPharmacy.fromJson(item),
+          )
+          .toList();
+
+      List<int> pharmacyIdsNotCached = [];
+      final database =
+          await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+      for (var pharmacyWithMedicine in pharmaciesWithMedicine) {
+        final pharmacy = await database.pharmacyDao
+            .findPharmacyById(pharmacyWithMedicine.pharmacyId);
+        if (pharmacy == null) {
+          pharmacyIdsNotCached.add(pharmacyWithMedicine.pharmacyId);
+        } else {
+          pharmacies.add(pharmacy);
+        }
+      }
+
+      if (pharmacyIdsNotCached.isEmpty) {
+        return pharmacies;
+      }
+
+      final newPharmacies = await getPharmaciesFromIds(pharmacyIdsNotCached);
+      for (var newPharmacy in newPharmacies) {
+        final fileName = '${newPharmacy.name.replaceAll(' ', '_')}.jpg';
+        final appDocDir = await getApplicationDocumentsDirectory();
+        final file = File('${appDocDir.path}/$fileName');
+        await file.writeAsBytes(base64Decode(newPharmacy.picture));
+        newPharmacy.picture = file.path;
+
+        pharmacies.add(newPharmacy);
+        await database.pharmacyDao.insertPharmacy(newPharmacy);
+      }
+
+      database.close();
+    } catch (e) {
+      pharmacies = [];
+    }
+
+    return pharmacies;
+  }
+
+  // To fetch pharmacies given a list of ids
+  Future<List<Pharmacy>> getPharmaciesFromIds(List<int> pharmacyIds) async {
     late List<Pharmacy> pharmacies;
     try {
-      final res = await dio
-          .get('$medicineURL/pharmacies', data: {'medicineId': medicineId});
+      // TODO: Change URL
+      final res = await dio.get('$medicineURL/pharmaciesWithIds',
+          data: {'pharmacyIds': pharmacyIds});
 
       pharmacies = res.data['pharmacies']
           .map<Pharmacy>(

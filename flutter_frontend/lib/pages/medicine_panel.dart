@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ class MedicineInfoPage extends StatefulWidget {
 }
 
 class _MedicineInfoPageState extends State<MedicineInfoPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,10 +213,6 @@ class _PharmacyListState extends State<PharmacyList> {
     });
   }
 
-  Uint8List _decodeImage(List<int> imageBytes) {
-    return Uint8List.fromList(imageBytes);
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Pharmacy>>(
@@ -283,11 +277,10 @@ class _PharmacyListState extends State<PharmacyList> {
                                   padding: const EdgeInsets.all(4),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.memory(
+                                    child: Image.file(
                                       height: 50,
                                       width: 50,
-                                      _decodeImage(
-                                          snapshot.data![index].picture),
+                                      File(snapshot.data![index].picture),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

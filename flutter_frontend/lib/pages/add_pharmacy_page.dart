@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -347,7 +348,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   }
 
   void savePharmacy(String name, String address, File file) {
-    List<int> imageBytes = file.readAsBytesSync();
+    String imageBytes = base64Encode(file.readAsBytesSync());
     Pharmacy pharmacy =
         Pharmacy(id: 0, name: name, address: address, picture: imageBytes);
     log('Pharmacy: $pharmacy.name, $pharmacy.address');

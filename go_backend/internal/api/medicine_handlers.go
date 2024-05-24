@@ -28,8 +28,12 @@ type GetMedicineFromBarcodeMessage struct {
   Barcode string `json:"barcode"`
 }
 
-type getPharmaciesMessage struct {
+type GetPharmaciesMessage struct {
 	MedicineID int `json:"medicineId"`
+}
+
+type GetPharmaciesWithIdsMessage struct {
+  PharmacyIDs []int `json:"pharmacyIds"`
 }
 
 type searchPharmaciesMessage struct {
@@ -108,7 +112,7 @@ func UpdateMedicineHandler(c *gin.Context) {
 }
 
 func GetPharmacyWithMedicineHandler(c *gin.Context) {
-	var message getPharmaciesMessage
+	var message GetPharmaciesMessage
 	if err := c.ShouldBindJSON(&message); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		utils.Error("Error binding JSON")
@@ -117,6 +121,30 @@ func GetPharmacyWithMedicineHandler(c *gin.Context) {
 
 	pharmacies := db.GetPharmaciesWithMedicine(message.MedicineID)
 	c.JSON(http.StatusOK, gin.H{"pharmacies": pharmacies})
+}
+
+func GetPharmaciesWithMedicineWithCacheHandler(c *gin.Context) {
+  var message GetPharmaciesMessage
+  if err := c.ShouldBindJSON(&message); err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    utils.Error("Error binding JSON")
+    return
+  }
+
+  pharmacies := db.GetPharmaciesWithMedicineWithCache(message.MedicineID)
+  c.JSON(http.StatusOK, gin.H{"pharmacies": pharmacies})
+}
+
+func GetPharmaciesWithIdsHandler(c *gin.Context) {
+  var message GetPharmaciesWithIdsMessage
+  if err := c.ShouldBindJSON(&message); err != nil {
+    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    utils.Error("Error binding JSON")
+    return
+  }
+
+  pharmacies := db.GetPharmaciesWithIds(message.PharmacyIDs)
+  c.JSON(http.StatusOK, gin.H{"pharmacies": pharmacies})
 }
 
 func SearchPharmacyWithMedicineHandler(c *gin.Context) {

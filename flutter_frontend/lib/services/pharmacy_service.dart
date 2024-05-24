@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import '../models/pharmacy_model.dart';
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PharmacyService {
@@ -14,14 +16,11 @@ class PharmacyService {
 
   Future<void> addPharmacy(Pharmacy pharmacy) async {
     try {
-      // Convert List<int> to base64 string
-      String pictureBase64 = base64Encode(pharmacy.picture);
-
       // Create JSON object with base64 string
       Map<String, dynamic> pharmacyJson = {
         'name': pharmacy.name,
         'address': pharmacy.address,
-        'picture': pictureBase64,
+        'picture': pharmacy.picture,
       };
 
       await dio.post(pharmaciesURL, data: pharmacyJson);
@@ -41,6 +40,14 @@ class PharmacyService {
             (item) => Pharmacy.fromJson(item),
           )
           .toList();
+
+      for (var pharmacy in pharmacies) {
+        final fileName = '${pharmacy.name.replaceAll(' ', '_')}.jpg';
+        final appDocDir = await getApplicationDocumentsDirectory();
+        final file = File('${appDocDir.path}/$fileName');
+        await file.writeAsBytes(base64Decode(pharmacy.picture));
+        pharmacy.picture = file.path;
+      }
     } catch (e) {
       // verbose error with stack trace
       pharmacies = [];

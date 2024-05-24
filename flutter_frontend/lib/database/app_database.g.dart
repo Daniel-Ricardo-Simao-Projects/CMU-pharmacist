@@ -76,6 +76,8 @@ class _$AppDatabase extends AppDatabase {
 
   MedicineDao? _medicineDaoInstance;
 
+  PharmacyDao? _pharmacyDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -101,6 +103,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `password` TEXT NOT NULL, `isLogged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Medicine` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `details` TEXT NOT NULL, `picture` TEXT NOT NULL, `stock` INTEGER NOT NULL, `pharmacyId` INTEGER NOT NULL, `barcode` TEXT NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Pharmacy` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `picture` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -116,6 +120,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   MedicineDao get medicineDao {
     return _medicineDaoInstance ??= _$MedicineDao(database, changeListener);
+  }
+
+  @override
+  PharmacyDao get pharmacyDao {
+    return _pharmacyDaoInstance ??= _$PharmacyDao(database, changeListener);
   }
 }
 
@@ -299,5 +308,89 @@ class _$MedicineDao extends MedicineDao {
   @override
   Future<void> deleteMedicine(Medicine medicine) async {
     await _medicineDeletionAdapter.delete(medicine);
+  }
+}
+
+class _$PharmacyDao extends PharmacyDao {
+  _$PharmacyDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _pharmacyInsertionAdapter = InsertionAdapter(
+            database,
+            'Pharmacy',
+            (Pharmacy item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'address': item.address,
+                  'picture': item.picture
+                }),
+        _pharmacyUpdateAdapter = UpdateAdapter(
+            database,
+            'Pharmacy',
+            ['id'],
+            (Pharmacy item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'address': item.address,
+                  'picture': item.picture
+                }),
+        _pharmacyDeletionAdapter = DeletionAdapter(
+            database,
+            'Pharmacy',
+            ['id'],
+            (Pharmacy item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'address': item.address,
+                  'picture': item.picture
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Pharmacy> _pharmacyInsertionAdapter;
+
+  final UpdateAdapter<Pharmacy> _pharmacyUpdateAdapter;
+
+  final DeletionAdapter<Pharmacy> _pharmacyDeletionAdapter;
+
+  @override
+  Future<List<Pharmacy>> findAllPharmacies() async {
+    return _queryAdapter.queryList('SELECT * FROM Pharmacy',
+        mapper: (Map<String, Object?> row) => Pharmacy(
+            id: row['id'] as int,
+            name: row['name'] as String,
+            address: row['address'] as String,
+            picture: row['picture'] as String));
+  }
+
+  @override
+  Future<Pharmacy?> findPharmacyById(int id) async {
+    return _queryAdapter.query('SELECT * FROM Pharmacy WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Pharmacy(
+            id: row['id'] as int,
+            name: row['name'] as String,
+            address: row['address'] as String,
+            picture: row['picture'] as String),
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> insertPharmacy(Pharmacy pharmacy) async {
+    await _pharmacyInsertionAdapter.insert(pharmacy, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updatePharmacy(Pharmacy pharmacy) async {
+    await _pharmacyUpdateAdapter.update(pharmacy, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deletePharmacy(Pharmacy pharmacy) async {
+    await _pharmacyDeletionAdapter.delete(pharmacy);
   }
 }
