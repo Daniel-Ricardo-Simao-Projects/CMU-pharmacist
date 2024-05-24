@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
-import 'package:flutter_frontend/pages/pharmacy_panel.dart';
+import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 

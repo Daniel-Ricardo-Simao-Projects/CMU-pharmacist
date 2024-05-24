@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
-import 'package:flutter_frontend/pages/pharmacy_panel.dart';
+import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';

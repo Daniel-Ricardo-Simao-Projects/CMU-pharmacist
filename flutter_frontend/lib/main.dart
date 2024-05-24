@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/find_medicine_page.dart';
 import 'package:flutter_frontend/pages/maps_page.dart';
-import 'package:flutter_frontend/pages/pharmacy_panel.dart';
+import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/pages/user_login_page.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 
