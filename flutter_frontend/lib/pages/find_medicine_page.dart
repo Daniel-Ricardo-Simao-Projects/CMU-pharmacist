@@ -3,6 +3,8 @@ import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
+import 'package:flutter_frontend/themes/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class FindMedicinePage extends StatefulWidget {
   const FindMedicinePage({super.key});
@@ -39,10 +41,14 @@ class _FindMedicinePageState extends State<FindMedicinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor:
+            Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
         appBar: AppBar(
           toolbarHeight: 10,
-          backgroundColor: backgroundColor,
+          backgroundColor: Provider.of<ThemeProvider>(context)
+              .getTheme
+              .colorScheme
+              .background,
         ),
         body: Column(
           children: [
@@ -126,18 +132,40 @@ class PharmacyResultsListState extends State<PharmacyResultsList> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error fetching pharmacies'));
+          } else if (snapshot.data!.isEmpty) {
+            return Center(
+                child: Text(
+              'Search for pharmacies\nwith a medicine',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'JosefinSans',
+                fontVariations: const [FontVariation('wght', 500)],
+                color: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .secondary,
+                fontSize: 16,
+              ),
+            ));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: const Icon(Icons.local_pharmacy, color: accentColor),
+                  leading: Icon(Icons.local_pharmacy,
+                      color: Provider.of<ThemeProvider>(context)
+                          .getTheme
+                          .colorScheme
+                          .secondary),
                   title: Text(
                     snapshot.data![index].name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'JosefinSans',
-                      fontVariations: [FontVariation('wght', 500)],
-                      color: primaryColor,
+                      fontVariations: const [FontVariation('wght', 500)],
+                      color: Provider.of<ThemeProvider>(context)
+                          .getTheme
+                          .colorScheme
+                          .primary,
                       fontSize: 16,
                     ),
                   ),
@@ -146,7 +174,6 @@ class PharmacyResultsListState extends State<PharmacyResultsList> {
                     style: const TextStyle(
                       fontFamily: 'JosefinSans',
                       fontVariations: [FontVariation('wght', 400)],
-                      color: subtext1Color,
                       fontSize: 14,
                     ),
                   ),
