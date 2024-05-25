@@ -12,4 +12,3 @@ LinearGradient glossyColor = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [Colors.white.withOpacity(0.2), Colors.white.withOpacity(0.1)]);
-const Color textColor = Color(0xFF16373C); // TODO: Remove this
