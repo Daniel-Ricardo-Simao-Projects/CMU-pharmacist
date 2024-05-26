@@ -146,6 +146,7 @@ func AddMedicine(medicine models.Medicine) {
 			if err != nil {
 				log.Fatal(err)
 			}
+
 			return
 		} else if err != nil {
 			log.Fatal(err)

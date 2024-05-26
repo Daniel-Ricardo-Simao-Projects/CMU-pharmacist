@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1044374790561",
+    "project_id": "cmu-pharmacist-3cbed",
+    "storage_bucket": "cmu-pharmacist-3cbed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044374790561:android:0cd564ed68bd207f526be0",
+        "android_client_info": {
+          "package_name": "com.example.flutter_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-Xnh76dQF1BHH0h-1i50WX_brRJIdiGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

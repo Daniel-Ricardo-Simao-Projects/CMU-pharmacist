@@ -17,6 +17,22 @@ class MedicineInfoPage extends StatefulWidget {
 }
 
 class _MedicineInfoPageState extends State<MedicineInfoPage> {
+  bool isNotified = false;
+  final medicineService = MedicineService();
+
+  @override
+  initState() {
+    super.initState();
+    checkIfNotified();
+  }
+
+  void checkIfNotified() async {
+    bool notified = await medicineService.isNotified(widget.medicine.id);
+    setState(() {
+      isNotified = notified;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,9 +90,14 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
           child: Center(
             child: IconButton(
               iconSize: 20,
-              onPressed: () {}, //TODO: Implement notification logic
-              icon:
-                  const Icon(Icons.notifications_outlined, color: primaryColor),
+              onPressed: () {
+                toggleNotification();
+              }, //TODO: Implement notification logic
+              icon: Icon(
+                  isNotified
+                      ? Icons.notifications
+                      : Icons.notifications_outlined,
+                  color: primaryColor),
             ),
           ),
         ),
@@ -136,6 +157,28 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
         ],
       ),
     );
+  }
+
+  void toggleNotification() async {
+    if (isNotified) {
+      // Remove from favorites
+      bool removed = await MedicineService()
+          .removeMedicineFromNotifications(widget.medicine.id);
+      if (removed) {
+        setState(() {
+          isNotified = false;
+        });
+      }
+    } else {
+      // Add to favorites
+      bool added = await MedicineService()
+          .addMedicineToNotifications(widget.medicine.id);
+      if (added) {
+        setState(() {
+          isNotified = true;
+        });
+      }
+    }
   }
 
   Widget _medicineDescription(Medicine medicine) {

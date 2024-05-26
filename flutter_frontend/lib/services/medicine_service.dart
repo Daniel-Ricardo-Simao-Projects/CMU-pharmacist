@@ -6,6 +6,7 @@ import 'package:flutter_frontend/models/pharmacy_model.dart';
 import '../models/medicine_in_pharmacy.dart';
 import '../models/medicine_model.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MedicineService {
   final String medicineURL =
@@ -228,6 +229,88 @@ class MedicineService {
       });
     } catch (e) {
       rethrow;
+    }
+  }
+
+  // Add medicine to notifications
+  Future<bool> addMedicineToNotifications(int medicineId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final username = prefs.getString('username');
+
+      if (username == null) {
+        return false;
+      }
+
+      final response = await dio.post('$medicineURL/notifications/add', data: {
+        'userId': username,
+        'medicineId': medicineId,
+      });
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Remove medicine from notifications
+  Future<bool> removeMedicineFromNotifications(int medicineId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final username = prefs.getString('username');
+
+      if (username == null) {
+        return false;
+      }
+
+      final response = await dio.delete('$medicineURL/notifications/remove',
+          data: {'userId': username, 'medicineId': medicineId});
+
+      if (response.statusCode == 200) {
+        print("Medicine removed from notifications");
+        return true;
+      } else {
+        print("Failed to remove medicine from notifications");
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> isNotified(int medicineId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final username = prefs.getString('username');
+
+      if (username == null) {
+        return false;
+      }
+
+      final response = await dio.get('$medicineURL/notifications/isNotified',
+          data: {'userId': username, 'medicineId': medicineId});
+
+      if (response.statusCode == 200) {
+        // get boolean value from response
+        bool isNotified = response.data['notified'];
+
+        print("Is notified: $isNotified");
+
+        return isNotified;
+      } else {
+        print("Failed to get notification status");
+
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+
+      return false;
     }
   }
 }
