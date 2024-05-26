@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
+	// "time"
 
 	"context"
 
@@ -19,7 +19,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func sendNotification(token string) {
+func sendNotification(token string, medicineName string, pharmacyName string) {
+	utils.Info("Sending notification to token: " + token)
+
 	ctx := context.Background()
 	app1, err := firebase.NewApp(ctx, nil)
 	if err != nil {
@@ -31,16 +33,16 @@ func sendNotification(token string) {
 		log.Fatalf("error getting Messaging client: %v\n", err)
 	}
 
+	title := medicineName + " is now available in " + pharmacyName
+	body := "Go to the app to see more details"
+
 	message := &messaging.Message{
 		Notification: &messaging.Notification{
-			Title: "Hello",
-			Body:  "This is a notification from your Go backend!",
+			Title: title,
+			Body:  body,
 		},
 		Token: token,
 	}
-
-	// thread sleep 5 seconds
-	time.Sleep(5 * time.Second)
 
 	// Send message to the device
 	response, err := client.Send(ctx, message)
@@ -133,20 +135,67 @@ func AddMedicineHandler(c *gin.Context) {
 		return
 	}
 
-	notifications := db.GetNotificationsForMedicine(newMedicine.Id)
+	id := db.GetIdByBarcode(newMedicine.Barcode)
+	if id == -1 {
+		utils.Info("Medicine does not exist")
+	}
+
+	notifications := db.GetNotificationsForMedicine(id)
 	if len(notifications) > 0 {
 		for _, notification := range notifications {
-			if notification.MedicineId == newMedicine.Id {
-				//SendNotification(notification.User, newMedicine.Id, newMedicine.PharmacyId)
-				db.RemoveNotification(notification)
+			if notification.MedicineId == id {
+				userID := notification.UsernameID
+				// get favorite pharmacies of user
+				favoritePharmacies := db.GetFavoritePharmaciesByUsername(userID)
+				// get pharmacy of new medicine
+				pharmacy := newMedicine.PharmacyId
+				// check if pharmacy of new medicine is in favorite pharmacies
+				for _, favoritePharmacy := range favoritePharmacies {
+					if favoritePharmacy.Id == pharmacy {
+						// send notification to user
+						sendNotification(db.GetTokenByUserId(userID), newMedicine.Name, favoritePharmacy.Name)
+						db.RemoveNotification(notification)
+						utils.Info("Notification sent to user: " + db.GetUserById(userID).Username)
+					}
+				}
 			}
 		}
 	}
 
-	// sendNotification("d-MQsbGnTseFcZhOMsM8cd:APA91bE_mOqSocWeEsTsXxYWebibjrrmVBuoboYSGgV6-HzTHdWDvNxPtaGGjay9J8gZkiNSqmsqPtrRsPXIfBHVJTl8QKBH3Jq9AJfj4NgjPG4vf5PsI0bP9zzwUXZB4gGtexLxeM_s")
-
 	db.AddMedicine(newMedicine)
 	c.JSON(http.StatusCreated, gin.H{"message": "Medicine added successfully"})
+	utils.Info("Medicine added successfully")
+}
+
+func AddMedicineHandlerUtils(newMedicine models.Medicine) {
+	id := db.GetIdByBarcode(newMedicine.Barcode)
+	if id == -1 {
+		utils.Info("Medicine does not exist")
+	}
+
+	notifications := db.GetNotificationsForMedicine(id)
+	if len(notifications) > 0 {
+		for _, notification := range notifications {
+			if notification.MedicineId == id {
+				userID := notification.UsernameID
+				// get favorite pharmacies of user
+				favoritePharmacies := db.GetFavoritePharmaciesByUsername(userID)
+				// get pharmacy of new medicine
+				pharmacy := newMedicine.PharmacyId
+				// check if pharmacy of new medicine is in favorite pharmacies
+				for _, favoritePharmacy := range favoritePharmacies {
+					if favoritePharmacy.Id == pharmacy {
+						// send notification to user
+						sendNotification(db.GetTokenByUserId(userID), newMedicine.Name, favoritePharmacy.Name)
+						db.RemoveNotification(notification)
+						utils.Info("Notification sent to user: " + db.GetUserById(userID).Username)
+					}
+				}
+			}
+		}
+	}
+
+	db.AddMedicine(newMedicine)
 	utils.Info("Medicine added successfully")
 }
 

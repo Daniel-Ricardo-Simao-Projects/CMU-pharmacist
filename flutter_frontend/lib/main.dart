@@ -71,7 +71,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final User? loggedInUser;
 
-  const MyApp({super.key, this.loggedInUser});
+  const MyApp({Key? key, this.loggedInUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +80,25 @@ class MyApp extends StatelessWidget {
       systemNavigationBarColor:
           Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
     ));
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'PharmacIST',
-      theme: Provider.of<ThemeProvider>(context).getTheme,
-      home: loggedInUser == null ? const LoginPage() : const HomePage(),
+
+    return FutureBuilder<String?>(
+      future: FirebaseMessaging.instance.getToken(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        final fcmToken = snapshot.data;
+
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'PharmacIST',
+          theme: Provider.of<ThemeProvider>(context).getTheme,
+          home: loggedInUser == null
+              ? LoginPage(fcmToken: fcmToken)
+              : const HomePage(),
+        );
+      },
     );
   }
 }
@@ -108,11 +122,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    super.initState();
-    FirebaseMessaging.instance
-        .getToken()
-        .then((value) => {log("FCM Token Is: "), log(value!)});
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("Got a message whilst in the foreground!");

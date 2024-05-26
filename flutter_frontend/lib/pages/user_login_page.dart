@@ -7,7 +7,9 @@ import '../models/user_model.dart';
 import '../database/app_database.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String? fcmToken;
+
+  const LoginPage({Key? key, this.fcmToken}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -164,13 +166,16 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
+    // print FCM token
+    print('FCM token: ${widget.fcmToken}');
+
     _dialogContext = context; // Store buildcontext temporarily
 
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    bool isAuthenticated =
-        await _userService.authenticateUser(username, password);
+    bool isAuthenticated = await _userService.authenticateUser(
+        username, password, widget.fcmToken);
 
     // Check if BuildContext is valid
     if (_dialogContext != null && mounted) {

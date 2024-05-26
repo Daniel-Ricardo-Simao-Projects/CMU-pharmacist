@@ -44,7 +44,8 @@ class UserService {
     }
   }
 
-  Future<bool> authenticateUser(String username, String password) async {
+  Future<bool> authenticateUser(
+      String username, String password, String? fcmToken) async {
     try {
       String hashedPassword = sha256.convert(utf8.encode(password)).toString();
 
@@ -52,6 +53,7 @@ class UserService {
       Map<String, dynamic> userData = {
         'username': username,
         'password': hashedPassword,
+        'fcm_token': fcmToken,
       };
 
       final response = await dio.post('$usersURL/authenticate', data: userData);

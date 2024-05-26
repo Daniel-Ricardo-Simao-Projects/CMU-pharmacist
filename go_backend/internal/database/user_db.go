@@ -20,6 +20,18 @@ func GetUserInfoByUsername(username string) *models.User {
 	return &userInfo
 }
 
+func GetUserIdByUsername(username string) int {
+	row := config.DB.QueryRow("SELECT id FROM users WHERE username = ?", username)
+
+	var id int
+	err := row.Scan(&id)
+	if err != nil {
+		return -1
+	}
+
+	return id
+}
+
 func GetUserByUsername(username string) *models.User {
 	row := config.DB.QueryRow("SELECT * FROM users WHERE username = ?", username)
 
@@ -86,4 +98,26 @@ func GetUsers() []models.User {
 	}
 
 	return users
+}
+
+func AddFCMToken(username, token string) error {
+	_, err := config.DB.Exec("INSERT INTO fcm_tokens (user_id, token) VALUES (?, ?)", GetUserIdByUsername(username), token)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
+}
+
+func GetTokenByUserId(userId int) string {
+	row := config.DB.QueryRow("SELECT token FROM fcm_tokens WHERE user_id = ?", userId)
+
+	var token string
+	err := row.Scan(&token)
+	if err != nil {
+		return ""
+	}
+
+	return token
 }

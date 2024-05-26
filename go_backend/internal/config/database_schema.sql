@@ -45,3 +45,9 @@ CREATE TABLE notifications (
   FOREIGN KEY (medicine_id) REFERENCES medicines(id)
 );
 
+CREATE TABLE fcm_tokens (
+  user_id INT NOT NULL,
+  token VARCHAR(255) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  PRIMARY KEY (user_id, token)
+);

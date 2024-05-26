@@ -8,3 +8,6 @@ seed:
 
 drop:
 	go run cmd/drop/main.go
+
+addMed:
+	go run cmd/addMed/main.go

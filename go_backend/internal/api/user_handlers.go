@@ -20,11 +20,26 @@ func GetUsersHandler(c *gin.Context) {
 }
 
 func AuthenticateUserHandler(c *gin.Context) {
-	var user models.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	type UserAuth struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		FCMToken string `json:"fcm_token"`
+	}
+
+	var userAuth UserAuth
+
+	if err := c.ShouldBindJSON(&userAuth); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		utils.Error("Error binding JSON")
 		return
+	}
+
+	utils.Info("User: " + userAuth.Username + " is trying to authenticate with token: " + userAuth.FCMToken)
+
+	// create user
+	user := models.User{
+		Username: userAuth.Username,
+		Password: userAuth.Password,
 	}
 
 	userInfo, err := services.AuthenticateUser(user.Username, user.Password)
@@ -39,6 +54,13 @@ func AuthenticateUserHandler(c *gin.Context) {
 		fmt.Println("User authenticated: ", userInfo)
 	}
 
+	// add fcm token
+	err = db.AddFCMToken(userAuth.Username, userAuth.FCMToken)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.Error("Error adding FCM token")
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"data": userInfo})
 	utils.Info("User authenticated successfully")
 }

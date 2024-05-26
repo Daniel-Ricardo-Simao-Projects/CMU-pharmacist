@@ -92,7 +92,7 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
               iconSize: 20,
               onPressed: () {
                 toggleNotification();
-              }, //TODO: Implement notification logic
+              },
               icon: Icon(
                   isNotified
                       ? Icons.notifications
