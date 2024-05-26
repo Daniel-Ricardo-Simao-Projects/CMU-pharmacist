@@ -30,8 +30,10 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
     final picker = ImagePicker();
     final result = await picker.pickImage(source: source);
 
+    if (result == null) return;
+
     setState(() {
-      _image = File(result!.path);
+      _image = File(result.path);
     });
   }
 

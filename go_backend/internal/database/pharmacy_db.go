@@ -7,7 +7,6 @@ import (
 
 	config "go_backend/internal/config"
 	models "go_backend/internal/models"
-	utils "go_backend/internal/utils"
 )
 
 func GetPharmacies() []models.Pharmacy {
@@ -53,7 +52,7 @@ func AddPharmacy(pharmacy models.Pharmacy) {
 	}
 
 	// print picture
-	utils.Info(pharmacy.Picture)
+	//utils.Info(pharmacy.Picture)
 
 	_, err = config.DB.Exec("INSERT INTO pharmacies (name, address, image_path) VALUES (?, ?, ?)", pharmacy.Name, pharmacy.Address, imagePath)
 	if err != nil {

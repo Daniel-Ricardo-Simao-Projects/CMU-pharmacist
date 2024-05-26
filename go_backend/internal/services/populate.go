@@ -72,11 +72,11 @@ func PopulateDatabase() {
 		var medicine = models.Medicine{
 			Id:         0,
 			Name:       "Paracetamol",
-			Details:    "Paracetamol is a pain reliever and a fever reducer. The exact mechanism of action of is not known. Paracetamol is used to treat many conditions such as headache, muscle aches, arthritis, backache, toothaches, colds, and fevers. It relieves pain in mild arthritis but has no effect on the underlying inflammation and swelling of the joint.",
+			Details:    "Paracetamol is a pain reliever and a fever reducer. Paracetamol is used to treat many conditions such as headache, muscle aches, arthritis, backache, toothaches, colds, and fevers. It relieves pain in mild arthritis but has no effect on the underlying inflammation and swelling of the joint.",
 			Stock:      100 + i,
 			PharmacyId: i,
 			Picture:    picture,
-      Barcode:    "1234567890123",
+			Barcode:    "1234567890123",
 		}
 		database.AddMedicine(medicine)
 	}

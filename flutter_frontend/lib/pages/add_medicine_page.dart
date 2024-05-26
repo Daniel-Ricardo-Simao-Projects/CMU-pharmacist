@@ -38,8 +38,10 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     final picker = ImagePicker();
     final result = await picker.pickImage(source: source);
 
+    if (result == null) return;
+
     setState(() {
-      _image = File(result!.path);
+      _image = File(result.path);
     });
   }
 
@@ -66,8 +68,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     });
   }
 
-  void _saveMedicine(
-      String name, int stock, String details, File file, int pharmacyId) {
+  void _saveMedicine(String name, int stock, String details, File file, int pharmacyId) {
     String imageBytes = base64Encode(file.readAsBytesSync());
     Medicine newMedicine = Medicine(
       id: 0,
@@ -88,8 +89,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       backgroundColor: backgroundColor,
       appBar: _appBar(context),
       body: Padding(
-        padding:
-            const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
+        padding: const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
         child: _addMedicineForm(),
       ),
     );
@@ -128,8 +128,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           decoration: BoxDecoration(
             color: primaryColor,
             borderRadius: BorderRadius.circular(15),
-            border: const Border(
-                bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -140,7 +139,16 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           ),
           child: TextButton(
               onPressed: () {
-                _saveMedicine(_name, _stock, _details, _image!, pharmacyId);
+                if (_name.isEmpty || _image == null || _details.isEmpty || _stock == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Please enter a name, image, valid details and a valid quantity.'),
+                    ),
+                  );
+                } else {
+                  _saveMedicine(_name, _stock, _details, _image!, pharmacyId);
+                }
               },
               child: const Text(
                 'Save',
@@ -158,8 +166,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           decoration: BoxDecoration(
             color: primaryColor,
             borderRadius: BorderRadius.circular(15),
-            border: const Border(
-                bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
