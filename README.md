@@ -94,6 +94,24 @@ You can also define a different backend url with the command in case you are run
 The default URL is localhost:5000.
 
 
+### Insert google maps API key
+
+You need to place the API key in the flutter app for the map to run.
+
+In AndroidManifest.xml, add the API key here:
+
+```xml
+    <meta-data 
+        android:name="com.google.android.geo.API_KEY"
+        android:value="ADD-API-KEY-HERE"
+    />
+```
+In constants.dart, add here:
+
+```dart 
+    const String apiKey = "API_KEY";
+```
+
 ## Mandatory Features
 - [x] Allow users to create a username in the application/system.
 - [x] Show a map with pharmacy locations:
