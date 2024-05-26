@@ -6,6 +6,8 @@ import 'package:flutter_frontend/models/constants.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_frontend/themes/colors.dart';
@@ -23,7 +25,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   String _name = '';
   File? _image;
   String _address = '';
-  TextEditingController controller = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   final FocusNode _addressFocusNode = FocusNode();
 
   Future<void> _pickImage(ImageSource source) async {
@@ -222,7 +224,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
                   fontSize: 15,
                 ),
                 focusNode: _addressFocusNode,
-                textEditingController: controller,
+                textEditingController: addressController,
                 googleAPIKey: apiKey,
                 inputDecoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(bottom: 10),
@@ -250,8 +252,8 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
                 //   log("placeDetails${prediction.lat}");
                 // },
                 itemClick: (Prediction prediction) {
-                  controller.text = prediction.description ?? "";
-                  controller.selection = TextSelection.fromPosition(
+                  addressController.text = prediction.description ?? "";
+                  addressController.selection = TextSelection.fromPosition(
                       TextPosition(
                           offset: prediction.description?.length ?? 0));
                   setState(() {
@@ -278,7 +280,16 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
               ),
             ),
             IconButton(
-                onPressed: () {}, // TODO: Implement my current location button
+                onPressed: () async {
+                  Position position = await Geolocator.getCurrentPosition(
+                      desiredAccuracy: LocationAccuracy.high);
+                  List<Placemark> placemarks = await placemarkFromCoordinates(
+                      position.latitude, position.longitude);
+                  Placemark place = placemarks[0];
+                  String address = "${place.street}, ${place.locality}, ${place.country}";
+                  addressController.text = address;
+                  _address = address;
+                },
                 icon: Icon(Icons.my_location,
                     color: Provider.of<ThemeProvider>(context)
                         .getTheme

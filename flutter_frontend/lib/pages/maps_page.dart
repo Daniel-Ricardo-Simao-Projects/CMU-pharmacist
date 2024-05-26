@@ -263,7 +263,7 @@ class _MapsPageState extends State<MapsPage>
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 3,
+      distanceFilter: 5,
     );
 
     _statusListen =
@@ -298,10 +298,10 @@ class _MapsPageState extends State<MapsPage>
         await _pharmacyService.getFavoritePharmaciesIds();
 
     for (Pharmacy p in pharmacies) {
-      log("adding marker for ${p.name}");
+      //log("adding marker for ${p.name}");
       LatLng? coordinates;
       if (_savedMarkers.containsKey(p.id.toString())) {
-        log("marker already saved");
+        log("marker ${p.name} already saved");
         final positionStr =
             _savedMarkers[p.id.toString()].toString().split(',');
         coordinates = LatLng(

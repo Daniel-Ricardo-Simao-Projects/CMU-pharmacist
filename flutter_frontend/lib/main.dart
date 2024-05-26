@@ -28,7 +28,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  print("Handling a background message: ${message.messageId}");
+  log("Handling a background message: ${message.messageId}");
 }
 
 void main() async {
@@ -112,13 +112,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     FirebaseMessaging.instance
         .getToken()
-        .then((value) => {print("FCM Token Is: "), print(value)});
+        .then((value) => {log("FCM Token Is: "), log(value!)});
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Got a message whilst in the foreground!");
-      print("Message data: ${message.data}");
+      log("Got a message whilst in the foreground!");
+      log("Message data: ${message.data}");
       if (message.notification != null) {
-        print("Message also contained a notification: ${message.notification}");
+        log("Message also contained a notification: ${message.notification}");
         setState(() {
           notifTitle = message.notification!.title;
           notifBody = message.notification!.body;
@@ -127,10 +127,10 @@ class _HomePageState extends State<HomePage> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Opened a notification');
-      print('Message data: ${message.data}');
+      log('Opened a notification');
+      log('Message data: ${message.data}');
       if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+        log('Message also contained a notification: ${message.notification}');
         setState(() {
           notifTitle = message.notification!.title;
           notifBody = message.notification!.body;
