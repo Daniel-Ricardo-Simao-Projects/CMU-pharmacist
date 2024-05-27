@@ -6,8 +6,10 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
+import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
@@ -137,7 +139,7 @@ class _MapsPageState extends State<MapsPage>
             ),
           );
         },
-        child: const Icon(Icons.my_location),
+        child: const Icon(Icons.my_location, color: Colors.white),
       ),
     );
   }
@@ -360,8 +362,17 @@ class _MapsPageState extends State<MapsPage>
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
+      backgroundColor:
+          Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
       controller: _searchBarController,
       hint: 'Search Pharmacies...',
+      hintStyle: TextStyle(
+        color:
+            Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+        fontFamily: 'JosefinSans',
+        fontVariations: const [FontVariation('wght', 500)],
+        fontSize: 15,
+      ),
       borderRadius: BorderRadius.circular(50),
       scrollPadding:
           const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
@@ -384,7 +395,10 @@ class _MapsPageState extends State<MapsPage>
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(Icons.place),
+            icon: Icon(Icons.place,
+                color: Provider.of<ThemeProvider>(
+                  context,
+                ).getTheme.colorScheme.secondary),
             onPressed: () {},
           ),
         ),

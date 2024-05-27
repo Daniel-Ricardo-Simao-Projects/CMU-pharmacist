@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
+import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddMedicinePage extends StatefulWidget {
   final int PharmacyId;
@@ -68,7 +70,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     });
   }
 
-  void _saveMedicine(String name, int stock, String details, File file, int pharmacyId) {
+  void _saveMedicine(
+      String name, int stock, String details, File file, int pharmacyId) {
     String imageBytes = base64Encode(file.readAsBytesSync());
     Medicine newMedicine = Medicine(
       id: 0,
@@ -86,10 +89,12 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor:
+          Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
       appBar: _appBar(context),
       body: Padding(
-        padding: const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
+        padding:
+            const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 16),
         child: _addMedicineForm(),
       ),
     );
@@ -126,9 +131,18 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           height: 55,
           width: 220,
           decoration: BoxDecoration(
-            color: primaryColor,
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .primary,
             borderRadius: BorderRadius.circular(15),
-            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: Border(
+                bottom: BorderSide(
+                    color: Provider.of<ThemeProvider>(context)
+                        .getTheme
+                        .colorScheme
+                        .outline,
+                    width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -139,7 +153,10 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           ),
           child: TextButton(
               onPressed: () {
-                if (_name.isEmpty || _image == null || _details.isEmpty || _stock == 0) {
+                if (_name.isEmpty ||
+                    _image == null ||
+                    _details.isEmpty ||
+                    _stock == 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
@@ -155,7 +172,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                 style: TextStyle(
                   fontFamily: 'JosefinSans',
                   fontVariations: [FontVariation('wght', 500)],
-                  color: text2Color,
+                  color: Colors.white,
                   fontSize: 16,
                 ),
               )),
@@ -164,9 +181,18 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           height: 55,
           width: 55,
           decoration: BoxDecoration(
-            color: primaryColor,
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .primary,
             borderRadius: BorderRadius.circular(15),
-            border: const Border(bottom: BorderSide(color: primaryBorderColor, width: 4)),
+            border: Border(
+                bottom: BorderSide(
+                    color: Provider.of<ThemeProvider>(context)
+                        .getTheme
+                        .colorScheme
+                        .outline,
+                    width: 4)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -181,7 +207,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             },
             icon: const Icon(
               Icons.photo_camera_outlined,
-              color: text2Color,
+              color: Colors.white,
             ),
             iconSize: 30,
             padding: EdgeInsets.zero,
@@ -196,21 +222,27 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           'Barcode:',
           style: TextStyle(
             fontFamily: 'JosefinSans',
-            fontVariations: [FontVariation('wght', 700)],
-            color: text1Color,
+            fontVariations: const [FontVariation('wght', 700)],
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .secondary,
             fontSize: 18,
           ),
         ),
         Text(
           barcode,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'JosefinSans',
-            fontVariations: [FontVariation('wght', 400)],
-            color: text1Color,
+            fontVariations: const [FontVariation('wght', 400)],
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .secondary,
             fontSize: 15,
           ),
         ),
@@ -222,12 +254,15 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Details',
           style: TextStyle(
             fontFamily: 'JosefinSans',
-            fontVariations: [FontVariation('wght', 700)],
-            color: text1Color,
+            fontVariations: const [FontVariation('wght', 700)],
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .secondary,
             fontSize: 18,
           ),
         ),
@@ -237,20 +272,34 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             filled: true,
             fillColor: Colors.white.withOpacity(0.5),
             contentPadding: const EdgeInsets.all(10),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              borderSide: BorderSide(color: accentColor),
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              borderSide: BorderSide(
+                color: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .secondary,
+              ),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              borderSide: BorderSide(color: primaryColor, width: 2),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              borderSide: BorderSide(
+                  color: Provider.of<ThemeProvider>(context)
+                      .getTheme
+                      .colorScheme
+                      .primary,
+                  width: 2),
             ),
           ),
-          cursorColor: primaryColor,
-          style: const TextStyle(
+          cursorColor:
+              Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+          style: TextStyle(
             fontFamily: 'JosefinSans',
-            fontVariations: [FontVariation('wght', 400)],
-            color: text1Color,
+            fontVariations: const [FontVariation('wght', 400)],
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .secondary,
             fontSize: 14,
           ),
           maxLines: null,
@@ -273,12 +322,15 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   Widget _quantityField() {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      const Text(
+      Text(
         'Quantity',
         style: TextStyle(
           fontFamily: 'JosefinSans',
-          fontVariations: [FontVariation('wght', 700)],
-          color: accentColor,
+          fontVariations: const [FontVariation('wght', 700)],
+          color: Provider.of<ThemeProvider>(context)
+              .getTheme
+              .colorScheme
+              .secondary,
           fontSize: 18,
         ),
       ),
@@ -288,18 +340,24 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             onPressed: () {
               _decrementStock();
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.remove,
-              color: accentColor,
+              color: Provider.of<ThemeProvider>(context)
+                  .getTheme
+                  .colorScheme
+                  .secondary,
             ),
           ),
           Text(
             //TODO: Change this to input field
             '$_stock',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'JosefinSans',
-              fontVariations: [FontVariation('wght', 400)],
-              color: text1Color,
+              fontVariations: const [FontVariation('wght', 400)],
+              color: Provider.of<ThemeProvider>(context)
+                  .getTheme
+                  .colorScheme
+                  .secondary,
               fontSize: 16,
             ),
           ),
@@ -307,9 +365,12 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             onPressed: () {
               _incrementStock();
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.add,
-              color: accentColor,
+              color: Provider.of<ThemeProvider>(context)
+                  .getTheme
+                  .colorScheme
+                  .secondary,
             ),
           ),
         ],
@@ -321,12 +382,15 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Name',
           style: TextStyle(
             fontFamily: 'JosefinSans',
-            fontVariations: [FontVariation('wght', 700)],
-            color: text1Color,
+            fontVariations: const [FontVariation('wght', 700)],
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .secondary,
             fontSize: 18,
           ),
         ),
@@ -335,16 +399,21 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           style: const TextStyle(
             fontFamily: 'JosefinSans',
             fontVariations: [FontVariation('wght', 400)],
-            color: text1Color,
             fontSize: 15,
           ),
-          cursorColor: primaryColor,
-          decoration: const InputDecoration(
+          cursorColor:
+              Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+          decoration: InputDecoration(
             isDense: true,
-            contentPadding: EdgeInsets.only(bottom: 10),
-            border: UnderlineInputBorder(),
+            contentPadding: const EdgeInsets.only(bottom: 10),
+            border: const UnderlineInputBorder(),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
+              borderSide: BorderSide(
+                  color: Provider.of<ThemeProvider>(context)
+                      .getTheme
+                      .colorScheme
+                      .primary,
+                  width: 2),
             ),
           ),
           onChanged: (value) {
@@ -383,20 +452,27 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                   _image!,
                   fit: BoxFit.cover,
                 ))
-            : const Column(
+            : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.add_photo_alternate_outlined,
                     size: 35,
-                    color: accentColor,
+                    color: Provider.of<ThemeProvider>(context)
+                        .getTheme
+                        .colorScheme
+                        .secondary,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     'Click to add picture',
                     style: TextStyle(
+                      color: Provider.of<ThemeProvider>(context)
+                          .getTheme
+                          .colorScheme
+                          .secondary,
                       fontFamily: 'JosefinSans',
-                      fontVariations: [FontVariation('wght', 400)],
+                      fontVariations: const [FontVariation('wght', 400)],
                       fontSize: 15,
                     ),
                   ),
@@ -408,19 +484,29 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   AppBar _appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: backgroundColor,
-      title: const Text(
+      backgroundColor:
+          Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
+      title: Text(
         'New Medicine',
         style: TextStyle(
           fontFamily: 'JosefinSans',
-          fontVariations: [FontVariation('wght', 700)],
-          color: text1Color,
+          fontVariations: const [FontVariation('wght', 700)],
+          color: Provider.of<ThemeProvider>(context)
+              .getTheme
+              .colorScheme
+              .secondary,
           fontSize: 20,
         ),
       ),
       // By default the appBar adds a back button, but we can customize it
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: accentColor),
+        icon: Icon(
+          Icons.arrow_back,
+          color: Provider.of<ThemeProvider>(context)
+              .getTheme
+              .colorScheme
+              .secondary,
+        ),
         onPressed: () {
           Navigator.pop(context);
         },
