@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_frontend/models/constants.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
@@ -15,7 +16,9 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:provider/provider.dart';
 
 class AddPharmacyPage extends StatefulWidget {
-  const AddPharmacyPage({super.key});
+  final String? address;
+
+  const AddPharmacyPage({super.key, this.address});
 
   @override
   State<AddPharmacyPage> createState() => _AddPharmacyPageState();
@@ -28,6 +31,15 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   final FocusNode _addressFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.address != null) {
+      _address = widget.address!;
+      addressController.text = widget.address!;
+    }
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();

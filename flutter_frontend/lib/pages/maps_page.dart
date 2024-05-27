@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
+import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
@@ -124,8 +125,46 @@ class _MapsPageState extends State<MapsPage> {
                 //   ),
                 // }.union(_markers),
                 onTap: (coordinates) {
-                  log(coordinates.toString());
-                },//_markers,
+                  var markerId = const MarkerId('newMarker');
+                  var marker = Marker(
+                      markerId: markerId,
+                      position: coordinates,
+                      icon: BitmapDescriptor.defaultMarker,
+                      infoWindow: const InfoWindow(
+                        title: 'Add a new pharmacy',
+                      ),
+                      onTap: () async {
+                        List<Placemark> placemarks = await placemarkFromCoordinates(
+                            coordinates.latitude, coordinates.longitude);
+                        Placemark place = placemarks[0];
+                        String address =
+                            "${place.street}, ${place.locality}, ${place.country}";
+                        log("address: $address");
+
+                        if (!mounted) {
+                          return;
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddPharmacyPage(
+                              address: address,
+                            ),
+                          ),
+                        );
+                      });
+
+                  // Find the old marker with the same markerId
+                  Marker? oldMarker = _markers.firstWhere((m) => m.markerId == markerId,
+                      orElse: () => const Marker(markerId: MarkerId("null")));
+
+                  setState(() {
+                    if (oldMarker.markerId != const MarkerId("null")) {
+                      _markers.remove(oldMarker);
+                    }
+                    _markers.add(marker);
+                  });
+                }, //_markers,
               ),
               buildFloatingSearchBar(),
             ]),
@@ -219,8 +258,7 @@ class _MapsPageState extends State<MapsPage> {
     List<String> markers = [];
     for (Marker marker in _markers) {
       final pharmacyid = marker.markerId.value;
-      final position =
-          '${marker.position.latitude},${marker.position.longitude}';
+      final position = '${marker.position.latitude},${marker.position.longitude}';
       markers.add(jsonEncode({pharmacyid: position}));
     }
     await prefs.setStringList('markers', markers);
@@ -228,8 +266,7 @@ class _MapsPageState extends State<MapsPage> {
 
   Future<void> _savePharmacies() async {
     log("saving pharmacies....");
-    final pharmaciesJson =
-        _pharmacies.map((pharmacy) => pharmacy.toJson()).toList();
+    final pharmaciesJson = _pharmacies.map((pharmacy) => pharmacy.toJson()).toList();
     // Encode the list of pharmacy objects (not JSON strings)
     final encodedData = jsonEncode(pharmaciesJson);
     final bytes = utf8.encode(encodedData);
@@ -257,8 +294,8 @@ class _MapsPageState extends State<MapsPage> {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position =
+        await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
       _savePosition();
@@ -269,14 +306,12 @@ class _MapsPageState extends State<MapsPage> {
       distanceFilter: 5,
     );
 
-    _statusListen =
-        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    _statusListen = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       log("status:$status.toString()");
     });
 
-    _positionListen =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position? position) {
+    _positionListen = Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position? position) {
       log(position == null
           ? 'Unknown'
           : '${position.latitude.toString()}, ${position.longitude.toString()}');
@@ -297,16 +332,14 @@ class _MapsPageState extends State<MapsPage> {
       return;
     }
     // get favorite pharmacies ids if any
-    List<int> favoritePharmacies =
-        await _pharmacyService.getFavoritePharmaciesIds();
+    List<int> favoritePharmacies = await _pharmacyService.getFavoritePharmaciesIds();
 
     for (Pharmacy p in pharmacies) {
       //log("adding marker for ${p.name}");
       LatLng? coordinates;
       if (_savedMarkers.containsKey(p.id.toString())) {
         log("marker ${p.name} already saved");
-        final positionStr =
-            _savedMarkers[p.id.toString()].toString().split(',');
+        final positionStr = _savedMarkers[p.id.toString()].toString().split(',');
         coordinates = LatLng(
           double.parse(positionStr[0]),
           double.parse(positionStr[1]),
@@ -321,17 +354,14 @@ class _MapsPageState extends State<MapsPage> {
       final marker = Marker(
         markerId: MarkerId(p.id.toString()),
         position: coordinates!,
-        icon: favoritePharmacies.contains(p.id)
-            ? _favoritePharmacyIcon
-            : _pharmacyIcon,
+        icon: favoritePharmacies.contains(p.id) ? _favoritePharmacyIcon : _pharmacyIcon,
         infoWindow: InfoWindow(
           title: p.name,
           snippet: p.address,
         ),
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => PharmacyInfoPanel(pharmacy: p)),
+          MaterialPageRoute(builder: (context) => PharmacyInfoPanel(pharmacy: p)),
         ),
       );
       if (!_markers.contains(marker)) {
@@ -359,8 +389,7 @@ class _MapsPageState extends State<MapsPage> {
   }
 
   Widget buildFloatingSearchBar() {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
       backgroundColor:
@@ -368,15 +397,13 @@ class _MapsPageState extends State<MapsPage> {
       controller: _searchBarController,
       hint: 'Search Pharmacies...',
       hintStyle: TextStyle(
-        color:
-            Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+        color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
         fontFamily: 'JosefinSans',
         fontVariations: const [FontVariation('wght', 500)],
         fontSize: 15,
       ),
       borderRadius: BorderRadius.circular(50),
-      scrollPadding:
-          const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
+      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
       transitionDuration: const Duration(milliseconds: 5),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
@@ -423,10 +450,10 @@ class _MapsPageState extends State<MapsPage> {
                     if (_savedMarkers.containsKey(pharmacy.id.toString())) {
                       mapController.animateCamera(
                         CameraUpdate.newLatLng(LatLng(
-                          double.parse(_savedMarkers[pharmacy.id.toString()]
-                              .split(',')[0]),
-                          double.parse(_savedMarkers[pharmacy.id.toString()]
-                              .split(',')[1]),
+                          double.parse(
+                              _savedMarkers[pharmacy.id.toString()].split(',')[0]),
+                          double.parse(
+                              _savedMarkers[pharmacy.id.toString()].split(',')[1]),
                         )),
                       );
                       _searchBarController.close();

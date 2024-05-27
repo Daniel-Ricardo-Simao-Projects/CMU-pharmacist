@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
         onDestinationSelected: (int index) {
           if (index == 3) {
             showModalBottomSheet(
-                context: context, builder: (context) => UserProfilePage());
+                context: context, builder: (context) => const UserProfilePage());
           } else {
             setState(() {
               _currentPageIndex = index;
