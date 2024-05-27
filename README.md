@@ -150,7 +150,8 @@ In constants.dart, add here:
     - [x] Tapping medicines opens medicine information panel;
 - [ ] Medicine Information Panel:
     - [x] Show name and picture;
-    - [ ] Button to get notification when available in favorite pharmacy;
+    - [x] Button to get notification when available in favorite pharmacy;
+        - [ ] *Maybe Extra: When clicking the notification, go to the right pharmacy*
     - [ ] List pharmacies where available, sorted by distance.
         - [x] List pharmacies where available.
         - [ ] *Note: Sorted by distance.*
