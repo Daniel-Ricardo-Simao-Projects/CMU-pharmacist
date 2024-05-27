@@ -77,6 +77,30 @@ class UserService {
     }
   }
 
+  void updateFcmToken(String? fcmToken) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? username = prefs.getString('username');
+      if (username != null) {
+        Map<String, dynamic> userData = {
+          'username': username,
+          'fcm_token': fcmToken,
+        };
+
+        print("Updating FCM token :$fcmToken for user: $username");
+
+        final response = await dio.put('$usersURL/token', data: userData);
+        if (response.statusCode == 200) {
+          print("FCM token updated successfully");
+        } else {
+          print("Failed to update FCM token");
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> saveUser(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', user.id.toString());

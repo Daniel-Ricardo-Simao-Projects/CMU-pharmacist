@@ -19,6 +19,31 @@ func GetUsersHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"Users": users})
 }
 
+func UpdateUserTokenHandler(c *gin.Context) {
+	type UserToken struct {
+		Username string `json:"username"`
+		FCMToken string `json:"fcm_token"`
+	}
+
+	var userToken UserToken
+
+	if err := c.ShouldBindJSON(&userToken); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.Error("Error binding JSON")
+		return
+	}
+
+	err := db.UpdateFCMToken(userToken.Username, userToken.FCMToken)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.Error("Error adding FCM token")
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "FCM token updated successfully"})
+	utils.Info("FCM token updated successfully")
+
+}
+
 func AuthenticateUserHandler(c *gin.Context) {
 	type UserAuth struct {
 		Username string `json:"username"`

@@ -32,6 +32,7 @@ func main() {
 	r.POST("/users", api.AddUserHandler)
 	r.PUT("/users/:id", api.UpdateUserHandler)
 	r.DELETE("/users/:id", api.DeleteUserHandler)
+	r.PUT("/users/token", api.UpdateUserTokenHandler)
 
 	r.GET("/pharmacies", api.GetPharmacyHandler)
 	r.POST("/pharmacies", api.AddPharmacyHandler)

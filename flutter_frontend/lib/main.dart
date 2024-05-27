@@ -22,6 +22,7 @@ import 'models/pharmacy_model.dart';
 import 'services/pharmacy_service.dart';
 import 'database/app_database.dart';
 import 'models/user_model.dart';
+import 'services/user_service.dart';
 
 String? notifTitle, notifBody;
 
@@ -111,7 +112,7 @@ class MyApp extends StatelessWidget {
           theme: Provider.of<ThemeProvider>(context).getTheme,
           home: loggedInUser == null
               ? LoginPage(fcmToken: fcmToken)
-              : const HomePage(),
+              : HomePage(fcmToken: fcmToken),
         );
       },
     );
@@ -119,7 +120,9 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String? fcmToken;
+
+  const HomePage({Key? key, required this.fcmToken}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -137,6 +140,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    UserService userService = UserService();
+    userService.updateFcmToken(widget.fcmToken);
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("Got a message whilst in the foreground!");

@@ -215,7 +215,8 @@ class _LoginPageState extends State<LoginPage> {
 
         Navigator.pushReplacement(
           _dialogContext!,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(
+              builder: (context) => HomePage(fcmToken: widget.fcmToken)),
         );
       } else {
         print(

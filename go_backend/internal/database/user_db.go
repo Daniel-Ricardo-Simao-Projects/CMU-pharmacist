@@ -110,6 +110,17 @@ func AddFCMToken(username, token string) error {
 	return nil
 }
 
+func UpdateFCMToken(username, token string) error {
+	userId := GetUserIdByUsername(username)
+	_, err := config.DB.Exec("UPDATE fcm_tokens SET token = ? WHERE user_id = ?", token, userId)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
+}
+
 func GetTokenByUserId(userId int) string {
 	row := config.DB.QueryRow("SELECT token FROM fcm_tokens WHERE user_id = ?", userId)
 
