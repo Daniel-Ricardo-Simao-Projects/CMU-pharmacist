@@ -18,7 +18,7 @@ ThemeData darkTheme = ThemeData(
     primary: const Color(0xFF2E7C87),
     outline: const Color(0xFF3A95A1),
     secondary: const Color(0xFFE1F2F3),
-    shadow: Colors.white.withOpacity(0.4),
+    shadow: Colors.white.withOpacity(0.0),
   ),
 );
 

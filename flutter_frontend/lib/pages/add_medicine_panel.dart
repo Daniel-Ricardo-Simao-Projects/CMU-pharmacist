@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
+import 'package:flutter_frontend/themes/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class AddMedicinePanel extends StatefulWidget {
   final int pharmacyId;
@@ -50,9 +52,10 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
     return Container(
       height: 300,
       width: double.infinity,
-      decoration: const BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color:
+            Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
@@ -67,14 +70,18 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.add_box, color: accentColor, size: 30),
+                Icon(Icons.add_box,
+                    color: Provider.of<ThemeProvider>(context)
+                        .getTheme
+                        .colorScheme
+                        .secondary,
+                    size: 30),
                 const SizedBox(width: 10),
                 const Text(
                   'Add ',
                   style: TextStyle(
                     fontFamily: 'JosefinSans',
                     fontVariations: [FontVariation('wght', 400)],
-                    color: subtext1Color,
                     fontSize: 14,
                   ),
                 ),
@@ -82,10 +89,13 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                   width: 150,
                   child: Text(
                     widget.medicine.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'JosefinSans',
-                      fontVariations: [FontVariation('wght', 700)],
-                      color: accentColor,
+                      fontVariations: const [FontVariation('wght', 700)],
+                      color: Provider.of<ThemeProvider>(context)
+                          .getTheme
+                          .colorScheme
+                          .secondary,
                       fontSize: 14,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -100,12 +110,15 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Barcode',
                     style: TextStyle(
                       fontFamily: 'JosefinSans',
-                      fontVariations: [FontVariation('wght', 700)],
-                      color: accentColor,
+                      fontVariations: const [FontVariation('wght', 700)],
+                      color: Provider.of<ThemeProvider>(context)
+                          .getTheme
+                          .colorScheme
+                          .secondary,
                       fontSize: 18,
                     ),
                   ),
@@ -114,7 +127,6 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                     style: const TextStyle(
                       fontFamily: 'JosefinSans',
                       fontVariations: [FontVariation('wght', 400)],
-                      color: subtext1Color,
                       fontSize: 18,
                     ),
                   ),
@@ -125,12 +137,15 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Quantity',
                   style: TextStyle(
                     fontFamily: 'JosefinSans',
-                    fontVariations: [FontVariation('wght', 700)],
-                    color: accentColor,
+                    fontVariations: const [FontVariation('wght', 700)],
+                    color: Provider.of<ThemeProvider>(context)
+                        .getTheme
+                        .colorScheme
+                        .secondary,
                     fontSize: 18,
                   ),
                 ),
@@ -140,9 +155,12 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                       onPressed: () {
                         _decrementStock();
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.remove,
-                        color: accentColor,
+                        color: Provider.of<ThemeProvider>(context)
+                            .getTheme
+                            .colorScheme
+                            .secondary,
                       ),
                     ),
                     Text(
@@ -150,7 +168,6 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                       style: const TextStyle(
                         fontFamily: 'JosefinSans',
                         fontVariations: [FontVariation('wght', 400)],
-                        color: text1Color,
                         fontSize: 16,
                       ),
                     ),
@@ -158,9 +175,12 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                       onPressed: () {
                         _incrementStock();
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.add,
-                        color: accentColor,
+                        color: Provider.of<ThemeProvider>(context)
+                            .getTheme
+                            .colorScheme
+                            .secondary,
                       ),
                     ),
                   ],
@@ -174,10 +194,18 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
               height: 55,
               width: 220,
               decoration: BoxDecoration(
-                color: primaryColor,
+                color: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .primary,
                 borderRadius: BorderRadius.circular(15),
-                border: const Border(
-                    bottom: BorderSide(color: primaryBorderColor, width: 4)),
+                border: Border(
+                    bottom: BorderSide(
+                        color: Provider.of<ThemeProvider>(context)
+                            .getTheme
+                            .colorScheme
+                            .outline,
+                        width: 4)),
                 boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
@@ -195,7 +223,7 @@ class _AddMedicinePanelState extends State<AddMedicinePanel> {
                     style: TextStyle(
                       fontFamily: 'JosefinSans',
                       fontVariations: [FontVariation('wght', 500)],
-                      color: text2Color,
+                      color: Colors.white,
                       fontSize: 16,
                     ),
                   )),

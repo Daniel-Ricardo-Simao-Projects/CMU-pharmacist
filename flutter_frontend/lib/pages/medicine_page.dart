@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
+import 'package:flutter_frontend/themes/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class MedicineInfoPage extends StatefulWidget {
   final Medicine medicine;
@@ -37,11 +38,13 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: backgroundColor,
+      backgroundColor:
+          Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
       body: CustomScrollView(slivers: [
         SliverAppBar(
           pinned: true,
-          backgroundColor: primaryColor,
+          backgroundColor:
+              Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
           floating: true,
           expandedHeight: 200,
           leading: backButton(context),
@@ -75,10 +78,13 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
         child: Container(
           width: 40,
           height: 40,
-          decoration: const BoxDecoration(
-            color: backgroundColor,
+          decoration: BoxDecoration(
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .background,
             shape: BoxShape.circle,
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
                 spreadRadius: 0,
@@ -97,7 +103,10 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
                   isNotified
                       ? Icons.notifications
                       : Icons.notifications_outlined,
-                  color: primaryColor),
+                  color: Provider.of<ThemeProvider>(context)
+                      .getTheme
+                      .colorScheme
+                      .secondary),
             ),
           ),
         ),
@@ -111,10 +120,13 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
       child: Container(
         width: 35,
         height: 35,
-        decoration: const BoxDecoration(
-          color: backgroundColor,
+        decoration: BoxDecoration(
+          color: Provider.of<ThemeProvider>(context)
+              .getTheme
+              .colorScheme
+              .background,
           shape: BoxShape.circle,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               spreadRadius: 0,
@@ -126,7 +138,13 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
         child: Center(
           child: IconButton(
             iconSize: 20,
-            icon: const Icon(Icons.arrow_back, color: primaryColor),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Provider.of<ThemeProvider>(context)
+                  .getTheme
+                  .colorScheme
+                  .secondary,
+            ),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -143,12 +161,15 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Pharmacies Available',
             style: TextStyle(
               fontFamily: 'JosefinSans',
-              fontVariations: [FontVariation('wght', 700)],
-              color: accentColor,
+              fontVariations: const [FontVariation('wght', 700)],
+              color: Provider.of<ThemeProvider>(context)
+                  .getTheme
+                  .colorScheme
+                  .secondary,
               fontSize: 20,
             ),
           ),
@@ -198,10 +219,13 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
                     width: double.infinity,
                     child: Text(
                       medicine.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'JosefinSans',
-                        fontVariations: [FontVariation('wght', 700)],
-                        color: accentColor,
+                        fontVariations: const [FontVariation('wght', 700)],
+                        color: Provider.of<ThemeProvider>(context)
+                            .getTheme
+                            .colorScheme
+                            .secondary,
                         fontSize: 18,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -215,7 +239,6 @@ class _MedicineInfoPageState extends State<MedicineInfoPage> {
                       style: const TextStyle(
                         fontFamily: 'JosefinSans',
                         fontVariations: [FontVariation('wght', 400)],
-                        color: subtext1Color,
                         fontSize: 13,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -275,8 +298,14 @@ class _PharmacyListState extends State<PharmacyList> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: InkWell(
-                  splashColor: primaryColor,
-                  highlightColor: primaryColor,
+                  splashColor: Provider.of<ThemeProvider>(context)
+                      .getTheme
+                      .colorScheme
+                      .primary,
+                  highlightColor: Provider.of<ThemeProvider>(context)
+                      .getTheme
+                      .colorScheme
+                      .primary,
                   borderRadius: BorderRadius.circular(15),
                   onTap: () {
                     Navigator.push(
@@ -294,7 +323,10 @@ class _PharmacyListState extends State<PharmacyList> {
                       gradient: glossyColor,
                       boxShadow: [
                         BoxShadow(
-                          color: shadow1Color,
+                          color: Provider.of<ThemeProvider>(context)
+                              .getTheme
+                              .colorScheme
+                              .shadow,
                           spreadRadius: 5,
                           blurRadius: 7,
                           offset: const Offset(0, 3),
@@ -338,12 +370,16 @@ class _PharmacyListState extends State<PharmacyList> {
                                     width: 230,
                                     child: Text(
                                       snapshot.data![index].name,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontFamily: 'JosefinSans',
-                                        fontVariations: [
+                                        fontVariations: const [
                                           FontVariation('wght', 700)
                                         ],
-                                        color: text1Color,
+                                        color:
+                                            Provider.of<ThemeProvider>(context)
+                                                .getTheme
+                                                .colorScheme
+                                                .secondary,
                                         fontSize: 14,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -359,7 +395,6 @@ class _PharmacyListState extends State<PharmacyList> {
                                         fontVariations: [
                                           FontVariation('wght', 400)
                                         ],
-                                        color: subtext1Color,
                                         fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,
