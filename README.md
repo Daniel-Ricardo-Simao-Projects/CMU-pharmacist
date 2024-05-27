@@ -125,7 +125,7 @@ In constants.dart, add here:
     - [ ] Pick location 
         - [ ] on map, 
         - [x] use address, or 
-        - [ ] current location;
+        - [x] current location;
         - *Note: location is just a string, no map integration yet.*
     - [x] Take picture;
 - [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
