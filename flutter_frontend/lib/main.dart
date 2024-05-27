@@ -134,7 +134,6 @@ class _HomePageState extends State<HomePage> {
     const MapsPage(),
     const AddPharmacyPage(),
     const FindMedicinePage(),
-    const UserProfilePage(),
   ];
 
   @override
@@ -198,9 +197,14 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
-          setState(() {
-            _currentPageIndex = index;
-          });
+          if (index == 3) {
+            showModalBottomSheet(
+                context: context, builder: (context) => UserProfilePage());
+          } else {
+            setState(() {
+              _currentPageIndex = index;
+            });
+          }
         },
         backgroundColor: Theme.of(context).colorScheme.background,
         indicatorColor: Theme.of(context).colorScheme.primary,
