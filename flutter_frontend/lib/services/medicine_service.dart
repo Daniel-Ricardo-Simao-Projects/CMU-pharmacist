@@ -247,12 +247,15 @@ class MedicineService {
         'medicineId': medicineId,
       });
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
+        print("Medicine added to notifications");
         return true;
       } else {
+        print("Failed to add medicine to notifications");
         return false;
       }
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }

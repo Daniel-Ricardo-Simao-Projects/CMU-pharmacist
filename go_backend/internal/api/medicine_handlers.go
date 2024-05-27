@@ -292,7 +292,6 @@ func AddNotificationHandler(c *gin.Context) {
 	}
 
 	utils.Info("Sending notification to user: " + username + " for medicine: ")
-	fmt.Println("AJAHJAHAHAHA", medicineID)
 
 	db.AddNotification(models.Notification{UsernameID: user, MedicineId: medicineID})
 	c.JSON(http.StatusCreated, gin.H{"message": "Notification added successfully"})
