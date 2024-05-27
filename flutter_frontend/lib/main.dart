@@ -87,7 +87,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final User? loggedInUser;
 
-  const MyApp({Key? key, this.loggedInUser}) : super(key: key);
+  const MyApp({super.key, this.loggedInUser});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class MyApp extends StatelessWidget {
       future: FirebaseMessaging.instance.getToken(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
 
         final fcmToken = snapshot.data;

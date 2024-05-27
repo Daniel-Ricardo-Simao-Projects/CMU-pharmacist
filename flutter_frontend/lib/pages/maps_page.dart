@@ -21,8 +21,7 @@ class MapsPage extends StatefulWidget {
   State<MapsPage> createState() => _MapsPageState();
 }
 
-class _MapsPageState extends State<MapsPage>
-    with AutomaticKeepAliveClientMixin {
+class _MapsPageState extends State<MapsPage> {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
@@ -33,14 +32,11 @@ class _MapsPageState extends State<MapsPage>
 
   final Set<Marker> _markers = {};
   final Map<String, dynamic> _savedMarkers = {};
-  String _mapTheme = '';
+  final String _mapTheme = '';
   LatLng? _currentPosition;
   final List<Pharmacy> _pharmacies = [];
   List<Pharmacy> _searchResults = [];
   final _searchBarController = FloatingSearchBarController();
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -81,6 +77,7 @@ class _MapsPageState extends State<MapsPage>
 
   @override
   void dispose() {
+    mapController.dispose();
     _positionListen?.cancel();
     _statusListen?.cancel();
     super.dispose();
@@ -95,7 +92,6 @@ class _MapsPageState extends State<MapsPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: _currentPosition == null
@@ -106,25 +102,30 @@ class _MapsPageState extends State<MapsPage>
               GoogleMap(
                 onMapCreated: _onMapCreated,
                 style: _mapTheme,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
                 zoomControlsEnabled: false,
                 compassEnabled: false,
                 initialCameraPosition: CameraPosition(
                   target: _currentPosition!,
                   zoom: 17.0,
                 ),
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('currentPosition'),
-                    position: _currentPosition!,
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                        BitmapDescriptor.hueAzure),
-                    infoWindow: const InfoWindow(
-                      title: 'Current Position',
-                      snippet: 'You are here',
-                    ),
-                  ),
-                }.union(_markers),
-                //_markers,
+                markers: _markers,
+                // markers: {
+                //   Marker(
+                //     markerId: const MarkerId('currentPosition'),
+                //     position: _currentPosition!,
+                //     icon: BitmapDescriptor.defaultMarkerWithHue(
+                //         BitmapDescriptor.hueAzure),
+                //     infoWindow: const InfoWindow(
+                //       title: 'Current Position',
+                //       snippet: 'You are here',
+                //     ),
+                //   ),
+                // }.union(_markers),
+                onTap: (coordinates) {
+                  log(coordinates.toString());
+                },//_markers,
               ),
               buildFloatingSearchBar(),
             ]),

@@ -420,10 +420,8 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
     String imageBytes = base64Encode(file.readAsBytesSync());
     Pharmacy pharmacy =
         Pharmacy(id: 0, name: name, address: address, picture: imageBytes);
-    log('Pharmacy: $pharmacy.name, $pharmacy.address');
+    log('Pharmacy: ${pharmacy.name}, ${pharmacy.address}');
     PharmacyService().addPharmacy(pharmacy);
-
-    //Navigator.pop(context);
   }
 }
 
