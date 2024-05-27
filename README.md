@@ -161,11 +161,12 @@ In constants.dart, add here:
 - [ ] Securing Communication;
 - [ ] Meta Moderation;
 - [ ] User Ratings;
-- [ ] User Accounts;
+- [x] User Accounts;
+    - [ ] * We do not allow to not have an account, yet (?) *
 - [ ] Social Sharing To Other Apps;
 - [ ] Localization (L10n);
 - [x] UI Adaptability: Rotation; *Note: **Maybe** done, automagically*
-- [ ] UI Adaptability: Light/Dark Theme;
+- [x] UI Adaptability: Light/Dark Theme;
 - [ ] Recommendations;
 
 ## TODO
