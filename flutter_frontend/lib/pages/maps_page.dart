@@ -94,7 +94,7 @@ class _MapsPageState extends State<MapsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: _currentPosition == null
+      body: _currentPosition == null || !mounted
           ? const Center(
               child: CircularProgressIndicator(),
             )
