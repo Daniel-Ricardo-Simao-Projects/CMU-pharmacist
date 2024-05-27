@@ -101,7 +101,20 @@ func GetUsers() []models.User {
 }
 
 func AddFCMToken(username, token string) error {
-	_, err := config.DB.Exec("INSERT INTO fcm_tokens (user_id, token) VALUES (?, ?)", GetUserIdByUsername(username), token)
+	// check if entry exists. If exists, update the token
+	row := config.DB.QueryRow("SELECT * FROM fcm_tokens WHERE user_id = ?", GetUserIdByUsername(username))
+
+	var userToken string
+
+	err := row.Scan(&userToken, &token)
+	if err == nil {
+		println("Token exists. Updating token")
+		return UpdateFCMToken(username, token)
+	}
+
+	println("Token does not exist", &token)
+
+	_, err = config.DB.Exec("INSERT INTO fcm_tokens (user_id, token) VALUES (?, ?)", GetUserIdByUsername(username), token)
 	if err != nil {
 		log.Fatal(err)
 		return err

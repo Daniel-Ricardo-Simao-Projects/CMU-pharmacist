@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/pages/user_login_page.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:flutter_frontend/themes/themes.dart';
 import 'package:provider/provider.dart';
+
+import '../pages/user_login_page.dart';
+
+import '../services/user_service.dart';
 
 enum ThemeType { light, dark, system }
 
@@ -150,7 +155,15 @@ class UserProfilePage extends StatelessWidget {
                   .secondary),
           const SizedBox(width: 10),
           TextButton(
-              onPressed: () {},
+              onPressed: () {
+                UserService().logout();
+                // pop everything and go to login page
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginPage(fcmToken: '')));
+              },
               child: Text(
                 'Logout',
                 style: TextStyle(

@@ -79,12 +79,15 @@ func AuthenticateUserHandler(c *gin.Context) {
 		fmt.Println("User authenticated: ", userInfo)
 	}
 
-	// add fcm token
-	err = db.AddFCMToken(userAuth.Username, userAuth.FCMToken)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		utils.Error("Error adding FCM token")
-		return
+	if userAuth.FCMToken != "" {
+		fmt.Println("User token: ", userAuth.FCMToken)
+		// add fcm token
+		err = db.AddFCMToken(userAuth.Username, userAuth.FCMToken)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			utils.Error("Error adding FCM token")
+			return
+		}
 	}
 	c.JSON(http.StatusOK, gin.H{"data": userInfo})
 	utils.Info("User authenticated successfully")

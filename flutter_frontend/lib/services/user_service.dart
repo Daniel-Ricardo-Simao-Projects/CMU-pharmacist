@@ -5,6 +5,8 @@ import 'package:crypto/crypto.dart';
 import '../models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../database/app_database.dart';
+
 class UserService {
   final String usersURL =
       '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/users';
@@ -101,15 +103,28 @@ class UserService {
     }
   }
 
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userId');
+    await prefs.remove('username');
+
+    // clear also the db
+    final database =
+        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final userDao = database.userDao;
+    final user = await userDao.findLoggedInUser();
+    if (user != null) {
+      user.isLogged = false;
+      await userDao.updateUser(user);
+    }
+
+    print("User logged out");
+  }
+
   Future<void> saveUser(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', user.id.toString());
     await prefs.setString('username', user.name);
-  }
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('userId');
-    await prefs.remove('username');
   }
 }
