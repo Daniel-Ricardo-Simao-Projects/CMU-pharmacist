@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
@@ -23,6 +25,9 @@ import 'models/user_model.dart';
 
 String? notifTitle, notifBody;
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -37,6 +42,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -123,11 +138,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      log("Got a message whilst in the foreground!");
-      log("Message data: ${message.data}");
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("Got a message whilst in the foreground!");
+      print("Message data: ${message.data}");
       if (message.notification != null) {
-        log("Message also contained a notification: ${message.notification}");
+        print("Message also contained a notification: ${message.notification}");
         setState(() {
           notifTitle = message.notification!.title;
           notifBody = message.notification!.body;
@@ -135,17 +150,37 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      log('Opened a notification');
-      log('Message data: ${message.data}');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Opened a notification");
+      print("Message data: ${message.data}");
       if (message.notification != null) {
-        log('Message also contained a notification: ${message.notification}');
-        setState(() {
-          notifTitle = message.notification!.title;
-          notifBody = message.notification!.body;
-        });
+        print("Message also contained a notification: ${message.notification}");
+        _showNotification(message.notification!);
       }
     });
+  }
+
+  Future<void> _showNotification(RemoteNotification notification) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    print("Notification title: ${notification.title}");
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      notification.title,
+      notification.body,
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
   }
 
   @override
