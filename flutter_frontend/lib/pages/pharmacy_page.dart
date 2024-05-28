@@ -19,7 +19,7 @@ class PharmacyInfoPanel extends StatefulWidget {
   const PharmacyInfoPanel({super.key, required this.pharmacy});
 
   @override
-  _PharmacyInfoPanelState createState() => _PharmacyInfoPanelState();
+  State<PharmacyInfoPanel> createState() => _PharmacyInfoPanelState();
 }
 
 class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
@@ -185,7 +185,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               await MedicineService().getMedicineFromBarcode(res.toString());
           if (medicine.id != 0) {
             showModalBottomSheet(
-                context: context,
+                context: context, // TODO: make this better
                 builder: (BuildContext context) {
                   return AddMedicinePanel(
                     pharmacyId: widget.pharmacy.id,
@@ -194,10 +194,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                 });
           } else {
             Navigator.push(
-              context,
+              context, // TODO: make this better
               MaterialPageRoute(
                 builder: (context) => AddMedicinePage(
-                  PharmacyId: widget.pharmacy.id,
+                  pharmacyId: widget.pharmacy.id,
                   barcode: res.toString(),
                 ),
               ),

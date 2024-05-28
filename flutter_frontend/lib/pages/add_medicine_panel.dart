@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
-import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 

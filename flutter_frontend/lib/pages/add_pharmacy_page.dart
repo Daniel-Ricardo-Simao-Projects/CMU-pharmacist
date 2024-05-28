@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_frontend/models/constants.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
@@ -264,11 +263,6 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
                 containerHorizontalPadding: 0,
                 debounceTime: 400,
                 countries: const ["pt"],
-                // TODO: Review this comment
-                //isLatLngRequired: true,
-                // getPlaceDetailWithLatLng: (Prediction prediction) {
-                //   log("placeDetails${prediction.lat}");
-                // },
                 itemClick: (Prediction prediction) {
                   addressController.text = prediction.description ?? "";
                   addressController.selection = TextSelection.fromPosition(

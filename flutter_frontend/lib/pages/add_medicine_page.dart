@@ -4,23 +4,22 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
-import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddMedicinePage extends StatefulWidget {
-  final int PharmacyId;
+  final int pharmacyId;
   final String barcode;
 
   const AddMedicinePage({
     super.key,
-    required this.PharmacyId,
+    required this.pharmacyId,
     required this.barcode,
   });
 
   @override
-  _AddMedicinePageState createState() => _AddMedicinePageState();
+  State<AddMedicinePage> createState() => _AddMedicinePageState();
 }
 
 class _AddMedicinePageState extends State<AddMedicinePage> {
@@ -117,7 +116,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           const SizedBox(height: 20),
           _detailsField(),
           const SizedBox(height: 30),
-          _bottomButtons(widget.PharmacyId),
+          _bottomButtons(widget.pharmacyId),
         ],
       ),
     );

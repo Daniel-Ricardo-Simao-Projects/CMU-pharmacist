@@ -54,17 +54,17 @@ void main() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  //FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Transparent status bar
@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   final String? fcmToken;
 
-  const HomePage({Key? key, required this.fcmToken}) : super(key: key);
+  const HomePage({super.key, required this.fcmToken});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -144,10 +144,10 @@ class _HomePageState extends State<HomePage> {
     userService.updateFcmToken(widget.fcmToken);
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("Got a message whilst in the foreground!");
-      print("Message data: ${message.data}");
+      log("Got a message whilst in the foreground!");
+      log("Message data: ${message.data}");
       if (message.notification != null) {
-        print("Message also contained a notification: ${message.notification}");
+        log("Message also contained a notification: ${message.notification}");
         setState(() {
           notifTitle = message.notification!.title;
           notifBody = message.notification!.body;
@@ -156,10 +156,10 @@ class _HomePageState extends State<HomePage> {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Opened a notification");
-      print("Message data: ${message.data}");
+      log("Opened a notification");
+      log("Message data: ${message.data}");
       if (message.notification != null) {
-        print("Message also contained a notification: ${message.notification}");
+        log("Message also contained a notification: ${message.notification}");
         _showNotification(message.notification!);
       }
     });
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    print("Notification title: ${notification.title}");
+    log("Notification title: ${notification.title}");
 
     await flutterLocalNotificationsPlugin.show(
       0,

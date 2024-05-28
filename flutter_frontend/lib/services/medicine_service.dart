@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_frontend/database/app_database.dart';
@@ -248,14 +249,14 @@ class MedicineService {
       });
 
       if (response.statusCode == 201) {
-        print("Medicine added to notifications");
+        log("Medicine added to notifications");
         return true;
       } else {
-        print("Failed to add medicine to notifications");
+        log("Failed to add medicine to notifications");
         return false;
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       return false;
     }
   }
@@ -274,14 +275,14 @@ class MedicineService {
           data: {'userId': username, 'medicineId': medicineId});
 
       if (response.statusCode == 200) {
-        print("Medicine removed from notifications");
+        log("Medicine removed from notifications");
         return true;
       } else {
-        print("Failed to remove medicine from notifications");
+        log("Failed to remove medicine from notifications");
         return false;
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       return false;
     }
   }
@@ -302,16 +303,16 @@ class MedicineService {
         // get boolean value from response
         bool isNotified = response.data['notified'];
 
-        print("Is notified: $isNotified");
+        log("Is notified: $isNotified");
 
         return isNotified;
       } else {
-        print("Failed to get notification status");
+        log("Failed to get notification status");
 
         return false;
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
 
       return false;
     }

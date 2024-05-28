@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/main.dart';
 import 'package:flutter_frontend/pages/create_user_page.dart';
@@ -9,7 +11,7 @@ import '../database/app_database.dart';
 class LoginPage extends StatefulWidget {
   final String? fcmToken;
 
-  const LoginPage({Key? key, this.fcmToken}) : super(key: key);
+  const LoginPage({super.key, this.fcmToken});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -166,8 +168,8 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
-    // print FCM token
-    print('FCM token: ${widget.fcmToken}');
+    // log FCM token
+    log('FCM token: ${widget.fcmToken}');
 
     _dialogContext = context; // Store buildcontext temporarily
 
@@ -219,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => HomePage(fcmToken: widget.fcmToken)),
         );
       } else {
-        print(
+        log(
             "Failed to login with username: $username and password: $password");
         ScaffoldMessenger.of(_dialogContext!).showSnackBar(
           const SnackBar(

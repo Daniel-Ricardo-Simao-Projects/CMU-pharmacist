@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import '../models/user_model.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/app_database.dart';
@@ -18,7 +18,7 @@ class UserService {
 
   // getter to access the authenticated user
   User getUser() {
-    print(user);
+    log(user.toString());
     return user;
   }
 
@@ -62,7 +62,7 @@ class UserService {
 
       // Check if the response contains a message indicating successful authentication
       if (response.statusCode == 200) {
-        print("User authenticated successfully" + response.data.toString());
+        log("User authenticated successfully${response.data}");
         user = User.fromJsonWithoutLastAttribute(response.data);
         saveUser(user);
         // Store the authenticated user in the user object
@@ -89,13 +89,13 @@ class UserService {
           'fcm_token': fcmToken,
         };
 
-        print("Updating FCM token :$fcmToken for user: $username");
+        log("Updating FCM token :$fcmToken for user: $username");
 
         final response = await dio.put('$usersURL/token', data: userData);
         if (response.statusCode == 200) {
-          print("FCM token updated successfully");
+          log("FCM token updated successfully");
         } else {
-          print("Failed to update FCM token");
+          log("Failed to update FCM token");
         }
       }
     } catch (e) {
@@ -109,8 +109,7 @@ class UserService {
     await prefs.remove('username');
 
     // clear also the db
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
     final userDao = database.userDao;
     final user = await userDao.findLoggedInUser();
@@ -119,7 +118,7 @@ class UserService {
       await userDao.updateUser(user);
     }
 
-    print("User logged out");
+    log("User logged out");
   }
 
   Future<void> saveUser(User user) async {

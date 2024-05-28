@@ -4,8 +4,6 @@ import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:flutter_frontend/themes/themes.dart';
 import 'package:provider/provider.dart';
 
-import '../pages/user_login_page.dart';
-
 import '../services/user_service.dart';
 
 enum ThemeType { light, dark, system }
