@@ -37,8 +37,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
 
   void checkFavoriteStatus() async {
     // Fetch user's favorite pharmacies
-    List<int> favoritePharmacyIds =
-        await PharmacyService().getFavoritePharmaciesIds();
+    List<int> favoritePharmacyIds = await PharmacyService().getFavoritePharmaciesIds();
     // Check if the current pharmacy is in the list of favorites
     setState(() {
       isFavorite = favoritePharmacyIds.contains(widget.pharmacy.id);
@@ -62,10 +61,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         child: CustomScrollView(slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .primary,
+            backgroundColor:
+                Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
             floating: true,
             expandedHeight: 200,
             leading: backButton(context),
@@ -99,10 +96,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .background,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
             shape: BoxShape.circle,
             boxShadow: const [
               BoxShadow(
@@ -121,10 +115,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               },
               icon: Icon(
                 isFavorite ? Icons.star : Icons.star_outline,
-                color: Provider.of<ThemeProvider>(context)
-                    .getTheme
-                    .colorScheme
-                    .secondary,
+                color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
               ),
             ),
           ),
@@ -140,10 +131,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         width: 35,
         height: 35,
         decoration: BoxDecoration(
-          color: Provider.of<ThemeProvider>(context)
-              .getTheme
-              .colorScheme
-              .background,
+          color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
           shape: BoxShape.circle,
           boxShadow: const [
             BoxShadow(
@@ -158,10 +146,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
           child: IconButton(
             iconSize: 20,
             icon: Icon(Icons.arrow_back,
-                color: Provider.of<ThemeProvider>(context)
-                    .getTheme
-                    .colorScheme
-                    .secondary),
+                color:
+                    Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -181,40 +167,42 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               builder: (context) => const SimpleBarcodeScannerPage(),
             ));
         if (res != null) {
-          var medicine =
-              await MedicineService().getMedicineFromBarcode(res.toString());
-          if (medicine.id != 0) {
-            showModalBottomSheet(
-                context: context, // TODO: make this better
-                builder: (BuildContext context) {
-                  return AddMedicinePanel(
+          var medicine = await MedicineService().getMedicineFromBarcode(res.toString());
+          if (context.mounted) {
+            if (medicine.id != 0) {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AddMedicinePanel(
+                        pharmacyId: widget.pharmacy.id,
+                        medicine: medicine,
+                      );
+                    });
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddMedicinePage(
                     pharmacyId: widget.pharmacy.id,
-                    medicine: medicine,
-                  );
-                });
-          } else {
-            Navigator.push(
-              context, // TODO: make this better
-              MaterialPageRoute(
-                builder: (context) => AddMedicinePage(
-                  pharmacyId: widget.pharmacy.id,
-                  barcode: res.toString(),
+                    barcode: res.toString(),
+                  ),
                 ),
+              );
+            }
+          }
+        } else {
+          if (context.mounted) {
+          // If the barcode is not found
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Barcode not found'),
+                duration: Duration(seconds: 2),
               ),
             );
           }
-        } else {
-          // If the barcode is not found
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Barcode not found'),
-              duration: Duration(seconds: 2),
-            ),
-          );
         }
       },
-      backgroundColor:
-          Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+      backgroundColor: Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
       child: const Icon(
         Icons.add,
         color: Colors.white,
@@ -233,10 +221,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
             style: TextStyle(
               fontFamily: 'JosefinSans',
               fontVariations: const [FontVariation('wght', 700)],
-              color: Provider.of<ThemeProvider>(context)
-                  .getTheme
-                  .colorScheme
-                  .secondary,
+              color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
               fontSize: 20,
             ),
           ),
@@ -298,10 +283,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               onTap: () {},
               child: Icon(
                 Icons.location_on,
-                color: Provider.of<ThemeProvider>(context)
-                    .getTheme
-                    .colorScheme
-                    .secondary,
+                color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
                 size: 30,
               ),
             )
@@ -314,8 +296,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   void toggleFavorite() async {
     if (isFavorite) {
       // Remove from favorites
-      bool removed =
-          await PharmacyService().removeFavoritePharmacy(widget.pharmacy.id);
+      bool removed = await PharmacyService().removeFavoritePharmacy(widget.pharmacy.id);
       if (removed) {
         setState(() {
           isFavorite = false;
@@ -323,8 +304,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
       }
     } else {
       // Add to favorites
-      bool added =
-          await PharmacyService().addFavoritePharmacy(widget.pharmacy.id);
+      bool added = await PharmacyService().addFavoritePharmacy(widget.pharmacy.id);
       if (added) {
         setState(() {
           isFavorite = true;
@@ -351,14 +331,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: InkWell(
-                  splashColor: Provider.of<ThemeProvider>(context)
-                      .getTheme
-                      .colorScheme
-                      .primary,
-                  highlightColor: Provider.of<ThemeProvider>(context)
-                      .getTheme
-                      .colorScheme
-                      .primary,
+                  splashColor:
+                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+                  highlightColor:
+                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
                   borderRadius: BorderRadius.circular(15),
                   onTap: () {
                     Navigator.push(
@@ -439,11 +415,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                                         fontVariations: const [
                                           FontVariation('wght', 700)
                                         ],
-                                        color:
-                                            Provider.of<ThemeProvider>(context)
-                                                .getTheme
-                                                .colorScheme
-                                                .secondary,
+                                        color: Provider.of<ThemeProvider>(context)
+                                            .getTheme
+                                            .colorScheme
+                                            .secondary,
                                         fontSize: 14,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -456,9 +431,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                                       snapshot.data![index].details,
                                       style: const TextStyle(
                                         fontFamily: 'JosefinSans',
-                                        fontVariations: [
-                                          FontVariation('wght', 400)
-                                        ],
+                                        fontVariations: [FontVariation('wght', 400)],
                                         fontSize: 13,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -471,9 +444,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                                       'Stock: ${snapshot.data![index].stock}',
                                       style: const TextStyle(
                                         fontFamily: 'JosefinSans',
-                                        fontVariations: [
-                                          FontVariation('wght', 400)
-                                        ],
+                                        fontVariations: [FontVariation('wght', 400)],
                                         fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,

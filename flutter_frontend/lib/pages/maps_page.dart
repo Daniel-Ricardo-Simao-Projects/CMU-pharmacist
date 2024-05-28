@@ -81,6 +81,7 @@ class _MapsPageState extends State<MapsPage> {
     mapController.dispose();
     _positionListen?.cancel();
     _statusListen?.cancel();
+    _searchBarController.dispose();
     super.dispose();
   }
 
@@ -125,63 +126,81 @@ class _MapsPageState extends State<MapsPage> {
                 //   ),
                 // }.union(_markers),
                 onTap: (coordinates) {
-                  var markerId = const MarkerId('newMarker');
-                  var marker = Marker(
-                      markerId: markerId,
-                      position: coordinates,
-                      icon: BitmapDescriptor.defaultMarker,
-                      infoWindow: const InfoWindow(
-                        title: 'Add a new pharmacy',
-                      ),
-                      onTap: () async {
-                        List<Placemark> placemarks = await placemarkFromCoordinates(
-                            coordinates.latitude, coordinates.longitude);
-                        Placemark place = placemarks[0];
-                        String address =
-                            "${place.street}, ${place.locality}, ${place.country}";
-                        log("address: $address");
-
-                        if (!mounted) {
-                          return;
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddPharmacyPage(
-                              address: address,
-                            ),
-                          ),
-                        );
-                      });
-
-                  // Find the old marker with the same markerId
-                  Marker? oldMarker = _markers.firstWhere((m) => m.markerId == markerId,
-                      orElse: () => const Marker(markerId: MarkerId("null")));
-
-                  setState(() {
-                    if (oldMarker.markerId != const MarkerId("null")) {
-                      _markers.remove(oldMarker);
-                    }
-                    _markers.add(marker);
-                  });
+                  addPharmacyOnLocation(coordinates, context);
                 }, //_markers,
               ),
               buildFloatingSearchBar(),
-            ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          mapController.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: _currentPosition!,
-                zoom: 17.0,
+              Positioned(
+                bottom: 60,
+                right: 16,
+                child: FloatingActionButton(
+                  heroTag: 'myLocation',
+                  onPressed: () {
+                    mapController.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: _currentPosition!,
+                          zoom: 17.0,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Icon(Icons.my_location, color: Colors.white),
+                ),
               ),
-            ),
-          );
-        },
-        child: const Icon(Icons.my_location, color: Colors.white),
-      ),
+              Positioned(
+                bottom: 120,
+                right: 16,
+                child: FloatingActionButton(
+                  heroTag: 'refresh',
+                  onPressed: () async {
+                    await _initializeState();
+                  },
+                  child: const Icon(Icons.replay, color: Colors.white),
+                ),
+              ),
+            ]),
     );
+  }
+
+  void addPharmacyOnLocation(LatLng coordinates, BuildContext context) {
+    var markerId = const MarkerId('newMarker');
+    var marker = Marker(
+        markerId: markerId,
+        position: coordinates,
+        icon: BitmapDescriptor.defaultMarker,
+        infoWindow: const InfoWindow(
+          title: 'Add a new pharmacy',
+        ),
+        onTap: () async {
+          List<Placemark> placemarks =
+              await placemarkFromCoordinates(coordinates.latitude, coordinates.longitude);
+          Placemark place = placemarks[0];
+          String address = "${place.street}, ${place.locality}, ${place.country}";
+          log("address: $address");
+
+          if (context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddPharmacyPage(
+                  address: address,
+                ),
+              ),
+            );
+          }
+        });
+
+    // Find the old marker with the same markerId
+    Marker? oldMarker = _markers.firstWhere((m) => m.markerId == markerId,
+        orElse: () => const Marker(markerId: MarkerId("null")));
+
+    setState(() {
+      if (oldMarker.markerId != const MarkerId("null")) {
+        _markers.remove(oldMarker);
+      }
+      _markers.add(marker);
+    });
   }
 
   Future<void> _initializeState() async {
