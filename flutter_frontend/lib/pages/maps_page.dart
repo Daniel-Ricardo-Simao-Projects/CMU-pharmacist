@@ -49,38 +49,7 @@ class _MapsPageState extends State<MapsPage> {
       log(error.toString());
     });
 
-    // DefaultAssetBundle.of(context)
-    //     .loadString('assets/map_themes/silver_map.json')
-    //     .then((value) {
-    //   _mapTheme = value;
-    // });
-
-    BitmapDescriptor.fromAssetImage(
-      ImageConfiguration.empty,
-      'assets/icon/pharmacy_icon.png',
-    ).then((icon) {
-      _pharmacyIcon = icon;
-    }).catchError((error) {
-      log(error);
-    });
-
-    BitmapDescriptor.fromAssetImage(
-      ImageConfiguration.empty,
-      'assets/icon/favorite.png',
-    ).then((icon) {
-      _favoritePharmacyIcon = icon;
-    }).catchError((error) {
-      log(error);
-    });
-
-    BitmapDescriptor.fromAssetImage(
-      ImageConfiguration.empty,
-      'assets/icon/add-location.png',
-    ).then((icon) {
-      _addLocationIcon = icon;
-    }).catchError((error) {
-      log(error);
-    });
+    _initializeIcons();
 
     _fetchLocationUpdates().catchError((error) {
       log(error);
@@ -107,7 +76,7 @@ class _MapsPageState extends State<MapsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: _currentPosition == null || !mounted
+      body: _currentPosition == null
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -124,18 +93,6 @@ class _MapsPageState extends State<MapsPage> {
                   zoom: 17.0,
                 ),
                 markers: _markers,
-                // markers: {
-                //   Marker(
-                //     markerId: const MarkerId('currentPosition'),
-                //     position: _currentPosition!,
-                //     icon: BitmapDescriptor.defaultMarkerWithHue(
-                //         BitmapDescriptor.hueAzure),
-                //     infoWindow: const InfoWindow(
-                //       title: 'Current Position',
-                //       snippet: 'You are here',
-                //     ),
-                //   ),
-                // }.union(_markers),
                 onTap: (coordinates) {
                   addPharmacyOnLocation(coordinates, context);
                 }, //_markers,
@@ -172,6 +129,35 @@ class _MapsPageState extends State<MapsPage> {
               ),
             ]),
     );
+  }
+
+  void _initializeIcons() {
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration.empty,
+      'assets/icon/pharmacy_icon.png',
+    ).then((icon) {
+      _pharmacyIcon = icon;
+    }).catchError((error) {
+      log(error);
+    });
+
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration.empty,
+      'assets/icon/favorite.png',
+    ).then((icon) {
+      _favoritePharmacyIcon = icon;
+    }).catchError((error) {
+      log(error);
+    });
+
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration.empty,
+      'assets/icon/add-location.png',
+    ).then((icon) {
+      _addLocationIcon = icon;
+    }).catchError((error) {
+      log(error);
+    });
   }
 
   void addPharmacyOnLocation(LatLng coordinates, BuildContext context) {
@@ -218,14 +204,9 @@ class _MapsPageState extends State<MapsPage> {
     try {
       await _loadPosition();
       await _loadMarkers();
-      //await _loadPharmacies();
-      //log("pharmacies$_pharmacies");
-      //_addPharmacyMarkers(_pharmacies);
       final pharmacies = await _pharmacyService.getPharmacies();
-      //pharmacies.removeWhere((element) => _pharmacies.contains(element));
       _addPharmacyMarkers(pharmacies);
       _pharmacies.addAll(pharmacies);
-      //await _savePharmacies();
     } catch (error) {
       log(error.toString());
     }
@@ -503,61 +484,5 @@ class _MapsPageState extends State<MapsPage> {
       return pharmacy.name.toLowerCase().contains(query.toLowerCase()) ||
           pharmacy.address.toLowerCase().contains(query.toLowerCase());
     }).toList();
-  }
-}
-
-class ScrollableWidget extends StatelessWidget {
-  const ScrollableWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.3,
-      minChildSize: 0.2,
-      maxChildSize: 0.8,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Container(
-                  width: 50,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.grey[300],
-                  ),
-                ),
-                Flexible(
-                  child: ListView.builder(
-                    physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.all(5),
-                    controller: scrollController,
-                    itemCount: 20,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: ListTile(
-                          title: Text('Item $index'),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 }
