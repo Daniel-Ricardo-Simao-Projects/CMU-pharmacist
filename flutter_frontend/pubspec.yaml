@@ -90,6 +90,7 @@ flutter:
     - assets/map_themes/silver_map.json
     - assets/icon/pharmacy_icon.png
     - assets/icon/favorite.png
+    - assets/icon/add-location.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

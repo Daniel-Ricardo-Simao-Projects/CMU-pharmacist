@@ -35,6 +35,13 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
     medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacy.id);
   }
 
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void checkFavoriteStatus() async {
     // Fetch user's favorite pharmacies
     List<int> favoritePharmacyIds = await PharmacyService().getFavoritePharmaciesIds();

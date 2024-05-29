@@ -26,8 +26,10 @@ class _MapsPageState extends State<MapsPage> {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
+
   BitmapDescriptor _pharmacyIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor _favoritePharmacyIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor _addLocationIcon = BitmapDescriptor.defaultMarker;
 
   final _pharmacyService = PharmacyService();
 
@@ -67,6 +69,15 @@ class _MapsPageState extends State<MapsPage> {
       'assets/icon/favorite.png',
     ).then((icon) {
       _favoritePharmacyIcon = icon;
+    }).catchError((error) {
+      log(error);
+    });
+
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration.empty,
+      'assets/icon/add-location.png',
+    ).then((icon) {
+      _addLocationIcon = icon;
     }).catchError((error) {
       log(error);
     });
@@ -168,7 +179,7 @@ class _MapsPageState extends State<MapsPage> {
     var marker = Marker(
         markerId: markerId,
         position: coordinates,
-        icon: BitmapDescriptor.defaultMarker,
+        icon: _addLocationIcon,
         infoWindow: const InfoWindow(
           title: 'Add a new pharmacy',
         ),

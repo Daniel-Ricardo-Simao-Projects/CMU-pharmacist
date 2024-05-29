@@ -54,17 +54,6 @@ void main() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  //FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  // NotificationSettings settings = await messaging.requestPermission(
-  //   alert: true,
-  //   announcement: false,
-  //   badge: true,
-  //   carPlay: false,
-  //   criticalAlert: false,
-  //   provisional: false,
-  //   sound: true,
-  // );
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Transparent status bar
