@@ -18,7 +18,7 @@ class RatingsGraph extends StatelessWidget {
 
     myRatings.initializeRatingData();
     return BarChart(BarChartData(
-      maxY: 40,
+      maxY: 20,
       minY: 0,
       gridData: const FlGridData(show: false),
       borderData: FlBorderData(show: false),
@@ -31,12 +31,12 @@ class RatingsGraph extends StatelessWidget {
       barGroups: myRatings.ratingData.map((data) {
         return BarChartGroupData(x: data.x, barRods: [
           BarChartRodData(
-            width: 20,
+            width: 13,
             toY: data.y.toDouble(),
             color: Colors.amber,
             backDrawRodData: BackgroundBarChartRodData(
               show: true,
-              toY: 40,
+              toY: 20,
               color: Colors.grey[300],
             ),
           )
