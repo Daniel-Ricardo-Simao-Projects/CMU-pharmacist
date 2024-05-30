@@ -16,6 +16,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
 
+Future<LatLng> getLatLngFromAddress(String address) async {
+  try {
+    List<Location> locations = await locationFromAddress(address);
+    if (locations.isNotEmpty) {
+      return LatLng(locations.first.latitude, locations.first.longitude);
+    }
+  } catch (e) {
+    log('Error: ${e.toString()}');
+  }
+  return const LatLng(0, 0);
+}
+
 class MapsPage extends StatefulWidget {
   const MapsPage({super.key});
 
@@ -129,7 +141,15 @@ class _MapsPageState extends State<MapsPage> {
                       : () {
                           refreshButtonFunction();
                         },
-                  child: const Icon(Icons.replay, color: Colors.white),
+                  child: _isRefreshing
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(Icons.replay, color: Colors.white),
                 ),
               ),
             ]),
@@ -151,7 +171,7 @@ class _MapsPageState extends State<MapsPage> {
         _isRefreshing = false;
       });
     }).catchError((error) {
-      showErrorSnackBar(context, error.toString());
+      showErrorSnackBar(context, "failed to fetch pharmacies");
       setState(() {
         _isRefreshing = false;
       });
@@ -309,12 +329,7 @@ class _MapsPageState extends State<MapsPage> {
         continue;
       }
       log("saving pharmacy: ${p.name}");
-      await database.pharmacyDao.insertPharmacy(Pharmacy(
-        id: p.id,
-        name: p.name,
-        address: p.address,
-        picture: p.picture,
-      ));
+      await database.pharmacyDao.insertPharmacy(p);
     }
     database.close();
     log("saved pharmacies");
@@ -393,15 +408,17 @@ class _MapsPageState extends State<MapsPage> {
         );
       } else {
         log("getting coordinates for ${p.name} at ${p.address}");
-        await _getLatLngFromAddress(p.address).then((value) {
-          coordinates = value;
-        });
+        // await getLatLngFromAddress(p.address).then((value) {
+        //   coordinates = value;
+        // });
+        coordinates = LatLng(p.latitude, p.longitude);
+        log("coordinates: $coordinates");
       }
 
       //log("new marker: ${p.name} at $coordinates");
       final marker = Marker(
         markerId: MarkerId(p.id.toString()),
-        position: coordinates!,
+        position: coordinates,
         icon: favoritePharmacies.contains(p.id) ? _favoritePharmacyIcon : _pharmacyIcon,
         infoWindow: InfoWindow(
           title: p.name,
@@ -422,18 +439,6 @@ class _MapsPageState extends State<MapsPage> {
     _saveMarkers().catchError((error) {
       log(error);
     });
-  }
-
-  Future<LatLng> _getLatLngFromAddress(String address) async {
-    try {
-      List<Location> locations = await locationFromAddress(address);
-      if (locations.isNotEmpty) {
-        return LatLng(locations.first.latitude, locations.first.longitude);
-      }
-    } catch (e) {
-      log('Error: ${e.toString()}');
-    }
-    return const LatLng(0, 0);
   }
 
   Widget buildFloatingSearchBar() {
@@ -486,7 +491,7 @@ class _MapsPageState extends State<MapsPage> {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Material(
-            color: Colors.white,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
             elevation: 4.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,

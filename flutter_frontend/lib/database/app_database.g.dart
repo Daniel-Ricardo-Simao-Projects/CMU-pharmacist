@@ -104,7 +104,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Medicine` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `details` TEXT NOT NULL, `picture` TEXT NOT NULL, `stock` INTEGER NOT NULL, `pharmacyId` INTEGER NOT NULL, `barcode` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Pharmacy` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `picture` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Pharmacy` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `picture` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -323,7 +323,9 @@ class _$PharmacyDao extends PharmacyDao {
                   'id': item.id,
                   'name': item.name,
                   'address': item.address,
-                  'picture': item.picture
+                  'picture': item.picture,
+                  'latitude': item.latitude,
+                  'longitude': item.longitude
                 }),
         _pharmacyUpdateAdapter = UpdateAdapter(
             database,
@@ -333,7 +335,9 @@ class _$PharmacyDao extends PharmacyDao {
                   'id': item.id,
                   'name': item.name,
                   'address': item.address,
-                  'picture': item.picture
+                  'picture': item.picture,
+                  'latitude': item.latitude,
+                  'longitude': item.longitude
                 }),
         _pharmacyDeletionAdapter = DeletionAdapter(
             database,
@@ -343,7 +347,9 @@ class _$PharmacyDao extends PharmacyDao {
                   'id': item.id,
                   'name': item.name,
                   'address': item.address,
-                  'picture': item.picture
+                  'picture': item.picture,
+                  'latitude': item.latitude,
+                  'longitude': item.longitude
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -365,7 +371,9 @@ class _$PharmacyDao extends PharmacyDao {
             id: row['id'] as int,
             name: row['name'] as String,
             address: row['address'] as String,
-            picture: row['picture'] as String));
+            picture: row['picture'] as String,
+            latitude: row['latitude'] as double,
+            longitude: row['longitude'] as double));
   }
 
   @override
@@ -375,7 +383,9 @@ class _$PharmacyDao extends PharmacyDao {
             id: row['id'] as int,
             name: row['name'] as String,
             address: row['address'] as String,
-            picture: row['picture'] as String),
+            picture: row['picture'] as String,
+            latitude: row['latitude'] as double,
+            longitude: row['longitude'] as double),
         arguments: [id]);
   }
 

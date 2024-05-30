@@ -20,7 +20,7 @@ func GetPharmacies() []models.Pharmacy {
 	// iterate over each row, watch out: send picture as base64
 	for rows.Next() {
 		var pharmacy models.Pharmacy
-		err := rows.Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Date)
+		err := rows.Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Latitude, &pharmacy.Longitude, &pharmacy.Date)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -55,7 +55,7 @@ func AddPharmacy(pharmacy models.Pharmacy) {
 	// print picture
 	//utils.Info(pharmacy.Picture)
 
-	_, err = config.DB.Exec("INSERT INTO pharmacies (name, address, image_path) VALUES (?, ?, ?)", pharmacy.Name, pharmacy.Address, imagePath)
+	_, err = config.DB.Exec("INSERT INTO pharmacies (name, address, image_path, latitude, longitude) VALUES (?, ?, ?, ?, ?)", pharmacy.Name, pharmacy.Address, imagePath, pharmacy.Latitude, pharmacy.Longitude)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func GetPharmacyById(id int) *models.Pharmacy {
 	row := config.DB.QueryRow("SELECT * FROM pharmacies WHERE id = ?", id)
 
 	var pharmacy models.Pharmacy
-	err := row.Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Date)
+	err := row.Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Latitude, &pharmacy.Longitude, &pharmacy.Date)
 	if err != nil {
 		return nil
 	}
@@ -100,8 +100,6 @@ func AddPharmacyRating(userId, pharmacyId, rating int) {
 	}
 
 	UpdatePharmacyRating(userId, pharmacyId, rating)
-
-	return
 }
 
 func UpdatePharmacyRating(userId, pharmacyId, rating int) {
@@ -109,8 +107,6 @@ func UpdatePharmacyRating(userId, pharmacyId, rating int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	return
 }
 
 func GetAveragePharmacyRating(pharmacyId int) float64 {

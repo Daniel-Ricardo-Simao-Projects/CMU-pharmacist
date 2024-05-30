@@ -248,8 +248,8 @@ func GetPharmaciesWithMedicine(medicineId int) []models.Pharmacy {
 		}
 
 		var image_path string
-		err = config.DB.QueryRow("SELECT name, address, image_path FROM pharmacies WHERE id = ?", pharmacy.Id).
-			Scan(&pharmacy.Name, &pharmacy.Address, &image_path)
+		err = config.DB.QueryRow("SELECT name, address, image_path, latitude, longitude FROM pharmacies WHERE id = ?", pharmacy.Id).
+			Scan(&pharmacy.Name, &pharmacy.Address, &image_path, &pharmacy.Latitude, &pharmacy.Longitude)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -296,8 +296,8 @@ func GetPharmaciesWithIds(pharmacyIds []int) []models.Pharmacy {
 	for _, pharmacyId := range pharmacyIds {
 		var pharmacy models.Pharmacy
 		var image_path string
-		err := config.DB.QueryRow("SELECT id, name, address, image_path FROM pharmacies WHERE id = ?", pharmacyId).
-			Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &image_path)
+		err := config.DB.QueryRow("SELECT id, name, address, image_path, latitude, longitude FROM pharmacies WHERE id = ?", pharmacyId).
+			Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &image_path, &pharmacy.Latitude, &pharmacy.Longitude)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -348,7 +348,7 @@ func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
 
 			var pharmacyToAppend models.Pharmacy
 			err = config.DB.QueryRow("SELECT * FROM pharmacies WHERE id = ?", pharmacy.Id).
-				Scan(&pharmacyToAppend.Id, &pharmacyToAppend.Name, &pharmacyToAppend.Address, &pharmacyToAppend.Picture, &pharmacyToAppend.Date)
+				Scan(&pharmacyToAppend.Id, &pharmacyToAppend.Name, &pharmacyToAppend.Address, &pharmacyToAppend.Picture, &pharmacyToAppend.Latitude, &pharmacyToAppend.Longitude, &pharmacyToAppend.Date)
 			if err != nil {
 				log.Fatal(err)
 			}

@@ -21,6 +21,8 @@ class PharmacyService {
         'name': pharmacy.name,
         'address': pharmacy.address,
         'picture': pharmacy.picture,
+        'latitude': pharmacy.latitude,
+        'longitude': pharmacy.longitude,
       };
 
       await dio.post(pharmaciesURL, data: pharmacyJson);

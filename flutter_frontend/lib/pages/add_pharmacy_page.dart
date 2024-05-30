@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/constants.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
+import 'package:flutter_frontend/pages/maps_page.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:geocoding/geocoding.dart';
@@ -411,11 +412,17 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
     );
   }
 
-  void savePharmacy(String name, String address, File file) {
+  void savePharmacy(String name, String address, File file) async {
     String imageBytes = base64Encode(file.readAsBytesSync());
-    Pharmacy pharmacy =
-        Pharmacy(id: 0, name: name, address: address, picture: imageBytes);
-    log('Pharmacy: ${pharmacy.name}, ${pharmacy.address}');
+    var coordinates = await getLatLngFromAddress(address);
+    Pharmacy pharmacy = Pharmacy(
+        id: 0,
+        name: name,
+        address: address,
+        picture: imageBytes,
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude);
+    log('Pharmacy: ${pharmacy.name}, ${pharmacy.address}, ${pharmacy.latitude}, ${pharmacy.longitude}');
     PharmacyService().addPharmacy(pharmacy);
   }
 }

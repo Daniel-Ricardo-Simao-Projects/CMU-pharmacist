@@ -25,7 +25,7 @@ func GetFavoritePharmaciesByUsername(username int) []models.Pharmacy {
 
 		var pharmacy models.Pharmacy
 		err = config.DB.QueryRow("SELECT * FROM pharmacies WHERE id = ?", favoritePharmacy.PharmacyId).
-			Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Date)
+			Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Latitude, &pharmacy.Longitude, &pharmacy.Date)
 		if err != nil {
 			log.Fatal(err)
 		}
