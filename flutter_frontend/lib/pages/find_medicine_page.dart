@@ -78,8 +78,8 @@ class _FindMedicinePageState extends State<FindMedicinePage> {
               padding: EdgeInsets.all(10),
               child: Icon(Icons.search_outlined, color: text2Color),
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
+            Expanded(
+              //width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
                 style: const TextStyle(
                   fontFamily: 'JosefinSans',
