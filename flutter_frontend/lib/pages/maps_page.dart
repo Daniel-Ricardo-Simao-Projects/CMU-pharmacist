@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_frontend/database/app_database.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/pharmacy_page.dart';
@@ -37,7 +37,7 @@ class _MapsPageState extends State<MapsPage> {
   final Map<String, dynamic> _savedMarkers = {};
   final String _mapTheme = '';
   LatLng? _currentPosition;
-  final List<Pharmacy> _pharmacies = [];
+  List<Pharmacy> _pharmacies = [];
   List<Pharmacy> _searchResults = [];
   final _searchBarController = FloatingSearchBarController();
 
@@ -204,10 +204,19 @@ class _MapsPageState extends State<MapsPage> {
     try {
       await _loadPosition();
       await _loadMarkers();
-      final pharmacies = await _pharmacyService.getPharmacies();
-      _addPharmacyMarkers(pharmacies);
+      var pharmacies = await _loadPharmacies();
+      if (pharmacies.isEmpty) {
+        pharmacies = await _pharmacyService.getPharmacies();
+      }
       _pharmacies.addAll(pharmacies);
+      await _savePharmacies();
+      _addPharmacyMarkers(pharmacies);
     } catch (error) {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text(error.toString()),
+      //   ),
+      // );
       log(error.toString());
     }
   }
@@ -238,22 +247,15 @@ class _MapsPageState extends State<MapsPage> {
     }
   }
 
-  Future<void> _loadPharmacies() async {
-    try {
-      log("loading pharmacies");
-      final cacheData = await DefaultCacheManager().getSingleFile('pharmacies');
-      final jsonString = cacheData.readAsStringSync();
-      //log("cached:$jsonString");
-      final List<dynamic> decodedData = jsonDecode(jsonString);
-      log("decode:$decodedData.toString()");
-      for (var pharmaciesStr in decodedData) {
-        log(pharmaciesStr.toString());
-        _pharmacies.add(Pharmacy.fromJson(pharmaciesStr));
-      }
-      //_pharmacies = decodedData.map((data) => Pharmacy.fromJson(data)).toList();
-    } catch (e) {
-      log("Error retrieving data from cache: $e");
+  Future<List<Pharmacy>> _loadPharmacies() async {
+    log('Loading pharmacies...');
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final pharmacies = await database.pharmacyDao.findAllPharmacies();
+    if (pharmacies.isEmpty) {
+      log('No pharmacies found in database');
+      return [];
     }
+    return pharmacies;
   }
 
   Future<void> _savePosition() async {
@@ -277,11 +279,21 @@ class _MapsPageState extends State<MapsPage> {
 
   Future<void> _savePharmacies() async {
     log("saving pharmacies....");
-    final pharmaciesJson = _pharmacies.map((pharmacy) => pharmacy.toJson()).toList();
-    // Encode the list of pharmacy objects (not JSON strings)
-    final encodedData = jsonEncode(pharmaciesJson);
-    final bytes = utf8.encode(encodedData);
-    await DefaultCacheManager().putFile('pharmacies', bytes, key: 'pharmacies');
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    for (Pharmacy p in _pharmacies) {
+      final pharmacy = await database.pharmacyDao.findPharmacyById(p.id);
+      if (pharmacy != null) {
+        continue;
+      }
+      log("saving pharmacy: ${p.name}");
+      await database.pharmacyDao.insertPharmacy(Pharmacy(
+        id: p.id,
+        name: p.name,
+        address: p.address,
+        picture: p.picture,
+      ));
+    }
+    log("saved pharmacies");
   }
 
   void _onMapCreated(GoogleMapController controller) {

@@ -83,7 +83,7 @@ class MedicineService {
         medicines.add(newMedicine);
         await database.medicineDao.insertMedicine(newMedicine);
       }
-      database.close();
+      //database.close();
     } catch (e) {
       medicinesInPharmacy = [];
     }
@@ -134,6 +134,7 @@ class MedicineService {
         if (pharmacy == null) {
           pharmacyIdsNotCached.add(pharmacyWithMedicine.pharmacyId);
         } else {
+          log("database: "+pharmacy.name);
           pharmacies.add(pharmacy);
         }
       }
@@ -154,7 +155,7 @@ class MedicineService {
         await database.pharmacyDao.insertPharmacy(newPharmacy);
       }
 
-      database.close();
+      //database.close();
     } catch (e) {
       pharmacies = [];
     }
