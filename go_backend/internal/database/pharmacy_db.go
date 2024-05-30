@@ -2,6 +2,7 @@ package database
 
 import (
 	"encoding/base64"
+	"fmt"
 	"log"
 	"os"
 
@@ -84,16 +85,21 @@ func AddPharmacyRating(userId, pharmacyId, rating int) {
 	// check if user already rated pharmacy
 	row := config.DB.QueryRow("SELECT * FROM pharmacy_ratings WHERE user_id = ? AND pharmacy_id = ?", userId, pharmacyId)
 	var userRating int
-	err := row.Scan(&userRating)
-	if err == nil {
-		UpdatePharmacyRating(userId, pharmacyId, rating)
+	var user_Id int
+	var pharmacy_Id int
+
+	// if row is empty, user didn't rate pharmacy yet
+	err := row.Scan(&user_Id, &pharmacy_Id, &userRating)
+	if err != nil {
+		fmt.Println("db.AddPharmacyRating: ", err)
+		_, err = config.DB.Exec("INSERT INTO pharmacy_ratings (user_id, pharmacy_id, rating) VALUES (?, ?, ?)", userId, pharmacyId, rating)
+		if err != nil {
+			log.Fatal(err)
+		}
 		return
 	}
 
-	_, err = config.DB.Exec("INSERT INTO pharmacy_ratings (user_id, pharmacy_id, rating) VALUES (?, ?, ?)", userId, pharmacyId, rating)
-	if err != nil {
-		log.Fatal(err)
-	}
+	UpdatePharmacyRating(userId, pharmacyId, rating)
 
 	return
 }
@@ -108,17 +114,18 @@ func UpdatePharmacyRating(userId, pharmacyId, rating int) {
 }
 
 func GetAveragePharmacyRating(pharmacyId int) float64 {
-	row := config.DB.QueryRow("SELECT pharmacy_id, AVG(rating) AS average_rating FROM pharmacy_ratings WHERE pharmacy_id = ?", pharmacyId)
-
-	var pharmacyIdInt int
+	row := config.DB.QueryRow("SELECT AVG(rating) AS average_rating FROM pharmacy_ratings WHERE pharmacy_id = ?", pharmacyId)
 
 	var averageRating float64
 
-	err := row.Scan(&pharmacyIdInt, &averageRating)
+	err := row.Scan(&averageRating)
 
 	if err != nil {
+		fmt.Println("db.GetAveragePharmacyRating: ", err)
 		return 0
 	}
+
+	fmt.Println("db.GetAveragePharmacyRating: ", averageRating)
 
 	// send average rating as int (0-5)
 	return averageRating

@@ -197,6 +197,8 @@ class PharmacyService {
         data: {'pharmacy_id': pharmacyId},
       );
 
+      print(response.data['rating']);
+
       return response.data['rating'];
     } catch (e) {
       log(e.toString());
@@ -211,7 +213,18 @@ class PharmacyService {
         data: {'pharmacy_id': pharmacyId},
       );
 
-      Map<int, int> histogram = Map<int, int>.from(response.data['histogram']);
+      print(response.data['histogram']); // {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+
+      Map<int, int> histogram = {};
+      for (var key in response.data['histogram'].keys) {
+        histogram[int.parse(key)] = response.data['histogram'][key];
+      }
+
+      // print(histogram); // {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+      for (var key in histogram.keys) {
+        print("$key: ${histogram[key]}");
+      }
+
       return histogram;
     } catch (e) {
       log(e.toString());

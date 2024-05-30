@@ -22,6 +22,8 @@ func UpdatePharmacyRatingByUser(username string, pharmacyId int, rating int) err
 		return errors.New("Pharmacy not found")
 	}
 
+	fmt.Println("UpdatePharmacyRatingByUser: ", id, pharmacyId, rating)
+
 	// check if user already rated pharmacy
 	db.AddPharmacyRating(id, pharmacyId, rating)
 	return nil
@@ -56,7 +58,6 @@ func GetPharmacyRating(pharmacyId int) int {
 
 func GetPharmacyRatingHistogram(pharmacyId int) map[int]int {
 	histogram := db.GetRatingDistribution(pharmacyId)
-	fmt.Println("GetPharmacyRatingHistogram: ", histogram)
 
 	return histogram
 }

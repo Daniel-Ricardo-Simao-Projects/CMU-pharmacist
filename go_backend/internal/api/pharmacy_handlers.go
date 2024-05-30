@@ -102,6 +102,7 @@ func GetPharmacyRatingHistogramHandler(c *gin.Context) {
 		return
 	}
 
+	// histogram is a map[int]int
 	histogram := service.GetPharmacyRatingHistogram(pharmacyId.PharmacyId)
 
 	c.JSON(http.StatusOK, gin.H{"histogram": histogram})

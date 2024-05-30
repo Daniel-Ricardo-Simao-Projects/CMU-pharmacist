@@ -494,8 +494,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.19"
-<<<<<<< Updated upstream
-=======
   flutter_rating_bar:
     dependency: "direct main"
     description:
@@ -504,7 +502,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
->>>>>>> Stashed changes
   flutter_test:
     dependency: "direct dev"
     description: flutter
