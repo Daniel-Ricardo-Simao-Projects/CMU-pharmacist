@@ -159,9 +159,8 @@ In constants.dart, add here:
 ## Optional Features
 - [ ] Securing Communication;
 - [ ] Meta Moderation;
-- [ ] User Ratings;
+- [x] User Ratings;
 - [x] User Accounts;
-    - [ ] * We do not allow to not have an account, yet (?) *
 - [ ] Social Sharing To Other Apps;
 - [ ] Localization (L10n);
 - [x] UI Adaptability: Rotation; *Note: **Maybe** done, automagically*
