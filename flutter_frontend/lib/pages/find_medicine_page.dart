@@ -178,6 +178,8 @@ class PharmacyResultsListState extends State<PharmacyResultsList> {
                     ),
                   ),
                   onTap: () {
+                    print(
+                        "Tapped on pharmacy with id: ${snapshot.data![index].id}");
                     Navigator.push(
                       context,
                       MaterialPageRoute(

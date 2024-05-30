@@ -346,20 +346,20 @@ func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
 				continue
 			}
 
-			var image_path string
-			err = config.DB.QueryRow("SELECT name, address, image_path FROM pharmacies WHERE id = ?", pharmacy.Id).
-				Scan(&pharmacy.Name, &pharmacy.Address, &image_path)
+			var pharmacyToAppend models.Pharmacy
+			err = config.DB.QueryRow("SELECT * FROM pharmacies WHERE id = ?", pharmacy.Id).
+				Scan(&pharmacyToAppend.Id, &pharmacyToAppend.Name, &pharmacyToAppend.Address, &pharmacyToAppend.Picture, &pharmacyToAppend.Date)
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			imageData, err := os.ReadFile(image_path)
+			imageData, err := os.ReadFile(pharmacyToAppend.Picture)
 			if err != nil {
 				log.Fatal(err)
 			}
-			pharmacy.Picture = base64.StdEncoding.EncodeToString(imageData)
+			pharmacyToAppend.Picture = base64.StdEncoding.EncodeToString(imageData)
 
-			pharmacies = append(pharmacies, pharmacy)
+			pharmacies = append(pharmacies, pharmacyToAppend)
 
 			//TODO: Order pharmacies by distance
 		}

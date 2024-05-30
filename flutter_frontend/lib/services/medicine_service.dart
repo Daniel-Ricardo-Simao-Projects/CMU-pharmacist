@@ -193,6 +193,14 @@ class MedicineService {
             (item) => Pharmacy.fromJson(item),
           )
           .toList();
+
+      for (var pharmacy in pharmacies) {
+        final fileName = '${pharmacy.name.replaceAll(' ', '_')}.jpg';
+        final appDocDir = await getApplicationDocumentsDirectory();
+        final file = File('${appDocDir.path}/$fileName');
+        await file.writeAsBytes(base64Decode(pharmacy.picture));
+        pharmacy.picture = file.path;
+      }
     } catch (e) {
       pharmacies = [];
     }
