@@ -31,3 +31,4 @@ go_backend/internal/images/medicines/*
 
 # Ignore flutter jank metrics
 flutter_frontend/flutter_jank_metrics_*.json
+flutter_frontend/devtools_options.yaml
