@@ -6,10 +6,12 @@ import 'package:flutter_frontend/pages/add_medicine_page.dart';
 import 'package:flutter_frontend/pages/add_medicine_panel.dart';
 import 'package:flutter_frontend/pages/medicine_page.dart';
 import 'package:flutter_frontend/pages/purchase_medicine_panel.dart';
+import 'package:flutter_frontend/pages/user_ratings/ratings_graph.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -26,6 +28,9 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   bool isFavorite = false; // Initially not a favorite
   final medicineService = MedicineService();
   late Future<List<Medicine>> medicines;
+  late Map<int, int> ratings = {};
+  late int averageRating = 0;
+  late int myRating = 0;
 
   @override
   void initState() {
@@ -33,6 +38,9 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
     // Check if the pharmacy is already in user's favorites when the widget is initialized
     checkFavoriteStatus();
     medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacy.id);
+    getRatingsHistogram();
+    getAverageRating();
+    getMyRating();
   }
 
   @override
@@ -41,10 +49,11 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
       super.setState(fn);
     }
   }
-
+  
   void checkFavoriteStatus() async {
     // Fetch user's favorite pharmacies
-    List<int> favoritePharmacyIds = await PharmacyService().getFavoritePharmaciesIds();
+    List<int> favoritePharmacyIds =
+        await PharmacyService().getFavoritePharmaciesIds();
     // Check if the current pharmacy is in the list of favorites
     setState(() {
       isFavorite = favoritePharmacyIds.contains(widget.pharmacy.id);
@@ -55,6 +64,31 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
     setState(() {
       medicines = medicineService.getMedicinesFromPharmacy(widget.pharmacy.id);
     });
+  }
+
+  void getRatingsHistogram() async {
+    var futureRatings = await PharmacyService().getPharmacyRatingHistogram(widget.pharmacy.id);
+    setState(() {
+      ratings = futureRatings;
+    });
+  }
+
+  void getAverageRating() async {
+    var futureAverageRating = await PharmacyService().getPharmacyAverageRating(widget.pharmacy.id);
+    setState(() {
+      averageRating = futureAverageRating;
+    });
+  }
+
+  void getMyRating() async {
+    var futureMyRating = await PharmacyService().getPharmacyRatingByUser(widget.pharmacy.id);
+    setState(() {
+      myRating = futureMyRating;
+    });
+  }
+
+  void ratePharmacy(int rating) {
+    PharmacyService().addPharmacyRating(widget.pharmacy.id, rating);
   }
 
   @override
@@ -68,8 +102,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         child: CustomScrollView(slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor:
-                Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+            backgroundColor: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .primary,
             floating: true,
             expandedHeight: 200,
             leading: backButton(context),
@@ -87,11 +123,169 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               delegate: SliverChildListDelegate([
             _pharmacyDetails(widget.pharmacy),
             const SizedBox(height: 20),
+            Divider(
+              color: Colors.grey.withOpacity(0.5),
+            ),
+            _pharmacyRatings(widget.pharmacy, ratings, averageRating),
+            Divider(
+              color: Colors.grey.withOpacity(0.5),
+            ),
+            const SizedBox(height: 10),
             _pharmacyMedicines(widget.pharmacy),
           ])),
         ]),
       ),
       floatingActionButton: _addMedicineButton(context),
+    );
+  }
+
+  Widget _pharmacyRatings(Pharmacy pharmacy, Map<int, int> ratings, int averageRating) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25, right: 25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Rate this pharmacy',
+            style: TextStyle(
+              fontFamily: 'JosefinSans',
+              fontVariations: const [FontVariation('wght', 600)],
+              color: Provider.of<ThemeProvider>(context)
+                  .getTheme
+                  .colorScheme
+                  .secondary,
+              fontSize: 18,
+            ),
+          ),
+          SizedBox(
+            width: 300,
+            child: Text(
+              'Share your experience to help other people',
+              style: TextStyle(
+                fontFamily: 'JosefinSans',
+                fontVariations: const [FontVariation('wght', 400)],
+                color: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .secondary,
+                fontSize: 14,
+              ),
+              maxLines: 2,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: 300,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Provider.of<ThemeProvider>(context)
+                                .getTheme
+                                .colorScheme
+                                .background,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 20, left: 20, right: 20, bottom: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Ratings stars',
+                                  style: TextStyle(
+                                    fontFamily: 'JosefinSans',
+                                    fontVariations: const [
+                                      FontVariation('wght', 700)
+                                    ],
+                                    color: Provider.of<ThemeProvider>(context)
+                                        .getTheme
+                                        .colorScheme
+                                        .secondary,
+                                    fontSize: 25,
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                SizedBox(
+                                    width: 300,
+                                    height: 200,
+                                    child: RatingsGraph(
+                                      histogram: ratings,
+                                    )
+                              ),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                },
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Provider.of<ThemeProvider>(context)
+                        .getTheme
+                        .colorScheme
+                        .primary,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        spreadRadius: 0,
+                        blurRadius: 5,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      averageRating.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'JosefinSans',
+                        fontVariations: [FontVariation('wght', 500)],
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              RatingBar.builder(
+                initialRating: myRating.toDouble(),
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                unratedColor: Colors.blueGrey[500],
+                glowColor: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .primary,
+                onRatingUpdate: (rating) {
+                  ratePharmacy(rating.toInt());
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -103,7 +297,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
+            color: Provider.of<ThemeProvider>(context)
+                .getTheme
+                .colorScheme
+                .background,
             shape: BoxShape.circle,
             boxShadow: const [
               BoxShadow(
@@ -122,7 +319,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               },
               icon: Icon(
                 isFavorite ? Icons.star : Icons.star_outline,
-                color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+                color: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .secondary,
               ),
             ),
           ),
@@ -138,7 +338,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
         width: 35,
         height: 35,
         decoration: BoxDecoration(
-          color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
+          color: Provider.of<ThemeProvider>(context)
+              .getTheme
+              .colorScheme
+              .background,
           shape: BoxShape.circle,
           boxShadow: const [
             BoxShadow(
@@ -153,8 +356,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
           child: IconButton(
             iconSize: 20,
             icon: Icon(Icons.arrow_back,
-                color:
-                    Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary),
+                color: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .secondary),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -174,17 +379,18 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               builder: (context) => const SimpleBarcodeScannerPage(),
             ));
         if (res != null) {
-          var medicine = await MedicineService().getMedicineFromBarcode(res.toString());
+          var medicine =
+              await MedicineService().getMedicineFromBarcode(res.toString());
           if (context.mounted) {
             if (medicine.id != 0) {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AddMedicinePanel(
-                        pharmacyId: widget.pharmacy.id,
-                        medicine: medicine,
-                      );
-                    });
+              showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AddMedicinePanel(
+                      pharmacyId: widget.pharmacy.id,
+                      medicine: medicine,
+                    );
+                  });
             } else {
               Navigator.push(
                 context,
@@ -199,7 +405,7 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
           }
         } else {
           if (context.mounted) {
-          // If the barcode is not found
+            // If the barcode is not found
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Barcode not found'),
@@ -209,7 +415,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
           }
         }
       },
-      backgroundColor: Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+      backgroundColor:
+          Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
       child: const Icon(
         Icons.add,
         color: Colors.white,
@@ -228,7 +435,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
             style: TextStyle(
               fontFamily: 'JosefinSans',
               fontVariations: const [FontVariation('wght', 700)],
-              color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+              color: Provider.of<ThemeProvider>(context)
+                  .getTheme
+                  .colorScheme
+                  .secondary,
               fontSize: 20,
             ),
           ),
@@ -290,7 +500,10 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               onTap: () {},
               child: Icon(
                 Icons.location_on,
-                color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+                color: Provider.of<ThemeProvider>(context)
+                    .getTheme
+                    .colorScheme
+                    .secondary,
                 size: 30,
               ),
             )
@@ -303,7 +516,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
   void toggleFavorite() async {
     if (isFavorite) {
       // Remove from favorites
-      bool removed = await PharmacyService().removeFavoritePharmacy(widget.pharmacy.id);
+      bool removed =
+          await PharmacyService().removeFavoritePharmacy(widget.pharmacy.id);
       if (removed) {
         setState(() {
           isFavorite = false;
@@ -311,7 +525,8 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
       }
     } else {
       // Add to favorites
-      bool added = await PharmacyService().addFavoritePharmacy(widget.pharmacy.id);
+      bool added =
+          await PharmacyService().addFavoritePharmacy(widget.pharmacy.id);
       if (added) {
         setState(() {
           isFavorite = true;
@@ -338,10 +553,14 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: InkWell(
-                  splashColor:
-                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
-                  highlightColor:
-                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+                  splashColor: Provider.of<ThemeProvider>(context)
+                      .getTheme
+                      .colorScheme
+                      .primary,
+                  highlightColor: Provider.of<ThemeProvider>(context)
+                      .getTheme
+                      .colorScheme
+                      .primary,
                   borderRadius: BorderRadius.circular(15),
                   onTap: () {
                     Navigator.push(
@@ -422,10 +641,11 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                                         fontVariations: const [
                                           FontVariation('wght', 700)
                                         ],
-                                        color: Provider.of<ThemeProvider>(context)
-                                            .getTheme
-                                            .colorScheme
-                                            .secondary,
+                                        color:
+                                            Provider.of<ThemeProvider>(context)
+                                                .getTheme
+                                                .colorScheme
+                                                .secondary,
                                         fontSize: 14,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -438,7 +658,9 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                                       snapshot.data![index].details,
                                       style: const TextStyle(
                                         fontFamily: 'JosefinSans',
-                                        fontVariations: [FontVariation('wght', 400)],
+                                        fontVariations: [
+                                          FontVariation('wght', 400)
+                                        ],
                                         fontSize: 13,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -451,7 +673,9 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
                                       'Stock: ${snapshot.data![index].stock}',
                                       style: const TextStyle(
                                         fontFamily: 'JosefinSans',
-                                        fontVariations: [FontVariation('wght', 400)],
+                                        fontVariations: [
+                                          FontVariation('wght', 400)
+                                        ],
                                         fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,
