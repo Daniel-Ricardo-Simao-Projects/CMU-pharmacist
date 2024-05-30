@@ -214,6 +214,7 @@ class _LoginPageState extends State<LoginPage> {
             isLogged: true,
           ));
         }
+        database.close();
 
         Navigator.pushReplacement(
           _dialogContext!,

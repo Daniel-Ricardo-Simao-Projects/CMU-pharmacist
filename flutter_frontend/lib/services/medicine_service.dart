@@ -83,7 +83,7 @@ class MedicineService {
         medicines.add(newMedicine);
         await database.medicineDao.insertMedicine(newMedicine);
       }
-      //database.close();
+      database.close();
     } catch (e) {
       medicinesInPharmacy = [];
     }
@@ -154,8 +154,7 @@ class MedicineService {
         pharmacies.add(newPharmacy);
         await database.pharmacyDao.insertPharmacy(newPharmacy);
       }
-
-      //database.close();
+      database.close();
     } catch (e) {
       pharmacies = [];
     }

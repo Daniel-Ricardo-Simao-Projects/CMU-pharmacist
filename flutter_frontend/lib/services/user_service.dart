@@ -117,7 +117,7 @@ class UserService {
       user.isLogged = false;
       await userDao.updateUser(user);
     }
-
+    database.close();
     log("User logged out");
   }
 

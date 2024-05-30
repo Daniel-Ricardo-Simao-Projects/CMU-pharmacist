@@ -49,8 +49,9 @@ class PharmacyService {
         pharmacy.picture = file.path;
       }
     } catch (e) {
+      log(e.toString());
       // verbose error with stack trace
-      pharmacies = [];
+      throw e;
     }
     return pharmacies;
   }

@@ -67,6 +67,7 @@ void main() async {
 
   final userDao = database.userDao;
   User? loggedInUser = await userDao.findLoggedInUser();
+  database.close();
 
   runApp(ChangeNotifierProvider(
       create: (context) => ThemeProvider(),

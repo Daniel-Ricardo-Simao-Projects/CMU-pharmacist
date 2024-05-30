@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/database/app_database.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
+import 'package:flutter_frontend/pages/error_scaffold.dart';
 import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
@@ -40,6 +41,8 @@ class _MapsPageState extends State<MapsPage> {
   List<Pharmacy> _pharmacies = [];
   List<Pharmacy> _searchResults = [];
   final _searchBarController = FloatingSearchBarController();
+
+  bool _isRefreshing = false;
 
   @override
   void initState() {
@@ -121,14 +124,38 @@ class _MapsPageState extends State<MapsPage> {
                 right: 16,
                 child: FloatingActionButton(
                   heroTag: 'refresh',
-                  onPressed: () async {
-                    await _initializeState();
-                  },
+                  onPressed: _isRefreshing
+                      ? null
+                      : () {
+                          refreshButtonFunction();
+                        },
                   child: const Icon(Icons.replay, color: Colors.white),
                 ),
               ),
             ]),
     );
+  }
+
+  void refreshButtonFunction() {
+    setState(() {
+      _isRefreshing = true;
+    });
+    _pharmacyService.getPharmacies().then((pharmacies) async {
+      _pharmacies.clear();
+      _pharmacies.addAll(pharmacies);
+      _addPharmacyMarkers(pharmacies);
+      await _savePharmacies().catchError((error) {
+        log(error);
+      });
+      setState(() {
+        _isRefreshing = false;
+      });
+    }).catchError((error) {
+      showErrorSnackBar(context, error.toString());
+      setState(() {
+        _isRefreshing = false;
+      });
+    });
   }
 
   void _initializeIcons() {
@@ -212,12 +239,7 @@ class _MapsPageState extends State<MapsPage> {
       await _savePharmacies();
       _addPharmacyMarkers(pharmacies);
     } catch (error) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text(error.toString()),
-      //   ),
-      // );
-      log(error.toString());
+      showErrorSnackBar(context, error.toString());
     }
   }
 
@@ -251,6 +273,7 @@ class _MapsPageState extends State<MapsPage> {
     log('Loading pharmacies...');
     final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final pharmacies = await database.pharmacyDao.findAllPharmacies();
+    database.close();
     if (pharmacies.isEmpty) {
       log('No pharmacies found in database');
       return [];
@@ -293,6 +316,7 @@ class _MapsPageState extends State<MapsPage> {
         picture: p.picture,
       ));
     }
+    database.close();
     log("saved pharmacies");
   }
 
@@ -361,13 +385,14 @@ class _MapsPageState extends State<MapsPage> {
       //log("adding marker for ${p.name}");
       LatLng? coordinates;
       if (_savedMarkers.containsKey(p.id.toString())) {
-        log("marker ${p.name} already saved");
+        //log("marker ${p.name} already saved");
         final positionStr = _savedMarkers[p.id.toString()].toString().split(',');
         coordinates = LatLng(
           double.parse(positionStr[0]),
           double.parse(positionStr[1]),
         );
       } else {
+        log("getting coordinates for ${p.name} at ${p.address}");
         await _getLatLngFromAddress(p.address).then((value) {
           coordinates = value;
         });
