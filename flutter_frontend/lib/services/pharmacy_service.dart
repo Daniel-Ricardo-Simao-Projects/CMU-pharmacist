@@ -138,4 +138,83 @@ class PharmacyService {
     }
     return favoritePharmaciesIds;
   }
+
+  Future<bool> addPharmacyRating(int pharmacyId, int rating) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final username = prefs.getString('username');
+
+      if (username == null) {
+        return false;
+      }
+
+      final response = await dio.post(
+        '$pharmaciesURL/rating',
+        data: {
+          'username': username,
+          'pharmacy_id': pharmacyId,
+          'rating': rating
+        },
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<int> getPharmacyRatingByUser(int pharmacyId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final username = prefs.getString('username');
+
+      if (username == null) {
+        return -1;
+      }
+
+      final response = await dio.get(
+        '$pharmaciesURL/rating',
+        data: {'username': username, 'pharmacy_id': pharmacyId},
+      );
+
+      return response.data['rating'];
+    } catch (e) {
+      log(e.toString());
+      return -1;
+    }
+  }
+
+  Future<int> getPharmacyAverageRating(int pharmacyId) async {
+    try {
+      final response = await dio.get(
+        '$pharmaciesURL/rating/average',
+        data: {'pharmacy_id': pharmacyId},
+      );
+
+      return response.data['rating'];
+    } catch (e) {
+      log(e.toString());
+      return 0;
+    }
+  }
+
+  Future<Map<int, int>> getPharmacyRatingHistogram(int pharmacyId) async {
+    try {
+      final response = await dio.get(
+        '$pharmaciesURL/rating/histogram',
+        data: {'pharmacy_id': pharmacyId},
+      );
+
+      Map<int, int> histogram = Map<int, int>.from(response.data['histogram']);
+      return histogram;
+    } catch (e) {
+      log(e.toString());
+      return {};
+    }
+  }
 }
