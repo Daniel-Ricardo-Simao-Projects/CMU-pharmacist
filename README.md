@@ -118,15 +118,14 @@ In constants.dart, add here:
     - [x] The map can be dragged or centered on current location;
     - [x] Search for pharmacy given the address
     - [x] Favorite pharmacies have a different marker;
-        - [ ] *Note: fix this, the map is not refreshed when a marker is set (and/or in another cases)*
+        - [x] *Note: fix this, the map is not refreshed when a marker is set (and/or in another cases)*
     - [x] Tapping a marker goes to a pharmacy information panel;
-- [ ] There should be an option to add a new pharmacy with:
+- [x] There should be an option to add a new pharmacy with:
     - [x] Name;
-    - [ ] Pick location 
-        - [ ] on map, 
+    - [x] Pick location 
+        - [x] on map, 
         - [x] use address, or 
         - [x] current location;
-        - *Note: location is just a string, no map integration yet.*
     - [x] Take picture;
 - [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
     - [x] Search with a sub-string;
