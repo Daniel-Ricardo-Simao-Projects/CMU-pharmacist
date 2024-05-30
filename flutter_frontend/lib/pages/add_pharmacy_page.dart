@@ -30,6 +30,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   final FocusNode _addressFocusNode = FocusNode();
+  bool _isGettingCurrentAddress = false;
 
   @override
   void initState() {
@@ -68,8 +69,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
       appBar: _appBar(context),
       body: Padding(
-          padding:
-              const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 20),
+          padding: const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 20),
           child: _addPharmacyForm()),
     );
   }
@@ -100,17 +100,12 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           height: 55,
           width: 220,
           decoration: BoxDecoration(
-            color: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .primary,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
             borderRadius: BorderRadius.circular(15),
             border: Border(
                 bottom: BorderSide(
-                    color: Provider.of<ThemeProvider>(context)
-                        .getTheme
-                        .colorScheme
-                        .outline,
+                    color:
+                        Provider.of<ThemeProvider>(context).getTheme.colorScheme.outline,
                     width: 4)),
             boxShadow: const [
               BoxShadow(
@@ -136,17 +131,12 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           height: 55,
           width: 55,
           decoration: BoxDecoration(
-            color: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .primary,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
             borderRadius: BorderRadius.circular(15),
             border: Border(
                 bottom: BorderSide(
-                    color: Provider.of<ThemeProvider>(context)
-                        .getTheme
-                        .colorScheme
-                        .outline,
+                    color:
+                        Provider.of<ThemeProvider>(context).getTheme.colorScheme.outline,
                     width: 4)),
             boxShadow: const [
               BoxShadow(
@@ -221,10 +211,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           'Address',
           style: TextStyle(
             fontFamily: 'JosefinSans',
-            color: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .secondary,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
             fontVariations: const [FontVariation('wght', 700)],
             fontSize: 18,
           ),
@@ -266,14 +253,12 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
                 itemClick: (Prediction prediction) {
                   addressController.text = prediction.description ?? "";
                   addressController.selection = TextSelection.fromPosition(
-                      TextPosition(
-                          offset: prediction.description?.length ?? 0));
+                      TextPosition(offset: prediction.description?.length ?? 0));
                   setState(() {
                     _address = prediction.description ?? "";
                   });
                 },
                 seperatedBuilder: const Divider(),
-
                 itemBuilder: (context, index, Prediction prediction) {
                   return Container(
                     padding: const EdgeInsets.all(10),
@@ -292,23 +277,37 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
               ),
             ),
             IconButton(
-                onPressed: () async {
-                  Position position = await Geolocator.getCurrentPosition(
-                      desiredAccuracy: LocationAccuracy.high);
-                  List<Placemark> placemarks = await placemarkFromCoordinates(
-                      position.latitude, position.longitude);
-                  Placemark place = placemarks[0];
-                  String address =
-                      "${place.street}, ${place.locality}, ${place.country}";
-                  addressController.text = address;
-                  _address = address;
-                },
-                icon: Icon(Icons.my_location,
-                    color: Provider.of<ThemeProvider>(context)
-                        .getTheme
-                        .colorScheme
-                        .secondary,
-                    size: 25)),
+                onPressed: _isGettingCurrentAddress
+                    ? null
+                    : () async {
+                        setState(() {
+                          _isGettingCurrentAddress = true;
+                        });
+                        // Position position = await Geolocator.getCurrentPosition(
+                        //     desiredAccuracy: LocationAccuracy.high);
+                        Position? position = await Geolocator.getLastKnownPosition();
+                        if (position != null) {
+                          log("Position: ${position.latitude}, ${position.longitude}");
+                          List<Placemark> placemarks = await placemarkFromCoordinates(
+                              position.latitude, position.longitude);
+                          Placemark place = placemarks[0];
+                          String address =
+                              "${place.street}, ${place.locality}, ${place.country}";
+                          addressController.text = address;
+                          _address = address;
+                        }
+                        setState(() {
+                          _isGettingCurrentAddress = false;
+                        });
+                      },
+                icon: _isGettingCurrentAddress
+                    ? const CircularProgressIndicator()
+                    : Icon(Icons.my_location,
+                        color: Provider.of<ThemeProvider>(context)
+                            .getTheme
+                            .colorScheme
+                            .secondary,
+                        size: 25)),
           ],
         ),
       ],
@@ -323,10 +322,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           'Name',
           style: TextStyle(
             fontFamily: 'JosefinSans',
-            color: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .secondary,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
             fontVariations: const [FontVariation('wght', 700)],
             fontSize: 18,
           ),
@@ -337,18 +333,14 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
             fontVariations: [FontVariation('wght', 400)],
             fontSize: 15,
           ),
-          cursorColor:
-              Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
+          cursorColor: Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
           decoration: InputDecoration(
             isDense: true,
             contentPadding: const EdgeInsets.only(bottom: 10),
             border: const UnderlineInputBorder(),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                  color: Provider.of<ThemeProvider>(context)
-                      .getTheme
-                      .colorScheme
-                      .primary,
+                  color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
                   width: 2),
             ),
           ),
@@ -376,10 +368,7 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
           color: Colors.white.withOpacity(0.5),
           boxShadow: [
             BoxShadow(
-              color: Provider.of<ThemeProvider>(context)
-                  .getTheme
-                  .colorScheme
-                  .shadow,
+              color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.shadow,
               blurRadius: 3,
               blurStyle: BlurStyle.outer,
             ),
@@ -433,16 +422,14 @@ class _AddPharmacyPageState extends State<AddPharmacyPage> {
 
 AppBar _appBar(BuildContext context) {
   return AppBar(
-    backgroundColor:
-        Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
+    backgroundColor: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
     centerTitle: true,
     title: Text(
       'New Pharmacy',
       style: TextStyle(
         fontFamily: 'JosefinSans',
         fontVariations: const [FontVariation('wght', 700)],
-        color:
-            Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+        color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
         fontSize: 20,
       ),
     ),
