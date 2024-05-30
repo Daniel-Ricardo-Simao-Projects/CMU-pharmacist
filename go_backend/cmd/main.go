@@ -37,6 +37,11 @@ func main() {
 	r.GET("/pharmacies", api.GetPharmacyHandler)
 	r.POST("/pharmacies", api.AddPharmacyHandler)
 
+	r.GET("/pharmacies/rating", api.GetPharmacyRatingByUserHandler)
+	r.POST("/pharmacies/rating", api.AddPharmacyRatingHandler)
+	r.GET("/pharmacies/rating/histogram", api.GetPharmacyRatingHistogramHandler)
+	r.GET("/pharmacies/rating/average", api.GetPharmacyAverageRatingHandler)
+
 	// TODO: Change names
 	r.GET("/medicines/from_pharmacy", api.GetMedicinesFromPharmacyHandler)
 	r.GET("/medicines/with_ids", api.GetMedicinesWithIds)

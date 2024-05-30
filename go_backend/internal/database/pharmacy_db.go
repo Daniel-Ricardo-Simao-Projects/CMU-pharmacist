@@ -79,3 +79,79 @@ func GetPharmacyById(id int) *models.Pharmacy {
 
 	return &pharmacy
 }
+
+func AddPharmacyRating(userId, pharmacyId, rating int) {
+	// check if user already rated pharmacy
+	row := config.DB.QueryRow("SELECT * FROM pharmacy_ratings WHERE user_id = ? AND pharmacy_id = ?", userId, pharmacyId)
+	var userRating int
+	err := row.Scan(&userRating)
+	if err == nil {
+		UpdatePharmacyRating(userId, pharmacyId, rating)
+		return
+	}
+
+	_, err = config.DB.Exec("INSERT INTO pharmacy_ratings (user_id, pharmacy_id, rating) VALUES (?, ?, ?)", userId, pharmacyId, rating)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return
+}
+
+func UpdatePharmacyRating(userId, pharmacyId, rating int) {
+	_, err := config.DB.Exec("UPDATE pharmacy_ratings SET rating = ? WHERE user_id = ? AND pharmacy_id = ?", rating, userId, pharmacyId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return
+}
+
+func GetAveragePharmacyRating(pharmacyId int) float64 {
+	row := config.DB.QueryRow("SELECT pharmacy_id, AVG(rating) AS average_rating FROM pharmacy_ratings WHERE pharmacy_id = ?", pharmacyId)
+
+	var pharmacyIdInt int
+
+	var averageRating float64
+
+	err := row.Scan(&pharmacyIdInt, &averageRating)
+
+	if err != nil {
+		return 0
+	}
+
+	// send average rating as int (0-5)
+	return averageRating
+}
+
+func GetRatingDistribution(pharmacyId int) map[int]int {
+	rows, err := config.DB.Query("SELECT rating, COUNT(rating) AS count FROM pharmacy_ratings WHERE pharmacy_id = ? GROUP BY rating", pharmacyId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ratingDistribution := make(map[int]int)
+	for rows.Next() {
+		var rating, count int
+		err := rows.Scan(&rating, &count)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ratingDistribution[rating] = count
+	}
+
+	return ratingDistribution
+}
+
+func GetPharmacyRatingByUser(userId, pharmacyId int) int {
+	row := config.DB.QueryRow("SELECT rating FROM pharmacy_ratings WHERE user_id = ? AND pharmacy_id = ?", userId, pharmacyId)
+
+	var rating int
+	err := row.Scan(&rating)
+	if err != nil {
+		return -1
+	}
+
+	return rating
+}

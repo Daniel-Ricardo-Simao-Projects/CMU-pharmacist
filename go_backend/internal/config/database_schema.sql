@@ -51,3 +51,12 @@ CREATE TABLE fcm_tokens (
   FOREIGN KEY (user_id) REFERENCES users(id),
   PRIMARY KEY (user_id, token)
 );
+
+CREATE TABLE pharmacy_ratings (
+    user_id INT NOT NULL,
+    pharmacy_id INT NOT NULL,
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id),
+    PRIMARY KEY (user_id, pharmacy_id)
+);
