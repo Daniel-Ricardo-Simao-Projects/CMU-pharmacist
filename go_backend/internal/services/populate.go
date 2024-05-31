@@ -68,7 +68,7 @@ func PopulateDatabase() {
 	}
 	picture := base64.StdEncoding.EncodeToString(medicinePicture)
 
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 40; i++ {
 		var medicine = models.Medicine{
 			Id:         0,
 			Name:       "Paracetamol",
