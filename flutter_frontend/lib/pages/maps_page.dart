@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/database/app_database.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
@@ -35,6 +34,19 @@ class MapsPage extends StatefulWidget {
 
   @override
   State<MapsPage> createState() => _MapsPageState();
+}
+
+class AnimateCameraProvider with ChangeNotifier {
+  LatLng? coordinatesToAnimate;
+
+  void animateCamera(LatLng position) {
+    if (coordinatesToAnimate == null) {
+      coordinatesToAnimate = position;
+      return;
+    }
+    coordinatesToAnimate = position;
+    notifyListeners();
+  }
 }
 
 class _MapsPageState extends State<MapsPage> {
@@ -73,6 +85,18 @@ class _MapsPageState extends State<MapsPage> {
       log(error);
     });
 
+    Provider.of<AnimateCameraProvider>(context, listen: false).addListener(() {
+      setState(() {
+        mapController.animateCamera(
+          CameraUpdate.newLatLng(
+            Provider.of<AnimateCameraProvider>(context, listen: false)
+                  .coordinatesToAnimate!,
+          ),
+        );
+      });
+    });
+    Provider.of<AnimateCameraProvider>(context, listen: false)
+        .animateCamera(LatLng(50, 50));
     Timer.periodic(Duration(seconds: 20), (Timer t) {
       log("checking for nearby pharmacies...");
       double closestDistance = 100;
@@ -93,7 +117,6 @@ class _MapsPageState extends State<MapsPage> {
             position.latitude,
             position.longitude,
           );
-          log("distance: $distance");
           if (distance < closestDistance) {
             if (_pharmaciesNotified.contains(int.parse(kv.key))) {
               continue;
@@ -108,10 +131,8 @@ class _MapsPageState extends State<MapsPage> {
         if (closestPharmacy == 0) {
           return;
         }
-        var pharmacyName =
-            _pharmacies.firstWhere((p) => p.id == closestPharmacy).name;
-        var pharmacyId =
-            _pharmacies.firstWhere((p) => p.id == closestPharmacy).id;
+        var pharmacyName = _pharmacies.firstWhere((p) => p.id == closestPharmacy).name;
+        var pharmacyId = _pharmacies.firstWhere((p) => p.id == closestPharmacy).id;
 
         print(
             "\n\n\npharmacy: $pharmacyName, pharmacyId: $pharmacyId, distance: $closestDistance\n\n\n");
@@ -202,8 +223,7 @@ class _MapsPageState extends State<MapsPage> {
                           width: 20,
                           height: 20,
                           child: const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : const Icon(Icons.replay, color: Colors.white),
@@ -274,11 +294,10 @@ class _MapsPageState extends State<MapsPage> {
           title: 'Add a new pharmacy',
         ),
         onTap: () async {
-          List<Placemark> placemarks = await placemarkFromCoordinates(
-              coordinates.latitude, coordinates.longitude);
+          List<Placemark> placemarks =
+              await placemarkFromCoordinates(coordinates.latitude, coordinates.longitude);
           Placemark place = placemarks[0];
-          String address =
-              "${place.street}, ${place.locality}, ${place.country}";
+          String address = "${place.street}, ${place.locality}, ${place.country}";
           log("address: $address");
 
           if (context.mounted) {
@@ -349,8 +368,7 @@ class _MapsPageState extends State<MapsPage> {
 
   Future<List<Pharmacy>> _loadPharmacies() async {
     log('Loading pharmacies...');
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final pharmacies = await database.pharmacyDao.findAllPharmacies();
     database.close();
     if (pharmacies.isEmpty) {
@@ -373,8 +391,7 @@ class _MapsPageState extends State<MapsPage> {
     List<String> markers = [];
     for (Marker marker in _markers) {
       final pharmacyid = marker.markerId.value;
-      final position =
-          '${marker.position.latitude},${marker.position.longitude}';
+      final position = '${marker.position.latitude},${marker.position.longitude}';
       markers.add(jsonEncode({pharmacyid: position}));
     }
     await prefs.setStringList('markers', markers);
@@ -382,8 +399,7 @@ class _MapsPageState extends State<MapsPage> {
 
   Future<void> _savePharmacies() async {
     log("saving pharmacies....");
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     for (Pharmacy p in _pharmacies) {
       final pharmacy = await database.pharmacyDao.findPharmacyById(p.id);
       if (pharmacy != null) {
@@ -417,8 +433,8 @@ class _MapsPageState extends State<MapsPage> {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position =
+        await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
       _savePosition();
@@ -429,14 +445,12 @@ class _MapsPageState extends State<MapsPage> {
       distanceFilter: 5,
     );
 
-    _statusListen =
-        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    _statusListen = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       log("status:$status.toString()");
     });
 
-    _positionListen =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position? position) {
+    _positionListen = Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position? position) {
       log(position == null
           ? 'Unknown'
           : '${position.latitude.toString()}, ${position.longitude.toString()}');
@@ -457,16 +471,14 @@ class _MapsPageState extends State<MapsPage> {
       return;
     }
     // get favorite pharmacies ids if any
-    List<int> favoritePharmacies =
-        await _pharmacyService.getFavoritePharmaciesIds();
+    List<int> favoritePharmacies = await _pharmacyService.getFavoritePharmaciesIds();
 
     for (Pharmacy p in pharmacies) {
       //log("adding marker for ${p.name}");
       LatLng? coordinates;
       if (_savedPositions.containsKey(p.id.toString())) {
         //log("marker ${p.name} already saved");
-        final positionStr =
-            _savedPositions[p.id.toString()].toString().split(',');
+        final positionStr = _savedPositions[p.id.toString()].toString().split(',');
         coordinates = LatLng(
           double.parse(positionStr[0]),
           double.parse(positionStr[1]),
@@ -477,9 +489,8 @@ class _MapsPageState extends State<MapsPage> {
         //   coordinates = value;
         // });
         coordinates = LatLng(p.latitude, p.longitude);
-        _savedPositions.addAll({
-          p.id.toString(): '${coordinates.latitude},${coordinates.longitude}'
-        });
+        _savedPositions.addAll(
+            {p.id.toString(): '${coordinates.latitude},${coordinates.longitude}'});
         log("coordinates: $coordinates");
       }
 
@@ -487,17 +498,14 @@ class _MapsPageState extends State<MapsPage> {
       final marker = Marker(
         markerId: MarkerId(p.id.toString()),
         position: coordinates,
-        icon: favoritePharmacies.contains(p.id)
-            ? _favoritePharmacyIcon
-            : _pharmacyIcon,
+        icon: favoritePharmacies.contains(p.id) ? _favoritePharmacyIcon : _pharmacyIcon,
         infoWindow: InfoWindow(
           title: p.name,
           snippet: p.address,
         ),
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => PharmacyInfoPanel(pharmacy: p)),
+          MaterialPageRoute(builder: (context) => PharmacyInfoPanel(pharmacy: p)),
         ),
       );
       if (!_markers.contains(marker)) {
@@ -513,8 +521,7 @@ class _MapsPageState extends State<MapsPage> {
   }
 
   Widget buildFloatingSearchBar() {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
       backgroundColor:
@@ -522,15 +529,13 @@ class _MapsPageState extends State<MapsPage> {
       controller: _searchBarController,
       hint: 'Search Pharmacies...',
       hintStyle: TextStyle(
-        color:
-            Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+        color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
         fontFamily: 'JosefinSans',
         fontVariations: const [FontVariation('wght', 500)],
         fontSize: 15,
       ),
       borderRadius: BorderRadius.circular(50),
-      scrollPadding:
-          const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
+      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56, left: 10, right: 10),
       transitionDuration: const Duration(milliseconds: 5),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
@@ -565,10 +570,7 @@ class _MapsPageState extends State<MapsPage> {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Material(
-            color: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .background,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
             elevation: 4.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -580,10 +582,10 @@ class _MapsPageState extends State<MapsPage> {
                     if (_savedPositions.containsKey(pharmacy.id.toString())) {
                       mapController.animateCamera(
                         CameraUpdate.newLatLng(LatLng(
-                          double.parse(_savedPositions[pharmacy.id.toString()]
-                              .split(',')[0]),
-                          double.parse(_savedPositions[pharmacy.id.toString()]
-                              .split(',')[1]),
+                          double.parse(
+                              _savedPositions[pharmacy.id.toString()].split(',')[0]),
+                          double.parse(
+                              _savedPositions[pharmacy.id.toString()].split(',')[1]),
                         )),
                       );
                       _searchBarController.close();

@@ -65,8 +65,22 @@ void main() async {
   User? loggedInUser = await userDao.findLoggedInUser();
   database.close();
 
-  runApp(ChangeNotifierProvider(
-      create: (context) => ThemeProvider(), child: MyApp(loggedInUser: loggedInUser)));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PageIndexProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AnimateCameraProvider(),
+        ),
+      ],
+      child: MyApp(loggedInUser: loggedInUser),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -114,6 +128,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class PageIndexProvider with ChangeNotifier {
+  int _currentPageIndex = 0;
+
+  int get currentPageIndex => _currentPageIndex;
+
+  void changePageIndex(int index) {
+    _currentPageIndex = index;
+    notifyListeners();
+  }
+}
+
 class HomePage extends StatefulWidget {
   final String? fcmToken;
 
@@ -134,6 +159,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    Provider.of<PageIndexProvider>(context, listen: false).addListener(() {
+      setState(() {
+        _currentPageIndex =
+            Provider.of<PageIndexProvider>(context, listen: false).currentPageIndex;
+      });
+    });
 
     UserService userService = UserService();
     userService.updateFcmToken(widget.fcmToken);

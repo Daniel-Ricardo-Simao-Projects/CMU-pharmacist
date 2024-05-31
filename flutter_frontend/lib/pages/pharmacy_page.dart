@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/main.dart';
 import 'package:flutter_frontend/models/medicine_model.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
 import 'package:flutter_frontend/pages/add_medicine_page.dart';
 import 'package:flutter_frontend/pages/add_medicine_panel.dart';
+import 'package:flutter_frontend/pages/maps_page.dart';
 import 'package:flutter_frontend/pages/medicine_page.dart';
 import 'package:flutter_frontend/pages/purchase_medicine_panel.dart';
 import 'package:flutter_frontend/pages/user_ratings/ratings_graph.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -497,7 +500,13 @@ class _PharmacyInfoPanelState extends State<PharmacyInfoPanel> {
             ),
             const SizedBox(width: 5),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Provider.of<PageIndexProvider>(context, listen: false).changePageIndex(0);
+                Provider.of<AnimateCameraProvider>(context, listen: false).animateCamera(
+                  LatLng(pharmacy.latitude, pharmacy.longitude)
+                );
+                Navigator.pop(context);
+              },
               child: Icon(
                 Icons.location_on,
                 color: Provider.of<ThemeProvider>(context)
