@@ -155,12 +155,12 @@ class _HomePageState extends State<HomePage> {
       log("Message data: ${message.data}");
       if (message.notification != null) {
         log("Message also contained a notification: ${message.notification}");
-        showNotification(message.notification!);
+        _showNotification(message.notification!);
       }
     });
   }
 
-  Future<void> showNotification(RemoteNotification notification) async {
+  Future<void> _showNotification(RemoteNotification notification) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'your_channel_id',

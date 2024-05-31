@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ShowNotification {
-  showNotification() async {
+  showNotification(String body, String message) async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
 
@@ -28,8 +28,8 @@ class ShowNotification {
 
     await flutterLocalNotificationsPlugin.show(
       1,
-      'my first notification',
-      'a very long message for the user of app',
+      body,
+      message,
       NotificationDetails(
         android: AndroidNotificationDetails(channel.id, channel.name,
             channelDescription: channel.description),

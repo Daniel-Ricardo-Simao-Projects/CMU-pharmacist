@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/database/app_database.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/error_scaffold.dart';
 import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/pharmacy_service.dart';
+import 'package:flutter_frontend/show_notification.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -39,6 +41,7 @@ class _MapsPageState extends State<MapsPage> {
   late GoogleMapController mapController;
   StreamSubscription<Position>? _positionListen;
   StreamSubscription<ServiceStatus>? _statusListen;
+  final _searchBarController = FloatingSearchBarController();
 
   BitmapDescriptor _pharmacyIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor _favoritePharmacyIcon = BitmapDescriptor.defaultMarker;
@@ -47,12 +50,12 @@ class _MapsPageState extends State<MapsPage> {
   final _pharmacyService = PharmacyService();
 
   final Set<Marker> _markers = {};
-  final Map<String, dynamic> _savedMarkers = {};
+  final Map<String, dynamic> _savedPositions = {};
   final String _mapTheme = '';
   LatLng? _currentPosition;
   List<Pharmacy> _pharmacies = [];
   List<Pharmacy> _searchResults = [];
-  final _searchBarController = FloatingSearchBarController();
+  Set<int> _pharmaciesNotified = {};
 
   bool _isRefreshing = false;
 
@@ -68,6 +71,49 @@ class _MapsPageState extends State<MapsPage> {
 
     _fetchLocationUpdates().catchError((error) {
       log(error);
+    });
+
+    Timer.periodic(Duration(seconds: 20), (Timer t) {
+      log("checking for nearby pharmacies...");
+      double closestDistance = 100;
+      int closestPharmacy = 0;
+      if (_currentPosition != null && _savedPositions.isNotEmpty) {
+        for (var kv in _savedPositions.entries) {
+          if (kv.key == 'newMarker') {
+            continue;
+          }
+          final positionStr = kv.value.toString().split(',');
+          final position = LatLng(
+            double.parse(positionStr[0]),
+            double.parse(positionStr[1]),
+          );
+          final distance = Geolocator.distanceBetween(
+            _currentPosition!.latitude,
+            _currentPosition!.longitude,
+            position.latitude,
+            position.longitude,
+          );
+          log("distance: $distance");
+          if (distance < closestDistance) {
+            if (_pharmaciesNotified.contains(int.parse(kv.key))) {
+              continue;
+            }
+            closestPharmacy = int.parse(kv.key);
+            closestDistance = distance;
+            _pharmaciesNotified.add(int.parse(kv.key));
+          } else {
+            _pharmaciesNotified.remove(int.parse(kv.key));
+          }
+        }
+        if (closestPharmacy == 0) {
+          return;
+        }
+        var pharmacyName = _pharmacies.firstWhere((p) => p.id == closestPharmacy).name;
+        String body = "Pharmacy ${pharmacyName} is ${closestDistance.toInt()} meters away";
+        String message = "Would you like to visit ${pharmacyName}?";
+        ShowNotification().showNotification(body, message);
+        log("pharmacies notified: $_pharmaciesNotified");
+      }
     });
   }
 
@@ -283,9 +329,9 @@ class _MapsPageState extends State<MapsPage> {
       log('Loading markers...');
       for (var marker in markersString) {
         final json = jsonDecode(marker);
-        _savedMarkers.addAll(json);
+        _savedPositions.addAll(json);
       }
-      log('Loaded markers: $_savedMarkers');
+      log('Loaded markers: $_savedPositions');
     }
   }
 
@@ -399,9 +445,9 @@ class _MapsPageState extends State<MapsPage> {
     for (Pharmacy p in pharmacies) {
       //log("adding marker for ${p.name}");
       LatLng? coordinates;
-      if (_savedMarkers.containsKey(p.id.toString())) {
+      if (_savedPositions.containsKey(p.id.toString())) {
         //log("marker ${p.name} already saved");
-        final positionStr = _savedMarkers[p.id.toString()].toString().split(',');
+        final positionStr = _savedPositions[p.id.toString()].toString().split(',');
         coordinates = LatLng(
           double.parse(positionStr[0]),
           double.parse(positionStr[1]),
@@ -412,6 +458,7 @@ class _MapsPageState extends State<MapsPage> {
         //   coordinates = value;
         // });
         coordinates = LatLng(p.latitude, p.longitude);
+        _savedPositions.addAll({p.id.toString(): '${coordinates.latitude},${coordinates.longitude}'});
         log("coordinates: $coordinates");
       }
 
@@ -500,13 +547,13 @@ class _MapsPageState extends State<MapsPage> {
                   title: Text(pharmacy.name),
                   subtitle: Text(pharmacy.address),
                   onTap: () {
-                    if (_savedMarkers.containsKey(pharmacy.id.toString())) {
+                    if (_savedPositions.containsKey(pharmacy.id.toString())) {
                       mapController.animateCamera(
                         CameraUpdate.newLatLng(LatLng(
                           double.parse(
-                              _savedMarkers[pharmacy.id.toString()].split(',')[0]),
+                              _savedPositions[pharmacy.id.toString()].split(',')[0]),
                           double.parse(
-                              _savedMarkers[pharmacy.id.toString()].split(',')[1]),
+                              _savedPositions[pharmacy.id.toString()].split(',')[1]),
                         )),
                       );
                       _searchBarController.close();
