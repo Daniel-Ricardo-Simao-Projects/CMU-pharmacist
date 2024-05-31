@@ -143,7 +143,7 @@ In constants.dart, add here:
     - [x] The map can be dragged or centered on current location;
     - [x] Search for pharmacy given the address
     - [x] Favorite pharmacies have a different marker;
-        - [x] *Note: fix this, the map is not refreshed when a marker is set (and/or in another cases)*
+        - [x] The map is not refreshed when a marker is set (and/or in another cases)*
     - [x] Tapping a marker goes to a pharmacy information panel;
 - [x] There should be an option to add a new pharmacy with:
     - [x] Name;
@@ -154,17 +154,16 @@ In constants.dart, add here:
     - [x] Take picture;
 - [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
     - [x] Search with a sub-string;
-    - [ ] *Note: Closest pharmacy is not implemented yet.*
+    - [x] Closest pharmacy is implemented;
     - [ ] *Note: fix performance issue, maybe fetch only the first 10 results and load more on demand/render only a subset*
 - [ ] Pharmacy Information Panel:
     - [x] Show name
     - [ ] Show location. Button to navigate there;
-        - *Note: location is just a string, no map integration yet.*
     - [x] Show picture
     - [x] List available medicines;
     - [x] Button to add medicine stock (scan barcode)or create medicine if code unknown:
         - [x] Scan barcode
-            - [ ] *Note: Now is mandatory to scan barcodes, **maybe** add manual input*
+            - [x] *Note: Now is mandatory to scan barcodes, **maybe** add manual input*
         - [x] Name;
         - [x] Box photo (from camera or file);
         - [x] Quantity;
@@ -172,13 +171,13 @@ In constants.dart, add here:
     - [x] Button to purchase/reduce stock (scan barcode);
     - [x] Button to add/remove from favorites;
     - [x] Tapping medicines opens medicine information panel;
-- [ ] Medicine Information Panel:
+- [x] Medicine Information Panel:
     - [x] Show name and picture;
     - [x] Button to get notification when available in favorite pharmacy;
-    - [ ] List pharmacies where available, sorted by distance.
+    - [x] List pharmacies where available, sorted by distance.
         - [x] List pharmacies where available.
-        - [ ] *Note: Sorted by distance.*
-- [ ] Do map directions ?????
+        - [x] *Note: Sorted by distance.*
+- [x] Do map directions ?????
 
 ## Optional Features
 - [ ] Securing Communication;
