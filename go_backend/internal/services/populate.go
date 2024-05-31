@@ -20,38 +20,38 @@ func PopulateDatabase() {
 		("Farmácia Nova Iorque", "Avenida dos Estados Unidos da América 142 B/C, Lisboa", "internal/images/pharmacies/FarmaciaNovaIorque.png", 38.7486388, -9.147437600000002),
 		("Farmácia Famões", "Rua José António Carvalho 16E, Famões", "internal/images/pharmacies/FarmaciaFamoes.png", 38.7916523, -9.210372999999999),
 		("FARMÁCIA SARAIVA", "Rua da República 86, Loures", "internal/images/pharmacies/FARMACIASARAIVA.png", 38.83127020000001, -9.1686596),
-		("Farmácia Santo Amaro", "Rua Filinto Elísio 29B, Lisboa", "internal/images/pharmacies/FarmaciaSantoAmaro.png", 38.70360989999999, -9.1845613),
-		("Farmácia Castro Sucr.", "Rua de São Bento 199A, Lisboa", "internal/images/pharmacies/FarmaciaCastroSucr.png", 38.71557669999999, -9.1547171),
-		("Farmácia Pimenta", "Rua Conselheiro Joaquim António D'Aguiar 259, Barreiro", "internal/images/pharmacies/FarmaciaPimenta.png", 38.6643491, -9.0781298),
-		("Farmácia Marques", "Estrada de Benfica 648, Lisboa", "internal/images/pharmacies/FarmaciaMarques.png", 38.75065059999999, -9.2008733),
-		("Farmácia Monserrate", "Rua Guilherme Gomes Fernandes 31, Odivelas", "internal/images/pharmacies/FarmaciaMonserrate.png", 38.7905386, -9.176471),
-		("Farmácia Santarita", "Avenida Bombeiros Voluntários de Algés 80A, Lisboa", "internal/images/pharmacies/FarmaciaSantarita.png", 38.70774789999999, -9.225318399999999),
-		("Farmácia Amadora-Sintra", "Avenida Conde de Oeiras 12C, Amadora", "internal/images/pharmacies/FarmaciaAmadora-Sintra.png", 38.7530112, -9.232764999999999),
-		("Farmácia Imperial (Farmácias Progresso)", "Avenida Guerra Junqueiro 30B, Lisboa", "internal/images/pharmacies/FarmaciaImperial(FarmaciasProgresso).png", 38.7398431, -9.136291199999999),
-		("Farmácia Damaia", "Largo Alexandre Gusmão 9A, Amadora", "internal/images/pharmacies/FarmaciaDamaia.png", 38.7457058, -9.219373100000002),
-		("Farmácia Batalha, Lda.", "Rua Avelino Salgado de Oliveira 8A, Camarate", "internal/images/pharmacies/FarmaciaBatalha,Lda.png", 38.8012573, -9.130927300000002),
-		("Farmácia Gusmão", "Rua Cândido dos Reis 30, Alhos Vedros", "internal/images/pharmacies/FarmaciaGusmao.png", 38.6550815, -9.0276597),
-		("Pharmacy Carenque", "Estrada Águas Livres 120B, Amadora", "internal/images/pharmacies/PharmacyCarenque.png", 38.6550815, -9.0276597),
-		("Ivone", "Rua Silva Carvalho 232c, Lisboa", "internal/images/pharmacies/Ivone.png", 38.6550815, -9.0276597),
-		("Farmácia Conceição Lda.", "Calçada Dom Gastão 29B, Lisboa", "internal/images/pharmacies/FarmaciaConceicaoLda.png", 38.6550815, -9.0276597),
-		("Farmácia do Guizo", "Urbanização do, Rua Moinho do Guizo lote A6 Piso 0 6 loja a, Amadora", "internal/images/pharmacies/FarmaciadoGuizo.png", 38.6550815, -9.0276597),
-		("Farmácia Vaz Martins", "Praceta Fernando Pessoa 5", "internal/images/pharmacies/FarmaciaVazMartins.png", 38.6550815, -9.0276597),
-		("Farmácia Antunes Rosas", "Praça Cidade São Salvador 199, Lisboa", "internal/images/pharmacies/FarmaciaAntunesRosas.png", 38.6550815, -9.0276597),
-		("Espaço de Saúde da Paiã", "Rua Major João Luís de Moura 11, Pontinha", "internal/images/pharmacies/EspacodeSaudedaPaia.png", 38.6550815, -9.0276597),
-		("Pragal Pharmacy Ltd.", "Rua Direita 6, Almada", "internal/images/pharmacies/PragalPharmacyLtd.png", 38.6550815, -9.0276597),
-		("Farmácia de Marvila", "Rua Eduarda Lapa Lote 35, Lisboa", "internal/images/pharmacies/FarmaciadeMarvila.png", 38.6550815, -9.0276597),
-		("Farmácia Seixal", "Avenida Vasco da Gama 15, Seixal", "internal/images/pharmacies/FarmaciaSeixal.png", 38.6550815, -9.0276597),
-		("Farmácia Confiança", "Avenida Dom Nuno Álvares Pereira 15A, Amadora", "internal/images/pharmacies/FarmaciaConfianca.png", 38.6550815, -9.0276597),
-		("Pharmacy Ribeiro Soares", "Rua Dom Pedro V 39, Santa Iria de Azoia", "internal/images/pharmacies/PharmacyRibeiroSoares.png", 38.6550815, -9.0276597),
-		("Farmácia Higiénica", "Rua dos Marinheiros 60, Póvoa de Santa Iria", "internal/images/pharmacies/FarmaciaHigienica.png", 38.6550815, -9.0276597),
-		("Farmácia Marques Freire", "Rua Santo António à Estrela 98, Lisboa", "internal/images/pharmacies/FarmaciaMarquesFreire.png", 38.6550815, -9.0276597),
-		("Farmácia do Monte", "Rua da Graça 82A, Lisboa", "internal/images/pharmacies/FarmaciadoMonte.png", 38.6550815, -9.0276597),
-		("Farmácia Santa Marta", "Rua Doutor Manuel Pacheco Nobre 44B, Barreiro", "internal/images/pharmacies/FarmaciaSantaMarta.png", 38.6550815, -9.0276597),
-		("Farmácia Sírius", "Rua Fialho de Almeida 38, Lisboa", "internal/images/pharmacies/FarmaciaSirius.png", 38.6550815, -9.0276597),
-		("Farmácia Silva Monteiro", "Portugal", "internal/images/pharmacies/FarmaciaSilvaMonteiro.png", 38.6550815, -9.0276597),
-		("Farmácia Cruz Correia", "Rua de Santo Eloy 41 A, Pontinha", "internal/images/pharmacies/FarmaciaCruzCorreia.png", 38.6550815, -9.0276597),
-		("Farmácia Tanara Amadora", "Avenida Doutor Armando Romão 3A, Amadora", "internal/images/pharmacies/FarmaciaTanaraAmadora.png", 38.6550815, -9.0276597)
-	`)
+		("Farmácia Santo Amaro", "Rua Filinto Elísio 29B, Lisboa", "internal/images/pharmacies/FarmaciaSantoAmaro.png", 38.70360989999999, -9.1845613)`)
+		// ("Farmácia Castro Sucr.", "Rua de São Bento 199A, Lisboa", "internal/images/pharmacies/FarmaciaCastroSucr.png", 38.71557669999999, -9.1547171),
+		// ("Farmácia Pimenta", "Rua Conselheiro Joaquim António D'Aguiar 259, Barreiro", "internal/images/pharmacies/FarmaciaPimenta.png", 38.6643491, -9.0781298),
+		// ("Farmácia Marques", "Estrada de Benfica 648, Lisboa", "internal/images/pharmacies/FarmaciaMarques.png", 38.75065059999999, -9.2008733),
+		// ("Farmácia Monserrate", "Rua Guilherme Gomes Fernandes 31, Odivelas", "internal/images/pharmacies/FarmaciaMonserrate.png", 38.7905386, -9.176471),
+		// ("Farmácia Santarita", "Avenida Bombeiros Voluntários de Algés 80A, Lisboa", "internal/images/pharmacies/FarmaciaSantarita.png", 38.70774789999999, -9.225318399999999),
+		// ("Farmácia Amadora-Sintra", "Avenida Conde de Oeiras 12C, Amadora", "internal/images/pharmacies/FarmaciaAmadora-Sintra.png", 38.7530112, -9.232764999999999),
+		// ("Farmácia Imperial (Farmácias Progresso)", "Avenida Guerra Junqueiro 30B, Lisboa", "internal/images/pharmacies/FarmaciaImperial(FarmaciasProgresso).png", 38.7398431, -9.136291199999999),
+		// ("Farmácia Damaia", "Largo Alexandre Gusmão 9A, Amadora", "internal/images/pharmacies/FarmaciaDamaia.png", 38.7457058, -9.219373100000002),
+		// ("Farmácia Batalha, Lda.", "Rua Avelino Salgado de Oliveira 8A, Camarate", "internal/images/pharmacies/FarmaciaBatalha,Lda.png", 38.8012573, -9.130927300000002),
+		// ("Farmácia Gusmão", "Rua Cândido dos Reis 30, Alhos Vedros", "internal/images/pharmacies/FarmaciaGusmao.png", 38.6550815, -9.0276597),
+		// ("Pharmacy Carenque", "Estrada Águas Livres 120B, Amadora", "internal/images/pharmacies/PharmacyCarenque.png", 38.6550815, -9.0276597),
+		// ("Ivone", "Rua Silva Carvalho 232c, Lisboa", "internal/images/pharmacies/Ivone.png", 38.6550815, -9.0276597),
+		// ("Farmácia Conceição Lda.", "Calçada Dom Gastão 29B, Lisboa", "internal/images/pharmacies/FarmaciaConceicaoLda.png", 38.6550815, -9.0276597),
+		// ("Farmácia do Guizo", "Urbanização do, Rua Moinho do Guizo lote A6 Piso 0 6 loja a, Amadora", "internal/images/pharmacies/FarmaciadoGuizo.png", 38.6550815, -9.0276597),
+		// ("Farmácia Vaz Martins", "Praceta Fernando Pessoa 5", "internal/images/pharmacies/FarmaciaVazMartins.png", 38.6550815, -9.0276597),
+		// ("Farmácia Antunes Rosas", "Praça Cidade São Salvador 199, Lisboa", "internal/images/pharmacies/FarmaciaAntunesRosas.png", 38.6550815, -9.0276597),
+		// ("Espaço de Saúde da Paiã", "Rua Major João Luís de Moura 11, Pontinha", "internal/images/pharmacies/EspacodeSaudedaPaia.png", 38.6550815, -9.0276597),
+		// ("Pragal Pharmacy Ltd.", "Rua Direita 6, Almada", "internal/images/pharmacies/PragalPharmacyLtd.png", 38.6550815, -9.0276597),
+		// ("Farmácia de Marvila", "Rua Eduarda Lapa Lote 35, Lisboa", "internal/images/pharmacies/FarmaciadeMarvila.png", 38.6550815, -9.0276597),
+		// ("Farmácia Seixal", "Avenida Vasco da Gama 15, Seixal", "internal/images/pharmacies/FarmaciaSeixal.png", 38.6550815, -9.0276597),
+		// ("Farmácia Confiança", "Avenida Dom Nuno Álvares Pereira 15A, Amadora", "internal/images/pharmacies/FarmaciaConfianca.png", 38.6550815, -9.0276597),
+		// ("Pharmacy Ribeiro Soares", "Rua Dom Pedro V 39, Santa Iria de Azoia", "internal/images/pharmacies/PharmacyRibeiroSoares.png", 38.6550815, -9.0276597),
+		// ("Farmácia Higiénica", "Rua dos Marinheiros 60, Póvoa de Santa Iria", "internal/images/pharmacies/FarmaciaHigienica.png", 38.6550815, -9.0276597),
+		// ("Farmácia Marques Freire", "Rua Santo António à Estrela 98, Lisboa", "internal/images/pharmacies/FarmaciaMarquesFreire.png", 38.6550815, -9.0276597),
+		// ("Farmácia do Monte", "Rua da Graça 82A, Lisboa", "internal/images/pharmacies/FarmaciadoMonte.png", 38.6550815, -9.0276597),
+		// ("Farmácia Santa Marta", "Rua Doutor Manuel Pacheco Nobre 44B, Barreiro", "internal/images/pharmacies/FarmaciaSantaMarta.png", 38.6550815, -9.0276597),
+		// ("Farmácia Sírius", "Rua Fialho de Almeida 38, Lisboa", "internal/images/pharmacies/FarmaciaSirius.png", 38.6550815, -9.0276597),
+		// ("Farmácia Silva Monteiro", "Portugal", "internal/images/pharmacies/FarmaciaSilvaMonteiro.png", 38.6550815, -9.0276597),
+		// ("Farmácia Cruz Correia", "Rua de Santo Eloy 41 A, Pontinha", "internal/images/pharmacies/FarmaciaCruzCorreia.png", 38.6550815, -9.0276597),
+		// ("Farmácia Tanara Amadora", "Avenida Doutor Armando Romão 3A, Amadora", "internal/images/pharmacies/FarmaciaTanaraAmadora.png", 38.6550815, -9.0276597)
+	//`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,7 +68,7 @@ func PopulateDatabase() {
 	}
 	picture := base64.StdEncoding.EncodeToString(medicinePicture)
 
-	for i := 1; i <= 40; i++ {
+	for i := 1; i <= 10; i++ {
 		var medicine = models.Medicine{
 			Id:         0,
 			Name:       "Paracetamol",
