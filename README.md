@@ -93,7 +93,7 @@ Before running the app, you need to configure Firebase. You can follow the instr
 1. Run the following command to install the Firebase CLI:
 
     ```bash
-    npm install -g firebase-tools
+    curl -sL https://firebase.tools/ | bash
     ```
 
 2. Run the following command to login to Firebase:
