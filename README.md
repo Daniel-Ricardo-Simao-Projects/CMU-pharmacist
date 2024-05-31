@@ -68,6 +68,7 @@ Besides that, if you want, before running the backend, you can populate or clean
 ```go
     make seed // populate the database
     make drop // clean the database
+    make addMed // adds Paracetamol to Pharmacy with id 1 ("Farmácia Alegro Montijo"). Helps debugging the notification feature.
 ```
 
 ## Run flutter app
@@ -75,6 +76,30 @@ Besides that, if you want, before running the backend, you can populate or clean
 ### Install Flutter
 
 To run the flutter app, you need to have flutter installed. You can follow the instructions on the [official website](https://flutter.dev/docs/get-started/install).
+
+### Firebase Configuration
+
+Before running the app, you need to configure Firebase. You can follow the instructions down below or follow the instructions on the [official website](https://firebase.google.com/docs/flutter/setup).
+
+1. Run the following command to install the Firebase CLI:
+
+    ```bash
+    npm install -g firebase-tools
+    ```
+
+2. Run the following command to login to Firebase:
+
+    ```bash
+    firebase login
+    ```
+
+3. Export the service account key file to environment variables:
+
+    ```bash
+    export GOOGLE_APPLICATION_CREDENTIALS="path/to/your/serviceAccountKey.json"
+    ```
+
+Note: For this to work, you need to either have your account connected to our project or create a new project and connect your account to it. If you are using our project, you can ask for the service account key file and to be added to the project.
 
 ### Run the app
 
@@ -150,7 +175,6 @@ In constants.dart, add here:
 - [ ] Medicine Information Panel:
     - [x] Show name and picture;
     - [x] Button to get notification when available in favorite pharmacy;
-        - [ ] *Maybe Extra: When clicking the notification, go to the right pharmacy*
     - [ ] List pharmacies where available, sorted by distance.
         - [x] List pharmacies where available.
         - [ ] *Note: Sorted by distance.*

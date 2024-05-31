@@ -117,7 +117,6 @@ func GetAveragePharmacyRating(pharmacyId int) float64 {
 	err := row.Scan(&averageRating)
 
 	if err != nil {
-		fmt.Println("db.GetAveragePharmacyRating: ", err)
 		return 0
 	}
 
