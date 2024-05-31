@@ -71,6 +71,15 @@ Besides that, if you want, before running the backend, you can populate or clean
     make addMed // adds Paracetamol to Pharmacy with id 1 ("Farmácia Alegro Montijo"). Helps debugging the notification feature.
 ```
 
+To turn the connection secure between the backend and the flutter app, use cloudflare tunnel
+
+```bash
+    cloudflared tunnel --url http://localhost:5000
+```
+Or use your machine ip or router port forwarding ip, etc.
+
+Copy the generated url to the flutter app explained below.
+
 ## Run flutter app
 
 ### Install Flutter
@@ -158,18 +167,16 @@ In constants.dart, add here:
         - [x] use address, or 
         - [x] current location;
     - [x] Take picture;
-- [ ] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
+- [x] Find medicines (including at least a sub-string search), providing the closest pharmacy with the searched medicine;
     - [x] Search with a sub-string;
     - [x] Closest pharmacy is implemented;
-    - [ ] *Note: fix performance issue, maybe fetch only the first 10 results and load more on demand/render only a subset*
-- [ ] Pharmacy Information Panel:
+- [x] Pharmacy Information Panel:
     - [x] Show name
-    - [ ] Show location. Button to navigate there;
+    - [x] Show location. Button to navigate there;
     - [x] Show picture
     - [x] List available medicines;
     - [x] Button to add medicine stock (scan barcode)or create medicine if code unknown:
-        - [x] Scan barcode
-            - [x] *Note: Now is mandatory to scan barcodes, **maybe** add manual input*
+        - [x] Scan barcode;
         - [x] Name;
         - [x] Box photo (from camera or file);
         - [x] Quantity;
@@ -182,18 +189,12 @@ In constants.dart, add here:
     - [x] Button to get notification when available in favorite pharmacy;
     - [x] List pharmacies where available, sorted by distance.
         - [x] List pharmacies where available.
-        - [x] *Note: Sorted by distance.*
-- [x] Do map directions ?????
+        - [x] Sorted by distance.
+- [x] Do map directions
 
 ## Optional Features
-- [ ] Securing Communication;
-- [ ] Meta Moderation;
+- [x] Securing Communication;
 - [x] User Ratings;
 - [x] User Accounts;
-- [ ] Social Sharing To Other Apps;
-- [ ] Localization (L10n);
-- [x] UI Adaptability: Rotation; *Note: **Maybe** done, automagically*
+- [x] UI Adaptability: Rotation;
 - [x] UI Adaptability: Light/Dark Theme;
-- [ ] Recommendations;
-
-## TODO
