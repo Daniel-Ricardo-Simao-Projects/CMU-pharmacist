@@ -93,3 +93,9 @@ You can also define a different backend url with the command in case you are run
 ```
 
 The default URL is localhost:5000.
+
+If you want to run the app in a real phone instead of an emulator, run this code:
+
+```bash
+    adb reverse tcp:5000 tcp:5000
+```
