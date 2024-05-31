@@ -11,15 +11,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_frontend/pages/add_pharmacy_page.dart';
 import 'package:flutter_frontend/pages/find_medicine_page.dart';
 import 'package:flutter_frontend/pages/maps_page.dart';
-import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/pages/user_login_page.dart';
 import 'package:flutter_frontend/pages/user_profile_page.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'models/pharmacy_model.dart';
-import 'services/pharmacy_service.dart';
 import 'database/app_database.dart';
 import 'models/user_model.dart';
 import 'services/user_service.dart';

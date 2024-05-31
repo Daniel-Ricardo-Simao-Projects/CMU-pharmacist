@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_frontend/database/app_database.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/medicine_in_pharmacy.dart';
 import '../models/medicine_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -182,11 +183,11 @@ class MedicineService {
   }
 
   // To get the pharmacies from the search menu, given a medicine substring
-  Future<List<Pharmacy>> getPharmaciesFromSearch(String medicineInput) async {
+  Future<List<Pharmacy>> getPharmaciesFromSearch(String medicineInput, String coordinates) async {
     late List<Pharmacy> pharmacies;
     try {
       final res = await dio.get('$medicineURL/pharmacies-search',
-          data: {'medicineInput': medicineInput});
+          data: {'medicineInput': medicineInput, 'coordinates': coordinates});
 
       pharmacies = res.data['pharmacies']
           .map<Pharmacy>(

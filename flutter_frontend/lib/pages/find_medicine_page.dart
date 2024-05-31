@@ -4,6 +4,7 @@ import 'package:flutter_frontend/pages/pharmacy_page.dart';
 import 'package:flutter_frontend/services/medicine_service.dart';
 import 'package:flutter_frontend/themes/colors.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class FindMedicinePage extends StatefulWidget {
@@ -31,8 +32,13 @@ class _FindMedicinePageState extends State<FindMedicinePage> {
       return;
     }
     MedicineService medicineService = MedicineService();
-    List<Pharmacy> fetchedPharmacies =
-        await medicineService.getPharmaciesFromSearch(medicine);
+    List<Pharmacy> fetchedPharmacies = [];
+    Position? position = await Geolocator.getLastKnownPosition();
+    if (position != null) {
+      String location = '${position.latitude}|${position.longitude}';
+      fetchedPharmacies =
+          await medicineService.getPharmaciesFromSearch(medicine, location);
+    }
     setState(() {
       _pharmacies = Future.value(fetchedPharmacies);
     });
@@ -45,10 +51,8 @@ class _FindMedicinePageState extends State<FindMedicinePage> {
             Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
         appBar: AppBar(
           toolbarHeight: 10,
-          backgroundColor: Provider.of<ThemeProvider>(context)
-              .getTheme
-              .colorScheme
-              .background,
+          backgroundColor:
+              Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
         ),
         body: Column(
           children: [
@@ -139,10 +143,7 @@ class PharmacyResultsListState extends State<PharmacyResultsList> {
               style: TextStyle(
                 fontFamily: 'JosefinSans',
                 fontVariations: const [FontVariation('wght', 500)],
-                color: Provider.of<ThemeProvider>(context)
-                    .getTheme
-                    .colorScheme
-                    .secondary,
+                color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
                 fontSize: 16,
               ),
             ));
@@ -177,8 +178,7 @@ class PharmacyResultsListState extends State<PharmacyResultsList> {
                     ),
                   ),
                   onTap: () {
-                    print(
-                        "Tapped on pharmacy with id: ${snapshot.data![index].id}");
+                    print("Tapped on pharmacy with id: ${snapshot.data![index].id}");
                     Navigator.push(
                       context,
                       MaterialPageRoute(

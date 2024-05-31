@@ -82,6 +82,11 @@ type searchPharmaciesMessage struct {
 	MedicineInput string `json:"medicineInput"`
 }
 
+type searchPharmaciesSortedMessage struct {
+	MedicineInput string `json:"medicineInput"`
+	Coordinates   string `json:"coordinates"`
+}
+
 func GetMedicineHandler(c *gin.Context) {
 	var message GetMedicineMessage
 	if err := c.ShouldBindJSON(&message); err != nil {
@@ -249,14 +254,14 @@ func GetPharmaciesWithIdsHandler(c *gin.Context) {
 }
 
 func SearchPharmacyWithMedicineHandler(c *gin.Context) {
-	var message searchPharmaciesMessage
+	var message searchPharmaciesSortedMessage
 	if err := c.ShouldBindJSON(&message); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		utils.Error("Error binding JSON")
 		return
 	}
 
-	pharmacies := db.SearchPharmaciesWithMedicine(message.MedicineInput)
+	pharmacies := db.SearchPharmaciesWithMedicine(message.MedicineInput, message.Coordinates)
 	c.JSON(http.StatusOK, gin.H{"pharmacies": pharmacies})
 
 }

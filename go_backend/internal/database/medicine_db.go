@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	config "go_backend/internal/config"
@@ -314,10 +315,21 @@ func GetPharmaciesWithIds(pharmacyIds []int) []models.Pharmacy {
 	return pharmacies
 }
 
-func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
+func SearchPharmaciesWithMedicine(medicineInput string, coordinates string) []models.Pharmacy {
 	// TODO: Maybe sanitize input (?)
 	medicineInput = "%" + medicineInput + "%"
 	medicineRows, err := config.DB.Query("SELECT id FROM medicines WHERE name LIKE ?", medicineInput)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	println("Coordinates: ", coordinates)
+	coordstr := strings.Split(coordinates, "|")
+	latitude, err := strconv.ParseFloat(coordstr[0], 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	longitude, err := strconv.ParseFloat(coordstr[1], 64)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -329,15 +341,16 @@ func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
 		if err != nil {
 			log.Fatal(err)
 		}
-		connectionRows, err := config.DB.Query("SELECT pharmacy_id, stock FROM medicine_pharmacy WHERE medicine_id = ?", medicineId)
+		connectionRows, err := config.DB.Query("SELECT pharmacies.id, pharmacies.name, pharmacies.address, pharmacies.image_path, pharmacies.latitude, pharmacies.longitude, pharmacies.created_at, medicine_pharmacy.stock, ST_Distance_Sphere(point(pharmacies.latitude, pharmacies.longitude), point(?,?)) as distance FROM pharmacies JOIN medicine_pharmacy ON pharmacies.id = medicine_pharmacy.pharmacy_id WHERE medicine_pharmacy.medicine_id = ? ORDER BY distance ASC;", latitude, longitude, medicineId)
 		if err != nil {
 			log.Fatal(err)
 		}
 		for connectionRows.Next() {
 			var pharmacy models.Pharmacy
 			var stock int
+			var distance float64
 
-			err := connectionRows.Scan(&pharmacy.Id, &stock)
+			err := connectionRows.Scan(&pharmacy.Id, &pharmacy.Name, &pharmacy.Address, &pharmacy.Picture, &pharmacy.Latitude, &pharmacy.Longitude, &pharmacy.Date, &stock, &distance)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -346,22 +359,13 @@ func SearchPharmaciesWithMedicine(medicineInput string) []models.Pharmacy {
 				continue
 			}
 
-			var pharmacyToAppend models.Pharmacy
-			err = config.DB.QueryRow("SELECT * FROM pharmacies WHERE id = ?", pharmacy.Id).
-				Scan(&pharmacyToAppend.Id, &pharmacyToAppend.Name, &pharmacyToAppend.Address, &pharmacyToAppend.Picture, &pharmacyToAppend.Latitude, &pharmacyToAppend.Longitude, &pharmacyToAppend.Date)
+			imageData, err := os.ReadFile(pharmacy.Picture)
 			if err != nil {
 				log.Fatal(err)
 			}
+			pharmacy.Picture = base64.StdEncoding.EncodeToString(imageData)
 
-			imageData, err := os.ReadFile(pharmacyToAppend.Picture)
-			if err != nil {
-				log.Fatal(err)
-			}
-			pharmacyToAppend.Picture = base64.StdEncoding.EncodeToString(imageData)
-
-			pharmacies = append(pharmacies, pharmacyToAppend)
-
-			//TODO: Order pharmacies by distance
+			pharmacies = append(pharmacies, pharmacy)
 		}
 	}
 

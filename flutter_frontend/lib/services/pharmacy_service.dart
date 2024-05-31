@@ -138,6 +138,7 @@ class PharmacyService {
           pharmacies.map((pharmacy) => pharmacy.id).toList();
     } catch (e) {
       log(e.toString());
+      return [];
     }
     return favoritePharmaciesIds;
   }
