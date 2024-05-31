@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_frontend/database/app_database.dart';
 import 'package:flutter_frontend/models/pharmacy_model.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import '../models/medicine_in_pharmacy.dart';
 import '../models/medicine_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -41,8 +41,8 @@ class MedicineService {
     List<Medicine> medicines = [];
     try {
       //TODO: Change URL
-      final res = await dio
-          .get('$medicineURL/from_pharmacy', data: {'pharmacyId': pharmacyId});
+      final res =
+          await dio.get('$medicineURL/from_pharmacy', data: {'pharmacyId': pharmacyId});
 
       medicinesInPharmacy = res.data['medicinesInPharmacy']
           .map<MedicineInPharmacy>(
@@ -51,11 +51,10 @@ class MedicineService {
           .toList();
 
       List<int> medicineIdsNotCached = [];
-      final database =
-          await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+      final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
       for (var medicineInPharmacy in medicinesInPharmacy) {
-        final medicine = await database.medicineDao
-            .findMedicineById(medicineInPharmacy.medicineId);
+        final medicine =
+            await database.medicineDao.findMedicineById(medicineInPharmacy.medicineId);
         if (medicine == null) {
           medicineIdsNotCached.add(medicineInPharmacy.medicineId);
         } else {
@@ -97,8 +96,8 @@ class MedicineService {
     late List<Medicine> medicines;
     try {
       //TODO: Maybe Change URL
-      final res = await dio
-          .get('$medicineURL/with_ids', data: {'medicineIds': medicineIds});
+      final res =
+          await dio.get('$medicineURL/with_ids', data: {'medicineIds': medicineIds});
 
       medicines = res.data['medicines']
           .map<Medicine>(
@@ -117,8 +116,8 @@ class MedicineService {
     List<Pharmacy> pharmacies = [];
     try {
       // TODO: Change URL
-      final res = await dio.get('$medicineURL/pharmaciesWithCache',
-          data: {'medicineId': medicineId});
+      final res = await dio
+          .get('$medicineURL/pharmaciesWithCache', data: {'medicineId': medicineId});
 
       pharmaciesWithMedicine = res.data['pharmacies']
           .map<MedicineInPharmacy>(
@@ -127,37 +126,55 @@ class MedicineService {
           .toList();
 
       List<int> pharmacyIdsNotCached = [];
-      final database =
-          await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+      final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
       for (var pharmacyWithMedicine in pharmaciesWithMedicine) {
-        final pharmacy = await database.pharmacyDao
-            .findPharmacyById(pharmacyWithMedicine.pharmacyId);
+        final pharmacy =
+            await database.pharmacyDao.findPharmacyById(pharmacyWithMedicine.pharmacyId);
         if (pharmacy == null) {
           pharmacyIdsNotCached.add(pharmacyWithMedicine.pharmacyId);
         } else {
-          log("database: "+pharmacy.name);
+          log("database: " + pharmacy.name);
           pharmacies.add(pharmacy);
         }
       }
 
-      if (pharmacyIdsNotCached.isEmpty) {
-        return pharmacies;
-      }
+      if (pharmacyIdsNotCached.isNotEmpty) {
+        final newPharmacies = await getPharmaciesFromIds(pharmacyIdsNotCached);
+        for (var newPharmacy in newPharmacies) {
+          final fileName = '${newPharmacy.name.replaceAll(' ', '_')}.jpg';
+          final appDocDir = await getApplicationDocumentsDirectory();
+          final file = File('${appDocDir.path}/$fileName');
+          await file.writeAsBytes(base64Decode(newPharmacy.picture));
+          newPharmacy.picture = file.path;
 
-      final newPharmacies = await getPharmaciesFromIds(pharmacyIdsNotCached);
-      for (var newPharmacy in newPharmacies) {
-        final fileName = '${newPharmacy.name.replaceAll(' ', '_')}.jpg';
-        final appDocDir = await getApplicationDocumentsDirectory();
-        final file = File('${appDocDir.path}/$fileName');
-        await file.writeAsBytes(base64Decode(newPharmacy.picture));
-        newPharmacy.picture = file.path;
-
-        pharmacies.add(newPharmacy);
-        await database.pharmacyDao.insertPharmacy(newPharmacy);
+          pharmacies.add(newPharmacy);
+          await database.pharmacyDao.insertPharmacy(newPharmacy);
+        }
+        database.close();
       }
-      database.close();
     } catch (e) {
       pharmacies = [];
+    }
+    
+    Position? position = await Geolocator.getLastKnownPosition();
+    if (position != null) {
+      pharmacies.sort((a, b) {
+        double distanceA = Geolocator.distanceBetween(
+          position.latitude,
+          position.longitude,
+          a.latitude,
+          a.longitude,
+        );
+
+        double distanceB = Geolocator.distanceBetween(
+          position.latitude,
+          position.longitude,
+          b.latitude,
+          b.longitude,
+        );
+
+        return distanceA.compareTo(distanceB);
+      });
     }
 
     return pharmacies;
@@ -168,8 +185,8 @@ class MedicineService {
     late List<Pharmacy> pharmacies;
     try {
       // TODO: Change URL
-      final res = await dio.get('$medicineURL/pharmaciesWithIds',
-          data: {'pharmacyIds': pharmacyIds});
+      final res = await dio
+          .get('$medicineURL/pharmaciesWithIds', data: {'pharmacyIds': pharmacyIds});
 
       pharmacies = res.data['pharmacies']
           .map<Pharmacy>(
@@ -183,7 +200,8 @@ class MedicineService {
   }
 
   // To get the pharmacies from the search menu, given a medicine substring
-  Future<List<Pharmacy>> getPharmaciesFromSearch(String medicineInput, String coordinates) async {
+  Future<List<Pharmacy>> getPharmaciesFromSearch(
+      String medicineInput, String coordinates) async {
     late List<Pharmacy> pharmacies;
     try {
       final res = await dio.get('$medicineURL/pharmacies-search',
@@ -212,8 +230,7 @@ class MedicineService {
   Future<Medicine> getMedicineFromBarcode(String barcode) async {
     late Medicine medicine;
     try {
-      final res =
-          await dio.get('$medicineURL/barcode', data: {'barcode': barcode});
+      final res = await dio.get('$medicineURL/barcode', data: {'barcode': barcode});
 
       medicine = Medicine.fromJson(res.data['medicine']);
     } catch (e) {
