@@ -59,16 +59,14 @@ void main() async {
   //SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   log(const String.fromEnvironment('URL'));
 
-  final database =
-      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
   final userDao = database.userDao;
   User? loggedInUser = await userDao.findLoggedInUser();
   database.close();
 
   runApp(ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: MyApp(loggedInUser: loggedInUser)));
+      create: (context) => ThemeProvider(), child: MyApp(loggedInUser: loggedInUser)));
 }
 
 class MyApp extends StatelessWidget {
@@ -83,6 +81,16 @@ class MyApp extends StatelessWidget {
       systemNavigationBarColor:
           Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
     ));
+
+    FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
 
     return FutureBuilder<String?>(
       future: FirebaseMessaging.instance.getToken(),
@@ -147,12 +155,12 @@ class _HomePageState extends State<HomePage> {
       log("Message data: ${message.data}");
       if (message.notification != null) {
         log("Message also contained a notification: ${message.notification}");
-        _showNotification(message.notification!);
+        showNotification(message.notification!);
       }
     });
   }
 
-  Future<void> _showNotification(RemoteNotification notification) async {
+  Future<void> showNotification(RemoteNotification notification) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'your_channel_id',
@@ -216,8 +224,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Search',
           ),
           NavigationDestination(
-            selectedIcon:
-                Icon(Icons.account_circle_outlined, color: text2Color),
+            selectedIcon: Icon(Icons.account_circle_outlined, color: text2Color),
             icon: Icon(Icons.account_circle_outlined),
             label: 'Profile',
           ),
@@ -228,4 +235,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

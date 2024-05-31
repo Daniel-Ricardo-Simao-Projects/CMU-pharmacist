@@ -46,7 +46,7 @@ func GetFavoritePharmaciesByUsername(username int) []models.Pharmacy {
 func AddFavoritePharmacy(username, pharmacyId int) {
 	_, err := config.DB.Exec("INSERT INTO favorites (user_id, pharmacy_id) VALUES (?, ?)", username, pharmacyId)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 }
 
