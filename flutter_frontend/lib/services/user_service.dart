@@ -8,13 +8,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../database/app_database.dart';
 
 class UserService {
-  final String usersURL =
+  String usersURL =
       '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/users';
   final Dio dio = Dio();
   late User
       user; // user object to store the authenticated user and access it throughout the app
 
   UserService();
+
+  void getNewUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? httpUrl = prefs.getString('url');
+
+    if (httpUrl != null) {
+      usersURL = httpUrl + '/users';
+    }
+  }
 
   // getter to access the authenticated user
   User getUser() {
@@ -30,7 +39,7 @@ class UserService {
         'username': username,
         'password': hashedPassword,
       };
-
+      getNewUrl();
       final response = await dio.post(usersURL, data: userJson);
 
       if (response.statusCode == 201) {
@@ -57,7 +66,7 @@ class UserService {
         'password': hashedPassword,
         'fcm_token': fcmToken,
       };
-
+      getNewUrl();
       final response = await dio.post('$usersURL/authenticate', data: userData);
 
       // Check if the response contains a message indicating successful authentication
@@ -90,7 +99,7 @@ class UserService {
         };
 
         log("Updating FCM token :$fcmToken for user: $username");
-
+        getNewUrl();
         final response = await dio.put('$usersURL/token', data: userData);
         if (response.statusCode == 200) {
           log("FCM token updated successfully");

@@ -3,6 +3,7 @@ import 'package:flutter_frontend/pages/user_login_page.dart';
 import 'package:flutter_frontend/themes/theme_provider.dart';
 import 'package:flutter_frontend/themes/themes.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/user_service.dart';
 
@@ -14,11 +15,10 @@ class UserProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
+      height: 300,
       width: double.infinity,
       decoration: BoxDecoration(
-        color:
-            Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
+        color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -31,6 +31,8 @@ class UserProfilePage extends StatelessWidget {
           _setThemeButton(context),
           const SizedBox(height: 20),
           _logoutButton(context),
+          const SizedBox(height: 20),
+          _setUrl(context),
         ],
       ),
     );
@@ -46,18 +48,14 @@ class UserProfilePage extends StatelessWidget {
             children: [
               Icon(Icons.dark_mode_outlined,
                   size: 30,
-                  color: Provider.of<ThemeProvider>(context)
-                      .getTheme
-                      .colorScheme
-                      .secondary),
+                  color:
+                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary),
               const SizedBox(width: 20),
               Text(
                 'Set Theme',
                 style: TextStyle(
-                  color: Provider.of<ThemeProvider>(context)
-                      .getTheme
-                      .colorScheme
-                      .secondary,
+                  color:
+                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
                   fontFamily: 'JosefinSans',
                   fontVariations: const [FontVariation('wght', 400)],
                   fontSize: 16,
@@ -70,24 +68,16 @@ class UserProfilePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
             icon: Icon(Icons.tune,
-                color: Provider.of<ThemeProvider>(context)
-                    .getTheme
-                    .colorScheme
-                    .secondary,
+                color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
                 size: 30),
-            color: Provider.of<ThemeProvider>(context)
-                .getTheme
-                .colorScheme
-                .primary,
+            color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.primary,
             onSelected: (ThemeType result) {
               switch (result) {
                 case ThemeType.light:
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .setTheme(lightTheme);
+                  Provider.of<ThemeProvider>(context, listen: false).setTheme(lightTheme);
                   break;
                 case ThemeType.dark:
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .setTheme(darkTheme);
+                  Provider.of<ThemeProvider>(context, listen: false).setTheme(darkTheme);
                   break;
                 case ThemeType.system:
                   final brightness = MediaQuery.of(context).platformBrightness;
@@ -147,10 +137,7 @@ class UserProfilePage extends StatelessWidget {
         children: [
           Icon(Icons.logout,
               size: 30,
-              color: Provider.of<ThemeProvider>(context)
-                  .getTheme
-                  .colorScheme
-                  .secondary),
+              color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary),
           const SizedBox(width: 10),
           TextButton(
               onPressed: () {
@@ -165,10 +152,8 @@ class UserProfilePage extends StatelessWidget {
               child: Text(
                 'Logout',
                 style: TextStyle(
-                  color: Provider.of<ThemeProvider>(context)
-                      .getTheme
-                      .colorScheme
-                      .secondary,
+                  color:
+                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
                   fontFamily: 'JosefinSans',
                   fontVariations: const [FontVariation('wght', 400)],
                   fontSize: 16,
@@ -187,10 +172,7 @@ class UserProfilePage extends StatelessWidget {
         children: [
           Icon(Icons.account_circle,
               size: 50,
-              color: Provider.of<ThemeProvider>(context)
-                  .getTheme
-                  .colorScheme
-                  .secondary),
+              color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary),
           const SizedBox(width: 10),
           const Text(
             'Alice Bob DRS',
@@ -202,6 +184,69 @@ class UserProfilePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Padding _setUrl(BuildContext context) {
+    TextEditingController controller = TextEditingController();
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        children: [
+          Icon(Icons.link,
+              size: 30,
+              color: Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary),
+          const SizedBox(width: 10),
+          TextButton(
+              onPressed: () {
+                _showDialog(context, controller);
+              },
+              child: Text(
+                'Change URL',
+                style: TextStyle(
+                  color:
+                      Provider.of<ThemeProvider>(context).getTheme.colorScheme.secondary,
+                  fontFamily: 'JosefinSans',
+                  fontVariations: const [FontVariation('wght', 400)],
+                  fontSize: 16,
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
+  void _showDialog(BuildContext context, TextEditingController controller) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? currentUrl = prefs.getString('url');
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Enter new URL'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: currentUrl ?? 'http://example.com',
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () async {
+                SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                await prefs.setString('url', controller.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

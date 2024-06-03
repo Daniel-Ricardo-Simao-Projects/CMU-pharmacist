@@ -8,11 +8,20 @@ import '../models/pharmacy_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PharmacyService {
-  final String pharmaciesURL =
+  String pharmaciesURL =
       '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/pharmacies';
   final Dio dio = Dio();
 
   PharmacyService();
+
+  void getNewUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? httpUrl = prefs.getString('url');
+
+    if (httpUrl != null) {
+      pharmaciesURL = httpUrl + '/pharmacies';
+    }
+  }
 
   Future<void> addPharmacy(Pharmacy pharmacy) async {
     try {
@@ -24,7 +33,7 @@ class PharmacyService {
         'latitude': pharmacy.latitude,
         'longitude': pharmacy.longitude,
       };
-
+      getNewUrl();
       await dio.post(pharmaciesURL, data: pharmacyJson);
     } catch (e) {
       rethrow;
@@ -35,6 +44,7 @@ class PharmacyService {
     late List<Pharmacy> pharmacies;
     try {
       log("GETTING PHARMACIES");
+      getNewUrl();
       final res = await dio.get(pharmaciesURL);
       log('got response');
       pharmacies = res.data['pharmacies']
@@ -67,7 +77,7 @@ class PharmacyService {
       if (username == null) {
         return false;
       }
-
+      getNewUrl();
       final response = await dio.post(
         '$pharmaciesURL/favoriteadd',
         data: {'userId': username, 'pharmacyId': pharmacyId},
@@ -93,7 +103,7 @@ class PharmacyService {
         log('Username not found');
         return false;
       }
-
+      getNewUrl();
       final response = await dio.delete(
         '$pharmaciesURL/favoritedelete',
         data: {'userId': username, 'pharmacyId': pharmacyId},
@@ -121,7 +131,7 @@ class PharmacyService {
       if (username == null) {
         return [];
       }
-
+      getNewUrl();
       final response = await dio.get(
         '$pharmaciesURL/favoriteget',
         data: {'userId': username},
@@ -151,7 +161,7 @@ class PharmacyService {
       if (username == null) {
         return false;
       }
-
+      getNewUrl();
       final response = await dio.post(
         '$pharmaciesURL/rating',
         data: {
@@ -180,7 +190,7 @@ class PharmacyService {
       if (username == null) {
         return -1;
       }
-
+      getNewUrl();
       final response = await dio.get(
         '$pharmaciesURL/rating',
         data: {'username': username, 'pharmacy_id': pharmacyId},
@@ -195,6 +205,7 @@ class PharmacyService {
 
   Future<int> getPharmacyAverageRating(int pharmacyId) async {
     try {
+      getNewUrl();
       final response = await dio.get(
         '$pharmaciesURL/rating/average',
         data: {'pharmacy_id': pharmacyId},
@@ -211,6 +222,7 @@ class PharmacyService {
 
   Future<Map<int, int>> getPharmacyRatingHistogram(int pharmacyId) async {
     try {
+      getNewUrl();
       final response = await dio.get(
         '$pharmaciesURL/rating/histogram',
         data: {'pharmacy_id': pharmacyId},

@@ -11,11 +11,20 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MedicineService {
-  final String medicineURL =
+  String medicineURL =
       '${const String.fromEnvironment('URL', defaultValue: 'http://localhost:5000')}/medicines';
   final Dio dio = Dio();
 
   MedicineService();
+
+  void getNewUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? httpUrl = prefs.getString('url');
+
+    if (httpUrl != null) {
+      medicineURL = httpUrl + '/medicines';
+    }
+  }
 
   // To add a new medicine in a pharmacy
   Future<void> addMedicine(Medicine medicine) async {
@@ -28,7 +37,7 @@ class MedicineService {
         'pharmacyId': medicine.pharmacyId,
         'barcode': medicine.barcode,
       };
-
+      getNewUrl();
       await dio.post(medicineURL, data: medicineJson);
     } catch (e) {
       rethrow;
@@ -41,6 +50,7 @@ class MedicineService {
     List<Medicine> medicines = [];
     try {
       //TODO: Change URL
+      getNewUrl();
       final res =
           await dio.get('$medicineURL/from_pharmacy', data: {'pharmacyId': pharmacyId});
 
@@ -96,6 +106,7 @@ class MedicineService {
     late List<Medicine> medicines;
     try {
       //TODO: Maybe Change URL
+      getNewUrl();
       final res =
           await dio.get('$medicineURL/with_ids', data: {'medicineIds': medicineIds});
 
@@ -116,6 +127,7 @@ class MedicineService {
     List<Pharmacy> pharmacies = [];
     try {
       // TODO: Change URL
+      getNewUrl();
       final res = await dio
           .get('$medicineURL/pharmaciesWithCache', data: {'medicineId': medicineId});
 
@@ -155,7 +167,7 @@ class MedicineService {
     } catch (e) {
       pharmacies = [];
     }
-    
+
     Position? position = await Geolocator.getLastKnownPosition();
     if (position != null) {
       pharmacies.sort((a, b) {
@@ -185,6 +197,7 @@ class MedicineService {
     late List<Pharmacy> pharmacies;
     try {
       // TODO: Change URL
+      getNewUrl();
       final res = await dio
           .get('$medicineURL/pharmaciesWithIds', data: {'pharmacyIds': pharmacyIds});
 
@@ -204,6 +217,7 @@ class MedicineService {
       String medicineInput, String coordinates) async {
     late List<Pharmacy> pharmacies;
     try {
+      getNewUrl();
       final res = await dio.get('$medicineURL/pharmacies-search',
           data: {'medicineInput': medicineInput, 'coordinates': coordinates});
 
@@ -230,6 +244,7 @@ class MedicineService {
   Future<Medicine> getMedicineFromBarcode(String barcode) async {
     late Medicine medicine;
     try {
+      getNewUrl();
       final res = await dio.get('$medicineURL/barcode', data: {'barcode': barcode});
 
       medicine = Medicine.fromJson(res.data['medicine']);
@@ -249,6 +264,7 @@ class MedicineService {
   // To purchase a medicine
   void purchaseMedicine(int medicineId, int pharmacyId, int quantity) {
     try {
+      getNewUrl();
       dio.put('$medicineURL/purchase', data: {
         'medicineId': medicineId,
         'pharmacyId': pharmacyId,
@@ -268,7 +284,7 @@ class MedicineService {
       if (username == null) {
         return false;
       }
-
+      getNewUrl();
       final response = await dio.post('$medicineURL/notifications/add', data: {
         'userId': username,
         'medicineId': medicineId,
@@ -296,7 +312,7 @@ class MedicineService {
       if (username == null) {
         return false;
       }
-
+      getNewUrl();
       final response = await dio.delete('$medicineURL/notifications/remove',
           data: {'userId': username, 'medicineId': medicineId});
 
@@ -321,7 +337,7 @@ class MedicineService {
       if (username == null) {
         return false;
       }
-
+      getNewUrl();
       final response = await dio.get('$medicineURL/notifications/isNotified',
           data: {'userId': username, 'medicineId': medicineId});
 
