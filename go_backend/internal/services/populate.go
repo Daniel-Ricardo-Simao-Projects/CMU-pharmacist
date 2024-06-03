@@ -17,10 +17,10 @@ func PopulateDatabase() {
 		("Farmácia Esperança", "Rua Carlos Mardel 101 - B, Lisboa", "internal/images/pharmacies/FarmaciaEsperanca.png", 38.7383581, -9.1329884),
 		("SEMBLANO & MENDES, LDA", "Rua Eduardo Viana 26A Fracção L, Almada", "internal/images/pharmacies/SEMBLANO&MENDES,LDA.png", 38.6606428, -9.162305100000001),
 		("FARMÁCIA MELO", "Praça Dom João I Nº 9 B, Amadora", "internal/images/pharmacies/FARMACIAMELO.png", 38.7579465, -9.2470954),
-		("Farmácia Nova Iorque", "Avenida dos Estados Unidos da América 142 B/C, Lisboa", "internal/images/pharmacies/FarmaciaNovaIorque.png", 38.7486388, -9.147437600000002),
-		("Farmácia Famões", "Rua José António Carvalho 16E, Famões", "internal/images/pharmacies/FarmaciaFamoes.png", 38.7916523, -9.210372999999999),
-		("FARMÁCIA SARAIVA", "Rua da República 86, Loures", "internal/images/pharmacies/FARMACIASARAIVA.png", 38.83127020000001, -9.1686596),
-		("Farmácia Santo Amaro", "Rua Filinto Elísio 29B, Lisboa", "internal/images/pharmacies/FarmaciaSantoAmaro.png", 38.70360989999999, -9.1845613)`)
+		("Farmácia Nova Iorque", "Avenida dos Estados Unidos da América 142 B/C, Lisboa", "internal/images/pharmacies/FarmaciaNovaIorque.png", 38.7486388, -9.147437600000002)`)
+		// ("Farmácia Famões", "Rua José António Carvalho 16E, Famões", "internal/images/pharmacies/FarmaciaFamoes.png", 38.7916523, -9.210372999999999),
+		// ("FARMÁCIA SARAIVA", "Rua da República 86, Loures", "internal/images/pharmacies/FARMACIASARAIVA.png", 38.83127020000001, -9.1686596),
+		// ("Farmácia Santo Amaro", "Rua Filinto Elísio 29B, Lisboa", "internal/images/pharmacies/FarmaciaSantoAmaro.png", 38.70360989999999, -9.1845613)
 		// ("Farmácia Castro Sucr.", "Rua de São Bento 199A, Lisboa", "internal/images/pharmacies/FarmaciaCastroSucr.png", 38.71557669999999, -9.1547171),
 		// ("Farmácia Pimenta", "Rua Conselheiro Joaquim António D'Aguiar 259, Barreiro", "internal/images/pharmacies/FarmaciaPimenta.png", 38.6643491, -9.0781298),
 		// ("Farmácia Marques", "Estrada de Benfica 648, Lisboa", "internal/images/pharmacies/FarmaciaMarques.png", 38.75065059999999, -9.2008733),
@@ -68,7 +68,7 @@ func PopulateDatabase() {
 	}
 	picture := base64.StdEncoding.EncodeToString(medicinePicture)
 
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 7; i++ {
 		var medicine = models.Medicine{
 			Id:         0,
 			Name:       "Paracetamol",
